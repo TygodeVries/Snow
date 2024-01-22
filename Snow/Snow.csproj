@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Formats\VarInt.cs" />
+    <Compile Include="Network\Entity\PlayerConnection.cs" />
     <Compile Include="Network\Packets\Configuration\Serverbound\FeatureFlags.cs" />
     <Compile Include="Network\Packets\Configuration\Serverbound\FinishConfiguration.cs" />
     <Compile Include="Network\Packets\Configuration\Serverbound\RegistryData.cs" />
@@ -75,6 +77,7 @@
     <Compile Include="Network\Packets\Play\Serverbound\UpdateRecipeBook.cs" />
     <Compile Include="Network\Packets\Play\Serverbound\UpdateRecipes.cs" />
     <Compile Include="Network\Packets\Play\Serverbound\UpdateTime.cs" />
+    <Compile Include="Network\PacketWriter.cs" />
     <Compile Include="Network\ServerboundPacket.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
