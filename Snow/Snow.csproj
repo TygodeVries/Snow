@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4565089C-041E-45F1-983E-355648034D2E}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Snow</RootNamespace>
+    <AssemblyName>Snow</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Network\Packets\Configuration\Serverbound\FeatureFlags.cs" />
+    <Compile Include="Network\Packets\Configuration\Serverbound\FinishConfiguration.cs" />
+    <Compile Include="Network\Packets\Configuration\Serverbound\RegistryData.cs" />
+    <Compile Include="Network\Packets\Configuration\Serverbound\UpdateTags.cs" />
+    <Compile Include="Network\Packets\Login\Serverbound\LoginSuccess.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\ChangeDifficulty.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\ChunkBatchFinished.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\ChunkBatchStart.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\ChunkDataAndUpdateLight.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\Commands.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\EntityEvent.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\GameEvent.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\InitalizeWorldBorder.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\Login.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\PlayerAbilities.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\PlayerInfoUpdate.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\ServerData.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\SetCenterChunk.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\SetContainerContent.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\SetDefaultSpawnPosition.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\SetEntityMetadata.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\SetExperience.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\SetHealth.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\SetHeldItem.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\SetTickingState.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\StepTick.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\SynchronizePlayerPosition.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\UpdateAdvancements.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\UpdateAttributes.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\UpdateRecipeBook.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\UpdateRecipes.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\UpdateTime.cs" />
+    <Compile Include="Network\ServerboundPacket.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Network\Packets\Handshake\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
