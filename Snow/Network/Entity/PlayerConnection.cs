@@ -1,6 +1,6 @@
 ﻿using Snow.Formats;
-using Snow.Network.Packets.Configuration.Serverbound;
-using Snow.Network.Packets.Login.Serverbound;
+using Snow.Network.Packets.Configuration.Clientbound;
+using Snow.Network.Packets.Login.Clientbound;
 using Snow.Network.Packets.Play.Serverbound;
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ namespace Snow.Network.Entity
         /// Send a packet to a player connection
         /// </summary>
         /// <param name="packet">The packet that will be send</param>
-        public void SendPacket(ServerboundPacket packet)
+        public void SendPacket(ClientboundPacket packet)
         {
             // Create packet writer
             PacketWriter writer = new PacketWriter();
@@ -48,7 +48,7 @@ namespace Snow.Network.Entity
         public void SendConnectionPackets()
         {
             // Login
-            SendPacket(new LoginSuccess());
+            SendPacket(new LoginSuccess(UUID.Random(), "TheSheepDev"));
 
             // Configuration
             SendPacket(new FeatureFlags());

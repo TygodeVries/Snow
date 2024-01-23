@@ -1,0 +1,4 @@
+﻿#Note
+
+CLIENTBOUND packets are send FROM the SERVER to the client
+SERVERBOUND packets are send FROM the CLIENT to the server

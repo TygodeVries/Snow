@@ -21,6 +21,18 @@ namespace Snow.Network
             bytes.Add(b);
         }
 
+        public void WriteUUID(UUID uuid)
+        {
+            WriteByteArray(uuid.GetBytes());
+        }
+
+        public void WriteString(string s)
+        {
+            WriteVarInt(s.Length);
+            
+            WriteByteArray(Encoding.UTF8.GetBytes(s));
+        }
+
         public void WriteByteArray(byte[] bytes)
         {
             for(int i = 0; i < bytes.Length; i++)
