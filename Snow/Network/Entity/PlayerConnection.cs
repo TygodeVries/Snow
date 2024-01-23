@@ -1,7 +1,7 @@
 ﻿using Snow.Formats;
 using Snow.Network.Packets.Configuration.Clientbound;
 using Snow.Network.Packets.Login.Clientbound;
-using Snow.Network.Packets.Play.Serverbound;
+using Snow.Network.Packets.Play.Clientbound;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,17 +48,17 @@ namespace Snow.Network.Entity
         public void SendConnectionPackets()
         {
             // Login
-            SendPacket(new LoginSuccess(UUID.Random(), "TheSheepDev"));
+            SendPacket(new LoginSuccess(UUID.Random(), "TheSheepDev")); // Done
 
             // Configuration
-            SendPacket(new FeatureFlags());
+            SendPacket(new FeatureFlags()); // Done
             SendPacket(new RegistryData());
             SendPacket(new UpdateTags());
-            SendPacket(new FinishConfiguration());
+            SendPacket(new FinishConfiguration()); // Done
 
             // Play
             SendPacket(new Login());
-            SendPacket(new ChangeDifficulty());
+            SendPacket(new ChangeDifficulty()); // Done
             SendPacket(new PlayerAbilities());
             SendPacket(new SetHeldItem());
             SendPacket(new UpdateRecipes());

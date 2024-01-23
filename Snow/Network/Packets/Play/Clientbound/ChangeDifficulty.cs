@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Snow.Network.Packets.Play.Serverbound
+namespace Snow.Network.Packets.Play.Clientbound
 {
     internal class ChangeDifficulty : ClientboundPacket
     {
