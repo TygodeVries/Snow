@@ -1,4 +1,5 @@
 ﻿using Snow.Formats;
+using Snow.Formats.Nbt;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,11 @@ namespace Snow.Network
             WriteByteArray(uuid.GetBytes());
         }
 
+        public void WriteCompoundTag(NbtCompoundTag compoundTag)
+        {
+            WriteByteArray(compoundTag.ToByteArray());
+        }
+
         public void WriteString(string s)
         {
             WriteVarInt(s.Length);
@@ -50,6 +56,18 @@ namespace Snow.Network
         {
             byte[] bytes = VarInt.ToByteArray((uint)i);
             WriteByteArray(bytes);
+        }
+
+        public void WriteInt(int i)
+        {
+            byte[] intBytes = BitConverter.GetBytes(i);
+
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(intBytes); // Convert to little-endian if necessary
+            }
+
+            WriteByteArray(intBytes);
         }
     }
 }

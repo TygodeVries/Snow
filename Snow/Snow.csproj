@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Formats\Nbt\NbtCompoundTag.cs" />
     <Compile Include="Formats\UUID.cs" />
     <Compile Include="Formats\VarInt.cs" />
     <Compile Include="Network\Entity\PlayerConnection.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Network\ClientboundPacket.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="World\Chunk.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
