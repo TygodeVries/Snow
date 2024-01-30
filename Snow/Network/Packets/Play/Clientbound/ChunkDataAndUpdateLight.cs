@@ -1,5 +1,5 @@
 ﻿using Snow.Formats.Nbt;
-using Snow.World;
+using Snow.Level;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +26,21 @@ namespace Snow.Network.Packets.Play.Clientbound
 
             NbtCompoundTag heightmapsCompoundTag = chunk.GetHeightmaps();
             packetWriter.WriteCompoundTag(heightmapsCompoundTag);
+
+            byte[] chunkData = chunk.GetChunkData();
+            packetWriter.WriteVarInt(chunkData.Length);
+            packetWriter.WriteByteArray(chunkData);
+
+            int BLOCK_ENTITY_COUNT = 0;
+            packetWriter.WriteVarInt(BLOCK_ENTITY_COUNT);
+
+            byte[] light_flags = new byte[] { 0x00, 0x00, 0x00, 0x00 };
+            packetWriter.WriteByteArray(light_flags);
+
+            int SKYLIGHT = 0;
+            int BLOCKLIGHT = 0;
+            packetWriter.WriteVarInt(SKYLIGHT);
+            packetWriter.WriteVarInt(BLOCKLIGHT);
         }
     }
 }

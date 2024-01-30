@@ -10,7 +10,13 @@ namespace Snow.Formats.Nbt
     {
         List<NbtCompoundTagEntry> entries = new List<NbtCompoundTagEntry>();
 
-        public bool addFileHeader = false;
+        public bool AddFileHeader = false;
+
+        public void AddField(string name, NbtTag tag)
+        {
+            NbtCompoundTagEntry entry = new NbtCompoundTagEntry(name, tag);
+            entries.Add(entry);
+        }
 
         public byte[] ToByteArray()
         {
@@ -21,7 +27,7 @@ namespace Snow.Formats.Nbt
         public override byte[] Encode()
         { 
             byte[] bytes = new byte[] { };
-            if (addFileHeader)
+            if (AddFileHeader)
             {
                 bytes = bytes.Concat(EncodeStringLenght("file")).ToArray();
                 bytes = bytes.Concat(Encoding.UTF8.GetBytes("file")).ToArray();
