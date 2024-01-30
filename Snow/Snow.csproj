@@ -44,6 +44,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Formats\Nbt\NbtCompoundTag.cs" />
+    <Compile Include="Formats\Nbt\NbtCompoundTagEntry.cs" />
+    <Compile Include="Formats\Nbt\NbtLongArrayTag.cs" />
+    <Compile Include="Formats\Nbt\NbtTag.cs" />
+    <Compile Include="Formats\Nbt\Values\NbtByteTag.cs" />
+    <Compile Include="Formats\Nbt\Values\NbtDoubleTag.cs" />
+    <Compile Include="Formats\Nbt\Values\NbtFloatTag.cs" />
+    <Compile Include="Formats\Nbt\Values\NbtIntTag.cs" />
+    <Compile Include="Formats\Nbt\Values\NbtStringTag.cs" />
     <Compile Include="Formats\UUID.cs" />
     <Compile Include="Formats\VarInt.cs" />
     <Compile Include="Network\Entity\PlayerConnection.cs" />
