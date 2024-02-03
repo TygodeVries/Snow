@@ -25,6 +25,7 @@ namespace Snow.Network.Packets.Play.Clientbound
             packetWriter.WriteFloat(bar);
             packetWriter.WriteVarInt(level);
             packetWriter.WriteVarInt(total);
+
         }
     }
 }

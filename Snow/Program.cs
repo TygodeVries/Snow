@@ -1,8 +1,8 @@
 ﻿using Snow.Network.Entity;
-using Snow.Network.Packets.Play.Serverbound;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,9 +12,18 @@ namespace Snow
     {
         static void Main(string[] args)
         {
-            PlayerConnection playerConnection = new PlayerConnection();
+            TcpListener listener = new TcpListener(4030);
+            listener.Start();
 
-            playerConnection.SendConnectionPackets();
+            Console.WriteLine($"Test: {0x11}");
+
+            while (true)
+            {
+                PlayerConnection playerConnection = new PlayerConnection(listener.AcceptTcpClient());
+
+                playerConnection.SendConnectionPackets();
+                Console.WriteLine("Connected player!");
+            }
         }
     }
 }

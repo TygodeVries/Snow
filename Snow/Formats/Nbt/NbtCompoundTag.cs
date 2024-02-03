@@ -12,6 +12,11 @@ namespace Snow.Formats.Nbt
 
         public bool AddFileHeader = false;
 
+        public NbtCompoundTag()
+        {
+            this.type = 0x0a;
+        }
+
         public void AddField(string name, NbtTag tag)
         {
             NbtCompoundTagEntry entry = new NbtCompoundTagEntry(name, tag);

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Snow.Network.Packets.Configuration.Clientbound
+namespace Snow.Formats
 {
-    internal class UpdateTags : ClientboundPacket
+    internal class Chat
     {
-        public override void Create(PacketWriter packetWriter)
+        public Chat(string msg)
         {
             throw new NotImplementedException();
         }

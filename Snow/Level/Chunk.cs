@@ -46,7 +46,7 @@ namespace Snow.Level
             this.world = world;
         }
 
-        public byte[] GetData()
+        public byte[] GetChunkData()
         {
             byte[] bytes = new byte[0];
 

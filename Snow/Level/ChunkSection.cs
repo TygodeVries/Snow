@@ -17,26 +17,30 @@ namespace Snow.Level
         {
             byte[] bitsPerEntry = new byte[] { (byte) 0x0F }; // 16 bits (2 bytes) per entry.
 
-            byte[] pallet = new byte[] { 0x00 };
-            byte[] palletData = VarInt.ToByteArray((uint)pallet.Length).Concat(pallet).ToArray();
-
             short[] blocks = new short[4096];
 
             // Create some cool block patern
             for(int i = 0; i <  blocks.Length; i++) 
                 blocks[i] = (short) (i % 20);
 
-            byte[] chunkSection = new byte[0];
-
-            int longsInArray = blocks.Length / 8;
+            int longsInArray = blocks.Length / 4;
             byte[] longsInArrayAsBytes = VarInt.ToByteArray((uint) longsInArray);
 
-            chunkSection = chunkSection.Concat(bitsPerEntry)
+            byte[] blocksAsBytes = blocksToBytes(blocks);
 
+            return bitsPerEntry.Concat(longsInArrayAsBytes).Concat(blocksAsBytes).ToArray();
+        }
 
-            bytes = bytes.Concat(palletData).Concat(.Concat(blocks).ToArray();
+        byte[] blocksToBytes(short[] blocks)
+        {
+            byte[] bytes = new byte[0];
 
-            return chunkSection;
+            for(int i = 0; i < blocks.Length; i++)
+            {
+                bytes = bytes.Concat(BitConverter.GetBytes(blocks[i])).ToArray();
+            }
+
+            return bytes;
         }
 
         /// <summary>

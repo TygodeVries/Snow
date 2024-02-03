@@ -43,17 +43,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Containers\Slot.cs" />
+    <Compile Include="Formats\Chat.cs" />
+    <Compile Include="Formats\Identifier.cs" />
     <Compile Include="Formats\Nbt\NbtCompoundTag.cs" />
     <Compile Include="Formats\Nbt\NbtCompoundTagEntry.cs" />
+    <Compile Include="Formats\Nbt\NbtConverter.cs" />
     <Compile Include="Formats\Nbt\NbtLongArrayTag.cs" />
     <Compile Include="Formats\Nbt\NbtTag.cs" />
     <Compile Include="Formats\Nbt\Values\NbtByteTag.cs" />
     <Compile Include="Formats\Nbt\Values\NbtDoubleTag.cs" />
     <Compile Include="Formats\Nbt\Values\NbtFloatTag.cs" />
     <Compile Include="Formats\Nbt\Values\NbtIntTag.cs" />
+    <Compile Include="Formats\Nbt\Values\NbtListTag.cs" />
     <Compile Include="Formats\Nbt\Values\NbtStringTag.cs" />
+    <Compile Include="Formats\Position.cs" />
     <Compile Include="Formats\UUID.cs" />
     <Compile Include="Formats\VarInt.cs" />
+    <Compile Include="Formats\VarLong.cs" />
     <Compile Include="Level\ChunkSection.cs" />
     <Compile Include="Level\World.cs" />
     <Compile Include="Network\Entity\PlayerConnection.cs" />
@@ -67,9 +74,8 @@
     <Compile Include="Network\Packets\Play\Clientbound\ChunkBatchStart.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\ChunkDataAndUpdateLight.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\Commands.cs" />
-    <Compile Include="Network\Packets\Play\Clientbound\EntityEvent.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\GameEvent.cs" />
-    <Compile Include="Network\Packets\Play\Clientbound\InitalizeWorldBorder.cs" />
+    <Compile Include="Network\Packets\Play\Clientbound\InitializeWorldBorder.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\Login.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\PlayerAbilities.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\PlayerInfoUpdate.cs" />
@@ -77,7 +83,6 @@
     <Compile Include="Network\Packets\Play\Clientbound\SetCenterChunk.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\SetContainerContent.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\SetDefaultSpawnPosition.cs" />
-    <Compile Include="Network\Packets\Play\Clientbound\SetEntityMetadata.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\SetExperience.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\SetHealth.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\SetHeldItem.cs" />
