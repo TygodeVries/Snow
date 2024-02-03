@@ -36,7 +36,7 @@ namespace Snow.Network.Entity
             // Add lenght and data bytes together and send it to client
             SendData(lenghtBytes.Concat(bytes).ToArray());
 
-            Thread.Sleep(1000);
+            Thread.Sleep(3000);
             
         }
 

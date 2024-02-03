@@ -17,9 +17,9 @@ namespace Snow.Network.Packets.Play.Clientbound
             packetWriter.WriteInt(0);
             packetWriter.WriteBool(false);
 
-            Identifier[] dimensionNames = new Identifier[1] { new Identifier("minecraft", "overworld") };
-
-            packetWriter.WriteArrayOfIdentifier(dimensionNames);
+            
+            packetWriter.WriteVarInt(1);
+            packetWriter.WriteString("minecraft:overworld");
 
             packetWriter.WriteVarInt(10);
             packetWriter.WriteVarInt(5);
@@ -29,9 +29,10 @@ namespace Snow.Network.Packets.Play.Clientbound
             packetWriter.WriteBool(false);
             packetWriter.WriteBool(false);
 
-            packetWriter.WriteIdentifier(new Identifier("minecraft", "overworld"));
-            packetWriter.WriteIdentifier(new Identifier("minecraft", "overworld"));
+            packetWriter.WriteString("minecraft:overworld");
+            packetWriter.WriteString("minecraft:overworld");
             packetWriter.WriteByteArray(new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 });
+          
             packetWriter.WriteByte(0x00);
             packetWriter.WriteByte(0x00);
 

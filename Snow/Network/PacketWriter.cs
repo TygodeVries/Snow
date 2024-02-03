@@ -112,7 +112,8 @@ namespace Snow.Network
 
         public void WriteBool(bool b)
         {
-            WriteByte(b ? (byte) 0 : (byte) 1);
+            if (b) WriteByte(0x01);
+            else WriteByte(0x00);
         }
 
         public void WriteVarInt(int i)

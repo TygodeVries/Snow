@@ -15,7 +15,6 @@ namespace Snow
             TcpListener listener = new TcpListener(4030);
             listener.Start();
 
-            Console.WriteLine($"Test: {0x11}");
 
             while (true)
             {
