@@ -1,6 +1,6 @@
 ﻿using Snow.Entities;
+using Snow.Formats;
 using Snow.Network;
-using Snow.Network.Entity;
 using Snow.Network.Packets.Play.Clientbound;
 using System;
 using System.Collections.Generic;
@@ -17,6 +17,13 @@ namespace Snow.Level
 
         private List<Entity> entities = new List<Entity>();
         private List<int> usedEntityIds = new List<int>();
+
+        public List<Entity> GetAllEntities()
+        {
+            return entities;
+        }
+
+        private List<EntityPlayer> entityPlayers = new List<EntityPlayer>();
 
         int GetRandomEntityId()
         {
@@ -35,18 +42,20 @@ namespace Snow.Level
         public void SpawnEntity(Entity entity)
         {
             entity.Id = GetRandomEntityId();
+            entity.uuid = UUID.Random();
             entities.Add(entity);
 
             entity.world = this;
 
+            foreach(EntityPlayer entityPlayer in entityPlayers)
+            {
+                entityPlayer.connection.RegisterEntity(entity);
+            }
+
+            if(entity.GetType().Equals(typeof(EntityPlayer)))
+            {
+                entityPlayers.Add((EntityPlayer) entity);
+            }
         }
-
-        public void SendEntityToPlayer(EntityPlayer player, Entity entity)
-        {
-            PlayerConnection connection = player.connection;
-
-            connection.SendPacket(new SpawnEntity(entity);
-        }
-
     }
 }

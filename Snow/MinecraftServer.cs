@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Threading;
 using Snow.Level;
-using Snow.Network.Entity;
 using Snow.Entities;
 using Snow.Network;
+using Snow.Level.Entities;
+using Snow.Network.Packets.Play.Clientbound;
+using Snow.Containers;
 namespace Snow
 {
     internal class MinecraftServer
@@ -34,6 +36,8 @@ namespace Snow
         {
             tcpListener.Start();
 
+            world.SpawnEntity(new EntityZombie());
+
             while(isRunning)
             {
                 DateTime startTime = DateTime.Now;
@@ -56,9 +60,24 @@ namespace Snow
 
         public List<PlayerConnection> playerConnections = new List<PlayerConnection>();
 
+        public int tickCount = 0;
         public void Tick()
         {
+            tickCount++;
             AcceptNewClients();
+
+            if(tickCount % 20 == 0)
+            {
+                SendKeepAlive();
+            }
+        }
+
+        void SendKeepAlive()
+        {
+            foreach(PlayerConnection player in playerConnections)
+            {
+                player.SendPacket(new UpdateTime());
+            }
         }
 
         void AcceptNewClients()
@@ -70,12 +89,14 @@ namespace Snow
 
                 playerConnections.Add(player);
 
-                EntityPlayer playerEntity = new EntityPlayer(player);
-                world.SpawnEntity(playerEntity);
+                EntityPlayer entityPlayer = new EntityPlayer(player);
+                world.SpawnEntity(entityPlayer); // Spawn entity into world
 
-                player.SendConnectionPackets();
+                player.SendConnectionPackets(entityPlayer);
 
-                playerEntity.SpawnClient();
+                entityPlayer.inventory = new Inventory(44);
+
+                entityPlayer.SpawnClient();
             }
         }
     }

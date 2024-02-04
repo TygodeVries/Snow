@@ -1,4 +1,5 @@
 ﻿using Snow.Containers;
+using Snow.Entities;
 using Snow.Formats;
 using Snow.Level;
 using Snow.Network.Packets.Configuration.Clientbound;
@@ -41,6 +42,28 @@ namespace Snow.Network
             
         }
 
+        public void RegisterEntity(Entity entity)
+        {
+            SendPacket(new SpawnEntity(entity));
+        }
+
+        public void SendAllEntitiesOfWorld(World world)
+        {
+            foreach (Entity entity in world.GetAllEntities())
+            {
+                if(entity is EntityPlayer)
+                {
+                    EntityPlayer player = (EntityPlayer)entity;
+                    if(player.connection == this)
+                    {
+                        continue;
+                    }
+                }
+
+                RegisterEntity(entity);
+            }
+        }
+
         private void SendData(byte[] data)
         {
             client.GetStream().Write(data, 0, data.Length);
@@ -53,17 +76,17 @@ namespace Snow.Network
             this.client = client;
         }
 
-        public void SendConnectionPackets()
+        public void SendConnectionPackets(EntityPlayer entityPlayer)
         {
-            UUID playerUUID = UUID.Random();
+            
 
-            SendPacket(new LoginSuccess(playerUUID, "TheSheepDev"));
+            SendPacket(new LoginSuccess(entityPlayer.uuid, "TheSheepDev"));
 
             SendPacket(new FeatureFlags());
             SendPacket(new RegistryData());
             SendPacket(new FinishConfiguration());
 
-            SendPacket(new Login());
+            SendPacket(new Login(entityPlayer));
             SendPacket(new ChangeDifficulty(0x00, false));
             SendPacket(new PlayerAbilities());
             SendPacket(new SetHeldItem(0x00));
@@ -71,7 +94,7 @@ namespace Snow.Network
             SendPacket(new Commands());
             SendPacket(new UpdateRecipeBook());
             SendPacket(new SynchronizePlayerPosition(0, 0, 0, 0, 0));
-            SendPacket(new PlayerInfoUpdate(0x00, playerUUID));
+            SendPacket(new PlayerInfoUpdate(0x00, entityPlayer.uuid));
             SendPacket(new InitializeWorldBorder());
             SendPacket(new UpdateTime());
             SendPacket(new SetDefaultSpawnPosition());
@@ -98,14 +121,6 @@ namespace Snow.Network
             SendPacket(new UpdateTime());
 
             SendPacket(new BlockUpdate(new Position(0, 0, 0), 1));
-
-            // Player should be spawned in now.
-
-            while(true)
-            {
-                SendPacket(new UpdateTime());
-                Thread.Sleep(1000);
-            }
         }
 
         public void SendSpiralChunks()

@@ -1,6 +1,5 @@
 ﻿using Snow.Containers;
 using Snow.Network;
-using Snow.Network.Entity;
 using Snow.Network.Packets.Play.Clientbound;
 using System;
 using System.Collections.Generic;
@@ -27,11 +26,13 @@ namespace Snow.Entities
             connection.SendPacket(clientboundPacket);
         }
        
+        /// <summary>
+        /// Spawn the client into the world
+        /// </summary>
         public void SpawnClient()
         {
             UpdateInventory();
-
-            connection.SendPacket();
+            connection.SendAllEntitiesOfWorld(world);
         }
     }
 }

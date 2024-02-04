@@ -28,6 +28,5 @@ namespace Snow.Entities
         }
 
         public World world;
-
     }
 }

@@ -66,6 +66,7 @@
     <Compile Include="Formats\VarInt.cs" />
     <Compile Include="Formats\VarLong.cs" />
     <Compile Include="Level\ChunkSection.cs" />
+    <Compile Include="Level\Entities\EntityZombie.cs" />
     <Compile Include="Level\ItemStack.cs" />
     <Compile Include="Level\World.cs" />
     <Compile Include="MinecraftServer.cs" />
