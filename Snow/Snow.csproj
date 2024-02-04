@@ -45,7 +45,8 @@
   <ItemGroup>
     <Compile Include="Containers\Inventory.cs" />
     <Compile Include="Containers\Slot.cs" />
-    <Compile Include="Entities\Player.cs" />
+    <Compile Include="Level\Entities\Entity.cs" />
+    <Compile Include="Level\Entities\EntityPlayer.cs" />
     <Compile Include="Formats\BitSet.cs" />
     <Compile Include="Formats\Chat.cs" />
     <Compile Include="Formats\Identifier.cs" />
@@ -68,7 +69,8 @@
     <Compile Include="Level\ItemStack.cs" />
     <Compile Include="Level\World.cs" />
     <Compile Include="MinecraftServer.cs" />
-    <Compile Include="Network\Entity\PlayerConnection.cs" />
+    <Compile Include="Network\Packets\Play\Clientbound\SpawnEntity.cs" />
+    <Compile Include="Network\PlayerConnection.cs" />
     <Compile Include="Network\Packets\Configuration\Clientbound\FeatureFlags.cs" />
     <Compile Include="Network\Packets\Configuration\Clientbound\FinishConfiguration.cs" />
     <Compile Include="Network\Packets\Configuration\Clientbound\RegistryData.cs" />

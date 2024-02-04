@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Snow.Network.Entity
+namespace Snow.Network
 {
     internal class PlayerConnection
     {
@@ -57,25 +57,20 @@ namespace Snow.Network.Entity
         {
             UUID playerUUID = UUID.Random();
 
-            // Login
-            SendPacket(new LoginSuccess(playerUUID, "TheSheepDev")); // Done
+            SendPacket(new LoginSuccess(playerUUID, "TheSheepDev"));
 
-            // Configuration
             SendPacket(new FeatureFlags());
             SendPacket(new RegistryData());
-        //    SendPacket(new UpdateTags());
             SendPacket(new FinishConfiguration());
 
             SendPacket(new Login());
-            SendPacket(new ChangeDifficulty(0x00, false)); // Done
+            SendPacket(new ChangeDifficulty(0x00, false));
             SendPacket(new PlayerAbilities());
             SendPacket(new SetHeldItem(0x00));
             SendPacket(new UpdateRecipes());
-       //     SendPacket(new EntityEvent());
             SendPacket(new Commands());
             SendPacket(new UpdateRecipeBook());
             SendPacket(new SynchronizePlayerPosition(0, 0, 0, 0, 0));
-       //     SendPacket(new ServerData());
             SendPacket(new PlayerInfoUpdate(0x00, playerUUID));
             SendPacket(new InitializeWorldBorder());
             SendPacket(new UpdateTime());
@@ -91,8 +86,6 @@ namespace Snow.Network.Entity
             block.present = true;
 
             inventory.SetItem(40, block);
-
-            SendPacket(new SetContainerContent(0x00, inventory));
        //     SendPacket(new SetEntityMetadata());
             SendPacket(new UpdateAttributes());
             SendPacket(new UpdateAdvancements());

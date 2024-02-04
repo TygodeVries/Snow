@@ -142,5 +142,22 @@ namespace Snow.Network
 
             WriteByteArray(intBytes);
         }
+
+        public void WriteShort(short s)
+        {
+            byte[] intBytes = BitConverter.GetBytes(s);
+
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(intBytes); // Convert to little-endian if necessary
+            }
+
+            WriteByteArray(intBytes);
+        }
+
+        public void WriteAngle(byte b)
+        {
+            WriteByte(b);
+        }
     }
 }
