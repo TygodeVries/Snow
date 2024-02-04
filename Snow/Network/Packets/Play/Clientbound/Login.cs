@@ -33,8 +33,8 @@ namespace Snow.Network.Packets.Play.Clientbound
             packetWriter.WriteString("minecraft:overworld");
             packetWriter.WriteByteArray(new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 });
           
-            packetWriter.WriteByte(0x00);
-            packetWriter.WriteByte(0x00);
+            packetWriter.WriteByte(0x01);
+            packetWriter.WriteByte(0x01);
 
             packetWriter.WriteBool(false);
             packetWriter.WriteBool(true);

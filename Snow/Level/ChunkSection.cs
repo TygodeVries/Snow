@@ -17,6 +17,8 @@ namespace Snow.Level
         {
             byte[] bitsPerEntry = new byte[] { (byte) 0x0F }; // 16 bits (2 bytes) per entry.
 
+            // No palette
+
             short[] blocks = new short[4096];
 
             // Create some cool block patern
@@ -26,30 +28,38 @@ namespace Snow.Level
             int longsInArray = blocks.Length / 4;
             byte[] longsInArrayAsBytes = VarInt.ToByteArray((uint) longsInArray);
 
-            byte[] blocksAsBytes = blocksToBytes(blocks);
+            byte[] blocksAsBytes = BlocksToBytes(blocks);
 
             return bitsPerEntry.Concat(longsInArrayAsBytes).Concat(blocksAsBytes).ToArray();
         }
 
-        byte[] blocksToBytes(short[] blocks)
+        public byte[] GetSingleBlockChunkData()
         {
-            byte[] bytes = new byte[0];
+            byte[] bitsPerEntry = new byte[] { (byte)0x0 };
 
-            for(int i = 0; i < blocks.Length; i++)
+            return bitsPerEntry.Concat(VarInt.ToByteArray(0)).Concat(VarInt.ToByteArray(0)).ToArray();
+        }
+
+        byte[] BlocksToBytes(short[] blocks)
+        {
+            byte[] bytes = new byte[blocks.Length * sizeof(short)];
+
+            for (int i = 0; i < blocks.Length; i++)
             {
-                bytes = bytes.Concat(BitConverter.GetBytes(blocks[i])).ToArray();
+                BitConverter.GetBytes(blocks[i]).CopyTo(bytes, i * sizeof(short));
             }
 
             return bytes;
         }
-
         /// <summary>
         /// Get the biomes of a chunk
         /// </summary>
         /// <returns></returns>
         public byte[] GetBiomes()
         {
-            return new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00 };
+            byte[] bitsPerEntry = new byte[] { (byte)0x0 };
+
+            return bitsPerEntry.Concat(VarInt.ToByteArray(0)).Concat(VarInt.ToByteArray(0)).ToArray();
         }
     }
 }

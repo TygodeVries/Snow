@@ -43,7 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Containers\Inventory.cs" />
     <Compile Include="Containers\Slot.cs" />
+    <Compile Include="Entities\Player.cs" />
+    <Compile Include="Formats\BitSet.cs" />
     <Compile Include="Formats\Chat.cs" />
     <Compile Include="Formats\Identifier.cs" />
     <Compile Include="Formats\Nbt\NbtCompoundTag.cs" />
@@ -62,13 +65,16 @@
     <Compile Include="Formats\VarInt.cs" />
     <Compile Include="Formats\VarLong.cs" />
     <Compile Include="Level\ChunkSection.cs" />
+    <Compile Include="Level\ItemStack.cs" />
     <Compile Include="Level\World.cs" />
+    <Compile Include="MinecraftServer.cs" />
     <Compile Include="Network\Entity\PlayerConnection.cs" />
     <Compile Include="Network\Packets\Configuration\Clientbound\FeatureFlags.cs" />
     <Compile Include="Network\Packets\Configuration\Clientbound\FinishConfiguration.cs" />
     <Compile Include="Network\Packets\Configuration\Clientbound\RegistryData.cs" />
     <Compile Include="Network\Packets\Configuration\Clientbound\UpdateTags.cs" />
     <Compile Include="Network\Packets\Login\Clientbound\LoginSuccess.cs" />
+    <Compile Include="Network\Packets\Play\Clientbound\BlockUpdate.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\ChangeDifficulty.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\ChunkBatchFinished.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\ChunkBatchStart.cs" />

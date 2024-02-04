@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Snow
@@ -12,17 +13,12 @@ namespace Snow
     {
         static void Main(string[] args)
         {
-            TcpListener listener = new TcpListener(4030);
-            listener.Start();
+            MinecraftServer minecraftServer = new MinecraftServer(4030);
+            Thread thread = new Thread(minecraftServer.Start);
+            thread.Start();
 
 
-            while (true)
-            {
-                PlayerConnection playerConnection = new PlayerConnection(listener.AcceptTcpClient());
-
-                playerConnection.SendConnectionPackets();
-                Console.WriteLine("Connected player!");
-            }
+            Console.ReadLine();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Snow.Containers;
+using Snow.Level;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,27 +10,30 @@ namespace Snow.Network.Packets.Play.Clientbound
 {
     internal class SetContainerContent : ClientboundPacket
     {
+
+        byte windowID;
+        Inventory inventory;
+
+        public SetContainerContent(byte windowID, Inventory inventory)
+        {
+            this.windowID = windowID;
+            this.inventory = inventory;
+        }
+
         public override void Create(PacketWriter packetWriter)
         {
             packetWriter.WriteVarInt(0x13);
-
-            packetWriter.WriteByte(0x00);
-
-            packetWriter.WriteVarInt(0);
-
-            packetWriter.WriteVarInt(44);
-
-
-            Slot[] slots = new Slot[44];
             
-            for(int i = 0; i < slots.Length; i++)
+            packetWriter.WriteByte(windowID);
+            packetWriter.WriteVarInt(0);
+            packetWriter.WriteVarInt(inventory.size);
+
+            for (int i = 0; i < inventory.size; i++)
             {
-                slots[i] = new Slot();
+                packetWriter.WriteItemStack(inventory.content[i]);
             }
 
-            packetWriter.WriteSlotArray(slots);
-
-            packetWriter.WriteSlot(new Slot());
+            packetWriter.WriteItemStack(new ItemStack());
         }
     }
 }

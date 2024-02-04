@@ -1,4 +1,5 @@
-﻿using Snow.Formats;
+﻿using Snow.Containers;
+using Snow.Formats;
 using Snow.Level;
 using Snow.Network.Packets.Configuration.Clientbound;
 using Snow.Network.Packets.Login.Clientbound;
@@ -36,7 +37,7 @@ namespace Snow.Network.Entity
             // Add lenght and data bytes together and send it to client
             SendData(lenghtBytes.Concat(bytes).ToArray());
 
-            Thread.Sleep(3000);
+            Thread.Sleep(5);
             
         }
 
@@ -83,32 +84,66 @@ namespace Snow.Network.Entity
             SendPacket(new SetTickingState());
             SendPacket(new StepTick());
             SendPacket(new SetCenterChunk(0, 0));
-            SendPacket(new SetContainerContent());
+
+            Inventory inventory = new Inventory(44);
+
+            ItemStack block = new ItemStack();
+            block.present = true;
+
+            inventory.SetItem(40, block);
+
+            SendPacket(new SetContainerContent(0x00, inventory));
        //     SendPacket(new SetEntityMetadata());
             SendPacket(new UpdateAttributes());
             SendPacket(new UpdateAdvancements());
             SendPacket(new SetHealth());
             SendPacket(new SetExperience(0, 0, 0));
-            SendPacket(new ChunkBatchStart());
-            SendTestChunks();
-            SendPacket(new ChunkBatchFinished());
+
+            Thread.Sleep(1000);
+
+            SendSpiralChunks();
             SendPacket(new UpdateTime());
 
+            SendPacket(new BlockUpdate(new Position(0, 0, 0), 1));
+
             // Player should be spawned in now.
+
+            while(true)
+            {
+                SendPacket(new UpdateTime());
+                Thread.Sleep(1000);
+            }
         }
 
-        public void SendTestChunks()
+        public void SendSpiralChunks()
         {
             World world = new World();
 
-            for (int x = -5; x < 5; x++)
+            int radius = 5;
+            int centerX = 0;
+            int centerZ = 0;
+
+            SendPacket(new ChunkBatchStart());
+
+            int chunksSent = 0;
+            for (int x = centerX - radius; x <= centerX + radius; x++)
             {
-                for (int z = -5; z < 5; z++)
+                for (int z = centerZ - radius; z <= centerZ + radius; z++)
                 {
-                    Chunk chunk = new Chunk(x, z, world);
-                    SendPacket(new ChunkDataAndUpdateLight(chunk));
+                    SendChunkData(x, z, world);
+                    chunksSent++; // Increment the counter
                 }
             }
+
+
+            SendPacket(new ChunkBatchFinished(chunksSent));
         }
+
+        public void SendChunkData(int x, int z, World world)
+        {
+            Chunk chunk = new Chunk(x, z, world);
+            SendPacket(new ChunkDataAndUpdateLight(chunk));
+        }
+
     }
 }

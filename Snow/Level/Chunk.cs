@@ -61,7 +61,7 @@ namespace Snow.Level
                 bytes = bytes.Concat(blockCount).ToArray();
 
                 // Blockstates
-                bytes = bytes.Concat(chunkSection.GetBlockStates()).ToArray();
+                bytes = bytes.Concat(chunkSection.GetSingleBlockChunkData()).ToArray();
 
                 // Biomes
                 bytes = bytes.Concat(chunkSection.GetBiomes()).ToArray();

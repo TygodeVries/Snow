@@ -1,6 +1,7 @@
 ﻿using Snow.Containers;
 using Snow.Formats;
 using Snow.Formats.Nbt;
+using Snow.Level;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +19,19 @@ namespace Snow.Network
 
         List<byte> bytes = new List<byte>();
 
+        public void OverwriteAllBytes(byte[] bytes)
+        {
+            this.bytes = bytes.ToList();
+        }
+
         public void WriteByte(byte b)
         {
             bytes.Add(b);
+        }
+
+        public void WriteByteArray(byte[] bytes)
+        {
+            this.bytes.AddRange(bytes);
         }
 
         public void WriteUUID(UUID uuid)
@@ -60,32 +71,24 @@ namespace Snow.Network
             WriteByteArray(bytes);
         }
 
-        public void WriteByteArray(byte[] bytes)
-        {
-            for(int i = 0; i < bytes.Length; i++)
-            {
-                WriteByte(bytes[i]);
-            }
-        }
-
         public void WritePosition(Position pos)
         {
             WriteByteArray(pos.ToByteArray());
         }
 
-        public void WriteSlotArray(Slot[] slots)
+        public void WriteItemStack(ItemStack itemStack)
         {
-            WriteVarInt(slots.Length);
-
-            foreach(Slot slot in slots)
+            if(itemStack.present)
             {
-                WriteSlot(slot);
+                WriteBool(true);
+                WriteVarInt(itemStack.itemID);
+                WriteByte(itemStack.count);
+                WriteCompoundTag(itemStack.nbt);
             }
-        }
-
-        public void WriteSlot(Slot slot)
-        {
-            WriteBool(slot.Present);
+            else
+            {
+                WriteBool(false);
+            }
         }
 
         public void WriteLong(long Long)

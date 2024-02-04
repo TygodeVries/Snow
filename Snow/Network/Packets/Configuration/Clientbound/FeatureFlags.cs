@@ -20,7 +20,8 @@ namespace Snow.Network.Packets.Configuration.Clientbound
         {
             packetWriter.WriteVarInt(0x08);
 
-            packetWriter.WriteVarInt(0); // Number of flags enabled
+            packetWriter.WriteVarInt(1); // Number of flags enabled
+            packetWriter.WriteString("minecraft:vanilla");
         }
     }
 }
