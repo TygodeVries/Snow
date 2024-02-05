@@ -12,6 +12,7 @@ using Snow.Network;
 using Snow.Level.Entities;
 using Snow.Network.Packets.Play.Clientbound;
 using Snow.Containers;
+using Snow.Tests;
 namespace Snow
 {
     internal class MinecraftServer
@@ -32,28 +33,38 @@ namespace Snow
 
         World world = new World();
 
+        EntityMotionTest entityMotionTest;
+
         public void Start()
         {
+            Console.WriteLine("Starting EntityMotionTest");
+            entityMotionTest = new EntityMotionTest(world);
             tcpListener.Start();
 
-            world.SpawnEntity(new EntityZombie());
-
+            Console.WriteLine("Server is running!");
             while(isRunning)
             {
-                DateTime startTime = DateTime.Now;
-                Tick();
-                double mspt = DateTime.Now.Subtract(startTime).TotalMilliseconds;
-
-                Console.Title = $"MSPT: {mspt}";
-
-                if (50 - mspt > 0)
+                if (tickCount % 20 == 0)
                 {
-                    Thread.Sleep((int)(50 - mspt));
+                    DateTime startTime = DateTime.Now;
+                    Tick();
+                    double mspt = DateTime.Now.Subtract(startTime).TotalMilliseconds;
+
+                    Console.Title = $"MSPT: {mspt}";
+
+                    if (50 - mspt > 0)
+                    {
+                        Thread.Sleep((int)(50 - mspt));
+                    }
+                    else
+                    {
+                        // Cant keep up
+                        Console.Title = $"MSPT: {mspt} | NOT KEEPING UP!";
+                    }
                 }
                 else
                 {
-                    // Cant keep up
-                    Console.Title = $"MSPT: {mspt} | NOT KEEPING UP!";
+                    Tick();
                 }
             }
         }
@@ -70,6 +81,11 @@ namespace Snow
             {
                 SendKeepAlive();
             }
+
+            entityMotionTest.Tick(tickCount);
+
+
+            world.Clean();
         }
 
         void SendKeepAlive()
@@ -85,7 +101,9 @@ namespace Snow
             if(tcpListener.Pending())
             {
                 TcpClient tcpClient = tcpListener.AcceptTcpClient();
-                PlayerConnection player = new PlayerConnection(tcpClient);
+                PlayerConnection player = new PlayerConnection(tcpClient, this);
+
+                Console.WriteLine("A new player has joined!");
 
                 playerConnections.Add(player);
 

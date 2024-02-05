@@ -25,6 +25,32 @@ namespace Snow.Level
 
         private List<EntityPlayer> entityPlayers = new List<EntityPlayer>();
 
+        public void RemoveEntity(Entity entity)
+        {
+            scedualedForRemoval.Add(entity);
+        }
+
+        List<Entity> scedualedForRemoval = new List<Entity>();
+
+        public void Clean()
+        {
+            foreach (Entity entity in scedualedForRemoval)
+            {
+                entities.Remove(entity);
+                usedEntityIds.Remove(entity.Id);
+
+                if (entity is EntityPlayer)
+                {
+                    entityPlayers.Remove((EntityPlayer)entity);
+                }
+
+                RemoveEntities removeEntities = new RemoveEntities(new int[] { entity.Id });
+                BroadcastPacket(removeEntities);
+            }
+
+            scedualedForRemoval.Clear();
+        }
+
         int GetRandomEntityId()
         {
             Random rng = new Random();
@@ -39,6 +65,14 @@ namespace Snow.Level
             return id;
         }
 
+        public void BroadcastPacket(ClientboundPacket clientboundPacket)
+        {
+            foreach(EntityPlayer entity in entityPlayers)
+            {
+                entity.connection.SendPacket(clientboundPacket);
+            }
+        }
+
         public void SpawnEntity(Entity entity)
         {
             entity.Id = GetRandomEntityId();
@@ -51,7 +85,7 @@ namespace Snow.Level
             {
                 entityPlayer.connection.RegisterEntity(entity);
             }
-
+            
             if(entity.GetType().Equals(typeof(EntityPlayer)))
             {
                 entityPlayers.Add((EntityPlayer) entity);

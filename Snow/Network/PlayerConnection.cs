@@ -33,13 +33,8 @@ namespace Snow.Network
             // Calculate lenght
             byte[] lenghtBytes = VarInt.ToByteArray((uint)bytes.Length);
 
-            Console.WriteLine("Sending packet: " + packet.GetType().Name.Split('.').Last() + " lenght: " + bytes.Length);
-
             // Add lenght and data bytes together and send it to client
-            SendData(lenghtBytes.Concat(bytes).ToArray());
-
-            Thread.Sleep(5);
-            
+            SendData(lenghtBytes.Concat(bytes).ToArray());            
         }
 
         public void RegisterEntity(Entity entity)
@@ -66,19 +61,44 @@ namespace Snow.Network
 
         private void SendData(byte[] data)
         {
-            client.GetStream().Write(data, 0, data.Length);
+            if (connected)
+            {
+                try
+                {
+                    client.GetStream().Write(data, 0, data.Length);
+                }
+                catch (Exception e)
+                {
+                    Disconnect();
+                }
+            }
         }
+
+        EntityPlayer entityPlayer;
+
+        public MinecraftServer minecraftServer;
+
+        public void Disconnect()
+        {
+            connected = false;
+            entityPlayer.world.RemoveEntity(entityPlayer);
+            minecraftServer.playerConnections.Remove(this);
+            entityPlayer = null;
+        }
+
+        bool connected = true;
 
 
         TcpClient client;
-        public PlayerConnection(TcpClient client)
+        public PlayerConnection(TcpClient client, MinecraftServer minecraftServer)
         {
             this.client = client;
+            this.minecraftServer = minecraftServer;
         }
 
         public void SendConnectionPackets(EntityPlayer entityPlayer)
         {
-            
+            this.entityPlayer = entityPlayer;   
 
             SendPacket(new LoginSuccess(entityPlayer.uuid, "TheSheepDev"));
 
@@ -114,8 +134,6 @@ namespace Snow.Network
             SendPacket(new UpdateAdvancements());
             SendPacket(new SetHealth());
             SendPacket(new SetExperience(0, 0, 0));
-
-            Thread.Sleep(1000);
 
             SendSpiralChunks();
             SendPacket(new UpdateTime());

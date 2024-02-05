@@ -1,0 +1,39 @@
+﻿using Snow.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Snow.Network.Packets.Play.Clientbound
+{
+    internal class UpdateEntityPosition : ClientboundPacket
+    {
+        Entity entity;
+
+        short deltaX;
+        short deltaY;
+        short deltaZ;
+
+        public UpdateEntityPosition(Entity entity, short deltaX, short deltaY, short deltaZ)
+        {
+            this.entity = entity;
+            this.deltaX = deltaX;
+            this.deltaY = deltaY;
+            this.deltaZ = deltaZ;
+        }
+
+        public override void Create(PacketWriter packetWriter)
+        {
+            packetWriter.WriteVarInt(0x2C);
+
+            packetWriter.WriteVarInt(entity.Id);
+
+            packetWriter.WriteShort(deltaX);
+            packetWriter.WriteShort(deltaY);
+            packetWriter.WriteShort(deltaZ);
+
+            packetWriter.WriteBool(false);
+        }
+    }
+}

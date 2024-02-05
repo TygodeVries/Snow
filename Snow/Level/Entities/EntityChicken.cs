@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace Snow.Level.Entities
 {
-    internal class EntityZombie : Entity
+    internal class EntityChicken : Entity
     {
-        public EntityZombie()
+        public EntityChicken()
         {
-            //this.type = 4;
+            this.type = 4;
+
         }
     }
 }

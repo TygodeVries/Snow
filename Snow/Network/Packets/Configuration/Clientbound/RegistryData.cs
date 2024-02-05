@@ -13,7 +13,7 @@ namespace Snow.Network.Packets.Configuration.Clientbound
         {
             packetWriter.WriteVarInt(0x05);
 
-            NbtCompoundTag tag = NbtConverter.Convert("C:\\Users\\zttde\\Desktop\\Screw\\Data\\Registry\\registry_data.json", false);
+            NbtCompoundTag tag = NbtConverter.Convert(@"Data/registry_data.json", false);
             packetWriter.WriteByteArray(tag.ToByteArray());
         }
     }

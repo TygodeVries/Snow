@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Snow.Network
 {
-    internal abstract class ClientboundPacket
+    internal abstract class ServerboundPacket
     {
-        public abstract void Create(PacketWriter packetWriter);
+        public abstract void Decode(PacketReader packetReader);
     }
 }

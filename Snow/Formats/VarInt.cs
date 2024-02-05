@@ -25,5 +25,28 @@ namespace Snow.Formats
 
             return bytes.ToArray();
         }
+
+        public static int FromByteArray(byte[] data, out int bytesRead)
+        {
+            int result = 0;
+            int shift = 0;
+            bytesRead = 0;
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                byte b = data[i];
+                result |= (b & 0x7F) << shift;
+                shift += 7;
+
+                bytesRead++;
+
+                if ((b & 0x80) == 0)
+                {
+                    break;
+                }
+            }
+
+            return result;
+        }
     }
 }
