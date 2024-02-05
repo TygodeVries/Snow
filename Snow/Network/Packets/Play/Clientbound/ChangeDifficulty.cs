@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class ChangeDifficulty : ClientboundPacket
+    public class ChangeDifficulty : ClientboundPacket
     {
         // 0: peaceful, 1: easy, 2: normal, 3: hard
         public byte Difficulty;

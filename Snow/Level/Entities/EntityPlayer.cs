@@ -9,16 +9,19 @@ using System.Threading.Tasks;
 
 namespace Snow.Entities
 {
-    internal class EntityPlayer : Entity
+    public class EntityPlayer : Entity
     {
-        public Inventory inventory;
-        
-        public PlayerConnection connection;
-
         public EntityPlayer(PlayerConnection connection)
         {
             this.connection = connection;
+            this.type = 123;
         }
+
+        private PlayerConnection connection;
+        public PlayerConnection GetConnection() { return connection; }
+
+        private Inventory inventory = new Inventory(44);
+        public Inventory GetInventory() { return inventory; }
 
         public void UpdateInventory()
         {
@@ -29,10 +32,17 @@ namespace Snow.Entities
         /// <summary>
         /// Spawn the client into the world
         /// </summary>
-        public void SpawnClient()
+        internal void SpawnClient()
         {
             UpdateInventory();
             connection.SendAllEntitiesOfWorld(world);
+        }
+
+
+        internal int selectedHotbarSlot = 0;
+        public int GetSelectedHotbarSlot()
+        {
+            return selectedHotbarSlot;
         }
     }
 }

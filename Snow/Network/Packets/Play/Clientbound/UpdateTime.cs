@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class UpdateTime : ClientboundPacket
+    public class UpdateTime : ClientboundPacket
     {
         public override void Create(PacketWriter packetWriter)
         {

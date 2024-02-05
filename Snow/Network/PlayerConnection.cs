@@ -9,13 +9,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Snow.Network
 {
-    internal class PlayerConnection
+    public class PlayerConnection
     {
         /// <summary>
         /// Send a packet to a player connection
@@ -49,7 +50,7 @@ namespace Snow.Network
                 if(entity is EntityPlayer)
                 {
                     EntityPlayer player = (EntityPlayer)entity;
-                    if(player.connection == this)
+                    if(player.GetConnection() == this)
                     {
                         continue;
                     }
@@ -77,6 +78,12 @@ namespace Snow.Network
         EntityPlayer entityPlayer;
 
         public MinecraftServer minecraftServer;
+
+        public EntityPlayer GetEntityPlayer()
+        {
+            return entityPlayer;
+        }
+
 
         public void Disconnect()
         {
@@ -118,7 +125,7 @@ namespace Snow.Network
             SendPacket(new InitializeWorldBorder());
             SendPacket(new UpdateTime());
             SendPacket(new SetDefaultSpawnPosition());
-            SendPacket(new GameEvent());
+            SendPacket(new GameEvent(0x0D, 0));
             SendPacket(new SetTickingState());
             SendPacket(new StepTick());
             SendPacket(new SetCenterChunk(0, 0));
@@ -138,7 +145,55 @@ namespace Snow.Network
             SendSpiralChunks();
             SendPacket(new UpdateTime());
 
-            SendPacket(new BlockUpdate(new Position(0, 0, 0), 1));
+            SendPacket(new BlockUpdate(new Position(0, -3, 0), 1));
+        }
+
+
+        byte[] data = new byte[0];
+        public void ReadPackets()
+        {
+            int available = client.Available;
+            if (available > 0)
+            {
+                byte[] dataRead = new byte[available];
+                client.GetStream().Read(dataRead, 0, dataRead.Length);
+
+                data = data.Concat(dataRead).ToArray();
+            }
+
+            if(data.Length > 3)
+            {
+                int lenght = VarInt.FromByteArray(data, out int bytesRead);
+
+                if(data.Length < lenght + bytesRead)
+                {
+                    return;
+                }
+
+                byte[] packet = new byte[lenght];
+                Array.Copy(data, bytesRead, packet, 0, lenght);
+
+                byte[] newData = new byte[data.Length - bytesRead - lenght];
+                Array.Copy(data, bytesRead + lenght, newData, 0, data.Length - bytesRead - lenght);
+
+                data = newData;
+
+                HandlePacket(packet);
+            }
+        }
+
+        void HandlePacket(byte[] packetData)
+        {
+            ServerboundPacket packet = ServerboundPacketMappings.CreateNewPacket(packetData);
+
+            if(packet == null)
+            {
+                // not implemented
+                return;
+            }
+
+            packet.Use(this);
+            
         }
 
         public void SendSpiralChunks()

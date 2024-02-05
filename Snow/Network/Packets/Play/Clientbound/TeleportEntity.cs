@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class TeleportEntity : ClientboundPacket
+    public class TeleportEntity : ClientboundPacket
     {
         Entity entity;
 
@@ -32,7 +32,7 @@ namespace Snow.Network.Packets.Play.Clientbound
         {
             packetWriter.WriteVarInt(0x6D);
 
-            packetWriter.WriteVarInt(entity.Id);
+            packetWriter.WriteVarInt(entity.EntityID);
 
             packetWriter.WriteDouble(x);
             packetWriter.WriteDouble(y);

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Configuration.Clientbound
 {
-    internal class FeatureFlags : ClientboundPacket
+    public class FeatureFlags : ClientboundPacket
     {
         /* #TODO for full implementation
         // Make features be able to be toggleable

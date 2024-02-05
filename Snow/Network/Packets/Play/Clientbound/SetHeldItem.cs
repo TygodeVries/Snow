@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class SetHeldItem : ClientboundPacket
+    public class SetHeldItem : ClientboundPacket
     {
         byte slot;
         public SetHeldItem(byte slot) { 

@@ -7,13 +7,27 @@ using System.Threading.Tasks;
 
 namespace Snow.Level
 {
-    internal class ItemStack
+    public class ItemStack
     {
-        public bool present = false;
+        public bool present;
 
-        public int itemID = 1;
-        public byte count = 1;
+        public int itemID;
+        public byte count;
 
         public NbtCompoundTag nbt = new NbtCompoundTag();
+
+        public ItemStack()
+        {
+            present = false;
+            itemID = 0;
+            count = 0;
+        }
+
+        public ItemStack(int itemId, byte count)
+        {
+            present = true;
+            this.itemID = itemId;
+            this.count = count;
+        }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class ChunkBatchStart : ClientboundPacket
+    public class ChunkBatchStart : ClientboundPacket
     {
         public override void Create(PacketWriter packetWriter)
         {

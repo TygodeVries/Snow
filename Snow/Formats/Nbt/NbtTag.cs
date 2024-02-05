@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Formats.Nbt
 {
-    internal abstract class NbtTag
+    public abstract class NbtTag
     {
         public byte type;
 

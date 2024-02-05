@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class SynchronizePlayerPosition : ClientboundPacket
+    public class SynchronizePlayerPosition : ClientboundPacket
     {
         double x;
         double y;

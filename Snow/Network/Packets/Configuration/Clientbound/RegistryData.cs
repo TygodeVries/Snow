@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Configuration.Clientbound
 {
-    internal class RegistryData : ClientboundPacket
+    public class RegistryData : ClientboundPacket
     {
         public override void Create(PacketWriter packetWriter)
         {

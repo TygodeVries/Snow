@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class ServerData : ClientboundPacket
+    public class ServerData : ClientboundPacket
     {
         public override void Create(PacketWriter packetWriter)
         {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Level
 {
-    internal class Chunk
+    public class Chunk
     {
         public int x;
         public int z;

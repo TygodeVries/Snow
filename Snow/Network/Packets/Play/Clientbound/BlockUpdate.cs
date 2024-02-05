@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class BlockUpdate : ClientboundPacket
+    public class BlockUpdate : ClientboundPacket
     {
         Position location;
         int blockId;

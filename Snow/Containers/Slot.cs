@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Containers
 {
-    internal class Slot
+    public class Slot
     {
         public bool Present = false;
 

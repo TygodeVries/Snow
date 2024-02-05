@@ -10,13 +10,18 @@ using System.Threading.Tasks;
 
 namespace Snow.Level
 {
-    internal class World
+    public class World
     {
         public List<Chunk> chunks = new List<Chunk>();
         public int SectionsPerColumn = 24;
 
         private List<Entity> entities = new List<Entity>();
         private List<int> usedEntityIds = new List<int>();
+
+        public World()
+        {
+            usedEntityIds.Add(0);
+        }
 
         public List<Entity> GetAllEntities()
         {
@@ -37,14 +42,14 @@ namespace Snow.Level
             foreach (Entity entity in scedualedForRemoval)
             {
                 entities.Remove(entity);
-                usedEntityIds.Remove(entity.Id);
+                usedEntityIds.Remove(entity.EntityID);
 
                 if (entity is EntityPlayer)
                 {
                     entityPlayers.Remove((EntityPlayer)entity);
                 }
 
-                RemoveEntities removeEntities = new RemoveEntities(new int[] { entity.Id });
+                RemoveEntities removeEntities = new RemoveEntities(new int[] { entity.EntityID });
                 BroadcastPacket(removeEntities);
             }
 
@@ -53,13 +58,9 @@ namespace Snow.Level
 
         int GetRandomEntityId()
         {
-            Random rng = new Random();
-            int id = rng.Next(0, 100000);
+            int id = usedEntityIds.Last() + 1;
 
-            if(usedEntityIds.Contains(id))
-            {
-                return GetRandomEntityId();
-            }
+            Console.WriteLine("Now on ID: " + id);
 
             usedEntityIds.Add(id);
             return id;
@@ -69,13 +70,13 @@ namespace Snow.Level
         {
             foreach(EntityPlayer entity in entityPlayers)
             {
-                entity.connection.SendPacket(clientboundPacket);
+                entity.GetConnection().SendPacket(clientboundPacket);
             }
         }
 
         public void SpawnEntity(Entity entity)
         {
-            entity.Id = GetRandomEntityId();
+            entity.EntityID = GetRandomEntityId();
             entity.uuid = UUID.Random();
             entities.Add(entity);
 
@@ -83,7 +84,7 @@ namespace Snow.Level
 
             foreach(EntityPlayer entityPlayer in entityPlayers)
             {
-                entityPlayer.connection.RegisterEntity(entity);
+                entityPlayer.GetConnection().RegisterEntity(entity);
             }
             
             if(entity.GetType().Equals(typeof(EntityPlayer)))

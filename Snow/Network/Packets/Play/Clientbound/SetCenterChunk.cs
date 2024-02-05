@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class SetCenterChunk : ClientboundPacket
+    public class SetCenterChunk : ClientboundPacket
     {
         int x;
         int z;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class SpawnEntity : ClientboundPacket
+    public class SpawnEntity : ClientboundPacket
     {
         Entity entity;
         public SpawnEntity(Entity entity)
@@ -18,14 +18,14 @@ namespace Snow.Network.Packets.Play.Clientbound
         public override void Create(PacketWriter packetWriter)
         {
             packetWriter.WriteVarInt(0x01);
-            packetWriter.WriteVarInt(entity.Id);
+            packetWriter.WriteVarInt(entity.EntityID);
             packetWriter.WriteUUID(entity.uuid);
 
             packetWriter.WriteVarInt(entity.type);
 
-            packetWriter.WriteDouble(entity.x);
-            packetWriter.WriteDouble(entity.y);
-            packetWriter.WriteDouble(entity.z);
+            packetWriter.WriteDouble(entity.GetLocation().x);
+            packetWriter.WriteDouble(entity.GetLocation().y);
+            packetWriter.WriteDouble(entity.GetLocation().z);
 
             packetWriter.WriteAngle(0);
             packetWriter.WriteAngle(0);

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Level.Entities
 {
-    internal class EntityZombie : Entity
+    public class EntityZombie : Entity
     {
         public EntityZombie()
         {

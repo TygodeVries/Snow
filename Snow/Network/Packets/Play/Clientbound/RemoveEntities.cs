@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class RemoveEntities : ClientboundPacket
+    public class RemoveEntities : ClientboundPacket
     {
 
         int[] entityIds;

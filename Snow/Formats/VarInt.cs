@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Formats
 {
-    internal class VarInt
+    public class VarInt
     {
         static int SEGMENT_BITS = 0x7F;
         static int CONTINUE_BIT = 0x80;

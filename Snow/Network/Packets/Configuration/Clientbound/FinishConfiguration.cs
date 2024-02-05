@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Configuration.Clientbound
 {
-    internal class FinishConfiguration : ClientboundPacket
+    public class FinishConfiguration : ClientboundPacket
     {
         public FinishConfiguration()
         {

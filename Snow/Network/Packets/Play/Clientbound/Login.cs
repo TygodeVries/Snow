@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class Login : ClientboundPacket
+    public class Login : ClientboundPacket
     {
         public Login(EntityPlayer entityPlayer)
         {
@@ -21,7 +21,7 @@ namespace Snow.Network.Packets.Play.Clientbound
         {
             packetWriter.WriteVarInt(0x29);
 
-            packetWriter.WriteInt(player.Id);
+            packetWriter.WriteInt(player.EntityID);
             packetWriter.WriteBool(false);
 
             

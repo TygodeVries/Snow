@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Formats
 {
-    internal class Identifier
+    public class Identifier
     {
         public string nameSpace;
         public string value;

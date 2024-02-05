@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Formats
 {
-    internal class Chat
+    public class Chat
     {
         public Chat(string msg)
         {

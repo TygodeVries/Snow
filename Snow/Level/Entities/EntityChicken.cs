@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Level.Entities
 {
-    internal class EntityChicken : Entity
+    public class EntityChicken : Entity
     {
         public EntityChicken()
         {

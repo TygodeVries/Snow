@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class PlayerInfoUpdate : ClientboundPacket
+    public class PlayerInfoUpdate : ClientboundPacket
     {
         byte action;
         UUID uuid;

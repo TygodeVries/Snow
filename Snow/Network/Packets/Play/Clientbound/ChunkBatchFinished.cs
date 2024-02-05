@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class ChunkBatchFinished : ClientboundPacket
+    public class ChunkBatchFinished : ClientboundPacket
     {
 
         int batchSize;

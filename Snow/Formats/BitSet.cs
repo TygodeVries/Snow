@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Formats
 {
-    internal class BitSet
+    public class BitSet
     {
         private readonly ulong[] bits;
         public int Length { get; private set; }

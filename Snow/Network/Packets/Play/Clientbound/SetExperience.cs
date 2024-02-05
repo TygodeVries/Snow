@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class SetExperience : ClientboundPacket
+    public class SetExperience : ClientboundPacket
     {
         float bar;
         int level;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Level
 {
-    internal class ChunkSection
+    public class ChunkSection
     {
         /// <summary>
         /// Get the blockstates of a chunk section

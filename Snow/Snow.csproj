@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Containers\Inventory.cs" />
     <Compile Include="Containers\Slot.cs" />
+    <Compile Include="Formats\Vector.cs" />
     <Compile Include="Level\Entities\Entity.cs" />
     <Compile Include="Level\Entities\EntityChicken.cs" />
     <Compile Include="Level\Entities\EntityPlayer.cs" />
@@ -78,6 +79,8 @@
     <Compile Include="Network\Packets\Play\Clientbound\TeleportEntity.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\UpdateEntityPosition.cs" />
     <Compile Include="Network\Packets\Play\Serverbound\SetHeldItem.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\SetPlayerPosition.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\SetPlayerPositionandRotation.cs" />
     <Compile Include="Network\PlayerConnection.cs" />
     <Compile Include="Network\Packets\Configuration\Clientbound\FeatureFlags.cs" />
     <Compile Include="Network\Packets\Configuration\Clientbound\FinishConfiguration.cs" />

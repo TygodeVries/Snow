@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Configuration.Clientbound
 {
-    internal class UpdateTags : ClientboundPacket
+    public class UpdateTags : ClientboundPacket
     {
         public override void Create(PacketWriter packetWriter)
         {

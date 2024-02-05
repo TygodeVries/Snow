@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network
 {
-    internal class PacketWriter
+    public class PacketWriter
     {
         public byte[] ToByteArray()
         {

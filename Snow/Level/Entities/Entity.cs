@@ -10,14 +10,23 @@ using System.Threading.Tasks;
 
 namespace Snow.Entities
 {
-    internal class Entity
+    public class Entity
     {
-        public int Id { get; set; }
-        public UUID uuid;
+        public int EntityID { get; set; }
+        internal UUID uuid;
 
-        public double x;
-        public double y;
-        public double z;
+        private double x;
+        private double y;
+        private double z;
+
+        /// <summary>
+        /// Returns a COPY of the location, use Teleport(x, y, z) to move the entity.
+        /// </summary>
+        /// <returns></returns>
+        public Vector GetLocation()
+        {
+            return new Vector(x, y, z);
+        }
 
         public int type;
 
@@ -73,6 +82,10 @@ namespace Snow.Entities
             this.z = z;
         }
 
-        public World world;
+        internal World world;
+        public World GetWorld()
+        {
+            return world;
+        }
     }
 }

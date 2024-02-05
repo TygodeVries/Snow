@@ -15,7 +15,7 @@ using Snow.Containers;
 using Snow.Tests;
 namespace Snow
 {
-    internal class MinecraftServer
+    public class MinecraftServer
     {
         TcpListener tcpListener;
 
@@ -84,6 +84,10 @@ namespace Snow
 
             entityMotionTest.Tick(tickCount);
 
+            foreach(PlayerConnection connection in playerConnections)
+            {
+                connection.ReadPackets();
+            }
 
             world.Clean();
         }
@@ -112,7 +116,7 @@ namespace Snow
 
                 player.SendConnectionPackets(entityPlayer);
 
-                entityPlayer.inventory = new Inventory(44);
+                entityPlayer.GetInventory().content[36] = new ItemStack();
 
                 entityPlayer.SpawnClient();
             }

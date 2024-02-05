@@ -8,31 +8,66 @@ using System.Threading.Tasks;
 
 namespace Snow.Network
 {
-    internal class ServerboundPacketMappings
+    public class ServerboundPacketMappings
     {
 
 
-        static Dictionary<int, string> mappings = new Dictionary<int, string>();
+        static Dictionary<int, Type> mappings = new Dictionary<int, Type>();
 
         public static void Load()
         {
-            Console.WriteLine("Loading serverbound packet mappings...");
-            string[] lines = File.ReadAllLines(@"Data/serverbound.mappings");
+            mappings.Clear();
+
+            try
+            {
+                Console.WriteLine("Loading serverbound packet mappings...");
+                string[] lines = File.ReadAllLines(@"Data/serverbound.mappings");
+
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    string[] args = lines[i].Split(' ');
+
+                    int id = int.Parse(args[0]);
+                    string name = args[1];
+
+                    string fullTypeName = "Snow.Network.Packets.Play.Serverbound." + name;
+
+                    Type packetType = Type.GetType(fullTypeName);
+
+                    mappings.Add(id, packetType);
+                }
+            } catch(Exception ex)
+            {
+                Console.WriteLine("Failed to load serverbound mappings. \n" + ex);
+            }
         }
 
         public static ServerboundPacket CreateNewPacket(byte[] packet)
         {
-            int read = 0;
-            int id = VarInt.FromByteArray(packet, out read);
+            try
+            {
+                int read = 0;
+                int id = VarInt.FromByteArray(packet, out read);
 
-            byte[] packetContent = new byte[packet.Length - read];
-            Array.Copy(packet, read, packetContent, 0, packet.Length - read);
-            ServerboundPacket serverboundPacket = (ServerboundPacket) Activator.CreateInstance(mappings[id], "Snow.Network.Packets.Play.Serverbound").Unwrap();
+                byte[] packetContent = new byte[packet.Length - read];
+                Array.Copy(packet, read, packetContent, 0, packet.Length - read);
 
-            PacketReader packetReader = new PacketReader(packetContent);
-            serverboundPacket.Decode(packetReader);
+                if (!mappings.ContainsKey(id))
+                {
+                    return null;
+                }
 
-            return serverboundPacket;
+                ServerboundPacket serverboundPacket = (ServerboundPacket)Activator.CreateInstance(mappings[id]);
+
+                PacketReader packetReader = new PacketReader(packetContent);
+                serverboundPacket.Decode(packetReader);
+
+                return serverboundPacket;
+            } catch(Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
         }
     }
 }

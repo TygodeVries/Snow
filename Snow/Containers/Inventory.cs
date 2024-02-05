@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Containers
 {
-    internal class Inventory
+    public class Inventory
     {
         public ItemStack[] content;
         public int size;

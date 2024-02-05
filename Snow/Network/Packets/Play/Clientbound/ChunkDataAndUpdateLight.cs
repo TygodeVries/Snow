@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class ChunkDataAndUpdateLight : ClientboundPacket
+    public class ChunkDataAndUpdateLight : ClientboundPacket
     {
         Chunk chunk;
 

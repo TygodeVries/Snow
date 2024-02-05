@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class SetContainerContent : ClientboundPacket
+    public class SetContainerContent : ClientboundPacket
     {
 
         byte windowID;

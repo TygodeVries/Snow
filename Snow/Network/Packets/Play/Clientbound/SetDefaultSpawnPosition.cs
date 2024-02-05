@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class SetDefaultSpawnPosition : ClientboundPacket
+    public class SetDefaultSpawnPosition : ClientboundPacket
     {
         public override void Create(PacketWriter packetWriter)
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class UpdateRecipeBook : ClientboundPacket
+    public class UpdateRecipeBook : ClientboundPacket
     {
         public override void Create(PacketWriter packetWriter)
         {

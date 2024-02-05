@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Snow.Network;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -12,7 +13,9 @@ namespace Snow
     {
         static void Main(string[] args)
         {
-            MinecraftServer minecraftServer = new MinecraftServer(4030);
+            ServerboundPacketMappings.Load();
+
+            MinecraftServer minecraftServer = new MinecraftServer(4041);
             Thread thread = new Thread(minecraftServer.Start);
             thread.Start();
 

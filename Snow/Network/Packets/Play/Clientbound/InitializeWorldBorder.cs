@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class InitializeWorldBorder : ClientboundPacket
+    public class InitializeWorldBorder : ClientboundPacket
     {
         public override void Create(PacketWriter packetWriter)
         {

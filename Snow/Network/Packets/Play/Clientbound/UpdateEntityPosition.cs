@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
-    internal class UpdateEntityPosition : ClientboundPacket
+    public class UpdateEntityPosition : ClientboundPacket
     {
         Entity entity;
 
@@ -27,7 +27,7 @@ namespace Snow.Network.Packets.Play.Clientbound
         {
             packetWriter.WriteVarInt(0x2C);
 
-            packetWriter.WriteVarInt(entity.Id);
+            packetWriter.WriteVarInt(entity.EntityID);
 
             packetWriter.WriteShort(deltaX);
             packetWriter.WriteShort(deltaY);
