@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Snow.Admin;
 namespace Snow.Network
 {
     public class ServerboundPacketMappings
@@ -20,7 +20,7 @@ namespace Snow.Network
 
             try
             {
-                Console.WriteLine("Loading serverbound packet mappings...");
+                Log.Send("Loading serverbound packet mappings...");
                 string[] lines = File.ReadAllLines(@"Data/serverbound.mappings");
 
                 for (int i = 0; i < lines.Length; i++)
@@ -38,7 +38,7 @@ namespace Snow.Network
                 }
             } catch(Exception ex)
             {
-                Console.WriteLine("Failed to load serverbound mappings. \n" + ex);
+                Log.Err("Failed to load serverbound mappings. \n" + ex);
             }
         }
 
@@ -65,7 +65,7 @@ namespace Snow.Network
                 return serverboundPacket;
             } catch(Exception e)
             {
-                Console.WriteLine(e);
+                Log.Err("Failed to create a new packet: " + e);
                 return null;
             }
         }

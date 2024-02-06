@@ -12,6 +12,7 @@ using Snow.Network;
 using Snow.Level.Entities;
 using Snow.Network.Packets.Play.Clientbound;
 using Snow.Containers;
+using Snow.Admin;
 using Snow.Tests;
 namespace Snow
 {
@@ -39,7 +40,7 @@ namespace Snow
         {
             tcpListener.Start();
 
-            Console.WriteLine("Server is running!");
+            Log.Send("Server is running!");
             while (isRunning)
             {
                 DateTime startTime = DateTime.Now;
@@ -62,7 +63,7 @@ namespace Snow
                     Console.Title = $"MSPT (20 ticks): {avarageMSPT}";
                     if (avarageMSPT > 50)
                     {
-                        Console.WriteLine($"Failed to complete tick in time, running {avarageMSPT - 50}ms behind!");
+                        Log.Send($"Failed to complete tick in time, running {avarageMSPT - 50}ms behind!");
                     }
                 }
             }

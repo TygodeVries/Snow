@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\Log.cs" />
     <Compile Include="Containers\Inventory.cs" />
     <Compile Include="Containers\Slot.cs" />
     <Compile Include="Formats\Vector.cs" />
