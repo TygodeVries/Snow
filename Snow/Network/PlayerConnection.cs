@@ -103,11 +103,13 @@ namespace Snow.Network
             this.minecraftServer = minecraftServer;
         }
 
-        public void SendConnectionPackets(EntityPlayer entityPlayer)
+        public void SendConnectionPackets(EntityPlayer entityPlayer, string playerName)
         {
             this.entityPlayer = entityPlayer;   
 
-            SendPacket(new LoginSuccess(entityPlayer.uuid, "TheSheepDev"));
+            // #TODO Should wait for connection packet to see what the players name is.
+
+            SendPacket(new LoginSuccess(entityPlayer.uuid, playerName));
 
             SendPacket(new FeatureFlags());
             SendPacket(new RegistryData());

@@ -26,11 +26,11 @@ namespace Snow.Network.Packets.Play.Clientbound
             
             packetWriter.WriteByte(windowID);
             packetWriter.WriteVarInt(0);
-            packetWriter.WriteVarInt(inventory.size);
+            packetWriter.WriteVarInt(inventory.GetSize());
 
-            for (int i = 0; i < inventory.size; i++)
+            for (int i = 0; i < inventory.GetSize(); i++)
             {
-                packetWriter.WriteItemStack(inventory.content[i]);
+                packetWriter.WriteItemStack(inventory.GetContent()[i]);
             }
 
             packetWriter.WriteItemStack(new ItemStack());

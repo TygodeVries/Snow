@@ -9,8 +9,8 @@ namespace Snow.Containers
 {
     public class Inventory
     {
-        public ItemStack[] content;
-        public int size;
+        private ItemStack[] content;
+        private int size;
 
         public Inventory(int size)
         {
@@ -25,6 +25,16 @@ namespace Snow.Containers
         public void SetItem(int index, ItemStack item)
         {
             content[index] = item;
+        }
+
+        public ItemStack[] GetContent()
+        {
+            return content;
+        }
+
+        public int GetSize()
+        {
+            return size;
         }
     }
 }

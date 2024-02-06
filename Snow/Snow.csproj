@@ -73,6 +73,7 @@
     <Compile Include="Level\World.cs" />
     <Compile Include="MinecraftServer.cs" />
     <Compile Include="Network\PacketReader.cs" />
+    <Compile Include="Network\Packets\Login\Serverbound\LoginStart.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\Disconnect.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\RemoveEntities.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\SpawnEntity.cs" />

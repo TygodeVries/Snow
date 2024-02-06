@@ -35,6 +35,11 @@ namespace Snow
 
         EntityMotionTest entityMotionTest;
 
+        public World GetWorld()
+        {
+            return world;
+        }
+
         public void Start()
         {
             Console.WriteLine("Starting EntityMotionTest");
@@ -107,18 +112,7 @@ namespace Snow
                 TcpClient tcpClient = tcpListener.AcceptTcpClient();
                 PlayerConnection player = new PlayerConnection(tcpClient, this);
 
-                Console.WriteLine("A new player has joined!");
-
                 playerConnections.Add(player);
-
-                EntityPlayer entityPlayer = new EntityPlayer(player);
-                world.SpawnEntity(entityPlayer); // Spawn entity into world
-
-                player.SendConnectionPackets(entityPlayer);
-
-                entityPlayer.GetInventory().content[36] = new ItemStack();
-
-                entityPlayer.SpawnClient();
             }
         }
     }

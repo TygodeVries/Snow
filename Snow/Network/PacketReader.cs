@@ -1,4 +1,5 @@
-﻿using Snow.Level;
+﻿using Snow.Formats;
+using Snow.Level;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,36 @@ namespace Snow.Network
             return value;
         }
 
+        public string ReadString()
+        {
+            int toRead = ReadVarInt();
+
+            byte[] text = new byte[toRead];
+
+            Array.Copy(data, pointer, text, 0, toRead);
+
+            string value = Encoding.UTF8.GetString(text);
+            return value;
+        }
+
+        public UUID ReadUUID()
+        {
+            byte[] bytes = new byte[16];
+            Array.Copy(data, pointer, bytes, 0, 16);
+            UUID uuid = new UUID(bytes);
+
+            return uuid;
+        }
+
+        public int ReadVarInt()
+        {
+            byte[] bytes = new byte[20];
+            Array.Copy(data, pointer, bytes, 0, 20);
+            int value = VarInt.FromByteArray(bytes, out int bytesRead);
+
+            pointer += bytesRead;
+            return value;
+        }
         public double ReadDouble()
         {
             byte[] item = new byte[8];
