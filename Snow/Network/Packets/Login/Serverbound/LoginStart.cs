@@ -23,7 +23,7 @@ namespace Snow.Network.Packets.Login.Serverbound
             entityPlayer.GetInventory().SetItem(36, new ItemStack(1, 0x01));
             entityPlayer.SpawnClient();
 
-            Console.WriteLine($"{username} joined the world!");
+            Console.WriteLine($"{username} joined the server!");
         }
 
         string username;

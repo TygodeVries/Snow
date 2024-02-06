@@ -18,13 +18,55 @@ namespace Snow
     public class MinecraftServer
     {
         TcpListener tcpListener;
+        bool isRunning;
+
+        public bool IsRunning()
+        {
+            return isRunning;
+        }
 
         public MinecraftServer(int port)
         {
             tcpListener = new TcpListener(IPAddress.Any, port);
+            playerConnections = new List<PlayerConnection>();
+            isRunning = true;
         }
 
-        bool isRunning = true;
+        public List<PlayerConnection> playerConnections;
+
+        double totalMSTP = 0;
+        public void Start()
+        {
+            tcpListener.Start();
+
+            Console.WriteLine("Server is running!");
+            while (isRunning)
+            {
+                DateTime startTime = DateTime.Now;
+                Tick();
+
+                // Calculate time it took to run tick
+                double mspt = DateTime.Now.Subtract(startTime).TotalMilliseconds;
+
+                // Wait till end of tick
+                if ((int)(50 - mspt) > 0)
+                    Thread.Sleep((int)(50 - mspt));
+
+                totalMSTP += mspt;
+
+                if (tickCount % 20 == 0)
+                {
+                    double avarageMSPT = totalMSTP / 20;
+                    totalMSTP = 0;
+
+                    Console.Title = $"MSPT (20 ticks): {avarageMSPT}";
+                    if (avarageMSPT > 50)
+                    {
+                        Console.WriteLine($"Failed to complete tick in time, running {avarageMSPT - 50}ms behind!");
+                    }
+                }
+            }
+        }
 
         public void Stop()
         {
@@ -33,50 +75,17 @@ namespace Snow
 
         World world = new World();
 
-        EntityMotionTest entityMotionTest;
-
         public World GetWorld()
         {
             return world;
         }
 
-        public void Start()
+        long tickCount = 0;
+        public long GetTick()
         {
-            Console.WriteLine("Starting EntityMotionTest");
-            entityMotionTest = new EntityMotionTest(world);
-            tcpListener.Start();
-
-            Console.WriteLine("Server is running!");
-            while(isRunning)
-            {
-                if (tickCount % 20 == 0)
-                {
-                    DateTime startTime = DateTime.Now;
-                    Tick();
-                    double mspt = DateTime.Now.Subtract(startTime).TotalMilliseconds;
-
-                    Console.Title = $"MSPT: {mspt}";
-
-                    if (50 - mspt > 0)
-                    {
-                        Thread.Sleep((int)(50 - mspt));
-                    }
-                    else
-                    {
-                        // Cant keep up
-                        Console.Title = $"MSPT: {mspt} | NOT KEEPING UP!";
-                    }
-                }
-                else
-                {
-                    Tick();
-                }
-            }
+            return tickCount;
         }
-
-        public List<PlayerConnection> playerConnections = new List<PlayerConnection>();
-
-        public int tickCount = 0;
+        
         public void Tick()
         {
             tickCount++;
@@ -86,8 +95,6 @@ namespace Snow
             {
                 SendKeepAlive();
             }
-
-            entityMotionTest.Tick(tickCount);
 
             foreach(PlayerConnection connection in playerConnections)
             {
