@@ -19,6 +19,8 @@ namespace Snow.Network.Packets.Login.Serverbound
             World world = connection.minecraftServer.GetWorld();
             world.SpawnEntity(entityPlayer); // Spawn entity into world
 
+            entityPlayer.username = username;
+
             Log.Send($"{username} joined the server!");
 
             connection.SendConnectionPackets(entityPlayer, username);

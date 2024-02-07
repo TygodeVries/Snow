@@ -20,6 +20,8 @@ namespace Snow.Entities
         private PlayerConnection connection;
         public PlayerConnection GetConnection() { return connection; }
 
+        public string username = "unnamed";
+
         private Inventory inventory = new Inventory(44);
         public Inventory GetInventory() { return inventory; }
 

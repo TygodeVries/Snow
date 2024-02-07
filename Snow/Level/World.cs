@@ -23,6 +23,19 @@ namespace Snow.Level
             usedEntityIds.Add(0);
         }
 
+        public Entity GetEntityWithID(int id)
+        {
+            foreach(Entity entity in entities)
+            {
+                if(entity.EntityID == id)
+                {
+                    return entity;
+                }
+            }
+
+            return null;
+        }
+
         public List<Entity> GetAllEntities()
         {
             return entities;

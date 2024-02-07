@@ -81,6 +81,7 @@
     <Compile Include="Network\Packets\Play\Clientbound\SpawnEntity.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\TeleportEntity.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\UpdateEntityPosition.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\Interact.cs" />
     <Compile Include="Network\Packets\Play\Serverbound\SetHeldItem.cs" />
     <Compile Include="Network\Packets\Play\Serverbound\SetPlayerPosition.cs" />
     <Compile Include="Network\Packets\Play\Serverbound\SetPlayerPositionandRotation.cs" />
