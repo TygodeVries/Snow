@@ -60,8 +60,6 @@ namespace Snow.Level
         {
             int id = usedEntityIds.Last() + 1;
 
-            Console.WriteLine("Now on ID: " + id);
-
             usedEntityIds.Add(id);
             return id;
         }
@@ -84,7 +82,10 @@ namespace Snow.Level
 
             foreach(EntityPlayer entityPlayer in entityPlayers)
             {
-                entityPlayer.GetConnection().RegisterEntity(entity);
+                if (entityPlayer != entity)
+                {
+                    entityPlayer.GetConnection().RegisterEntity(entity);
+                }
             }
             
             if(entity.GetType().Equals(typeof(EntityPlayer)))

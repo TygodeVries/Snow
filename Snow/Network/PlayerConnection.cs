@@ -2,6 +2,7 @@
 using Snow.Entities;
 using Snow.Formats;
 using Snow.Level;
+using Snow.Network.Mappings;
 using Snow.Network.Packets.Configuration.Clientbound;
 using Snow.Network.Packets.Login.Clientbound;
 using Snow.Network.Packets.Play.Clientbound;
@@ -35,7 +36,8 @@ namespace Snow.Network
             byte[] lenghtBytes = VarInt.ToByteArray((uint)bytes.Length);
 
             // Add lenght and data bytes together and send it to client
-            SendData(lenghtBytes.Concat(bytes).ToArray());            
+            SendData(lenghtBytes.Concat(bytes).ToArray());
+
         }
 
         public void RegisterEntity(Entity entity)
@@ -186,7 +188,7 @@ namespace Snow.Network
 
         void HandlePacket(byte[] packetData)
         {
-            ServerboundPacket packet = ServerboundPacketMappings.CreateNewPacket(packetData);
+            ServerboundPacket packet = MappingsManager.CreateServerboundPacket(packetData, this);
 
             if(packet == null)
             {
@@ -195,7 +197,6 @@ namespace Snow.Network
             }
 
             packet.Use(this);
-            
         }
 
         public void SendSpiralChunks()
@@ -228,5 +229,25 @@ namespace Snow.Network
             SendPacket(new ChunkDataAndUpdateLight(chunk));
         }
 
+        private ConnectionState currentState = ConnectionState.HANDSHAKE;
+
+        public ConnectionState GetConnectionState()
+        {
+            return currentState;
+        }
+
+        public void SetConnectionState(ConnectionState state)
+        {
+            currentState = state;
+        }
+
+    }
+
+    public enum ConnectionState
+    {
+        HANDSHAKE,
+        LOGIN,
+        CONFIGURATION,
+        PLAY
     }
 }

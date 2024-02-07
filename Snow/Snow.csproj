@@ -74,6 +74,7 @@
     <Compile Include="Level\World.cs" />
     <Compile Include="MinecraftServer.cs" />
     <Compile Include="Network\PacketReader.cs" />
+    <Compile Include="Network\Packets\Handshake\Serverbound\Handshake.cs" />
     <Compile Include="Network\Packets\Login\Serverbound\LoginStart.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\Disconnect.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\RemoveEntities.cs" />
@@ -118,7 +119,7 @@
     <Compile Include="Network\PacketWriter.cs" />
     <Compile Include="Network\ClientboundPacket.cs" />
     <Compile Include="Network\ServerboundPacket.cs" />
-    <Compile Include="Network\ServerboundPacketMappings.cs" />
+    <Compile Include="Network\Mappings\PacketMappingsLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Level\Chunk.cs" />
@@ -126,16 +127,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Data\Packets\clientbound.packets">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Data\registry_data.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data\serverbound.mappings">
+    <None Include="Data\Packets\serverbound.packets">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Network\Packets.note" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Network\Packets\Handshake\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

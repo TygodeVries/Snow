@@ -57,8 +57,12 @@ namespace Snow.Network
 
         public int ReadVarInt()
         {
-            byte[] bytes = new byte[20];
-            Array.Copy(data, pointer, bytes, 0, 20);
+            int size = 20;
+            if (data.Length - pointer < size)
+                size = data.Length - pointer;
+
+            byte[] bytes = new byte[size];
+            Array.Copy(data, pointer, bytes, 0, size);
             int value = VarInt.FromByteArray(bytes, out int bytesRead);
 
             pointer += bytesRead;

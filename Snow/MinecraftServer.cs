@@ -46,6 +46,7 @@ namespace Snow
                 DateTime startTime = DateTime.Now;
                 Tick();
 
+
                 // Calculate time it took to run tick
                 double mspt = DateTime.Now.Subtract(startTime).TotalMilliseconds;
 

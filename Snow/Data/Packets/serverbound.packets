@@ -1,0 +1,8 @@
+$ HANDSHAKE
+0 Handshake.Serverbound.Handshake
+$ LOGIN
+0 Login.Serverbound.LoginStart
+$ PLAY
+44 Play.Serverbound.SetHeldItem
+23 Play.Serverbound.SetPlayerPosition
+24 Play.Serverbound.SetPlayerPositionandRotation

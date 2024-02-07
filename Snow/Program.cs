@@ -7,15 +7,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Snow.Admin;
+using Snow.Network.Mappings;
 namespace Snow
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            
-
-            ServerboundPacketMappings.Load();
+            MappingsManager.Load();
 
             MinecraftServer minecraftServer = new MinecraftServer(4041);
             Thread thread = new Thread(minecraftServer.Start);
