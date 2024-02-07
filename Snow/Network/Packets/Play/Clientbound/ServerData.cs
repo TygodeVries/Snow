@@ -12,12 +12,6 @@ namespace Snow.Network.Packets.Play.Clientbound
         public override void Create(PacketWriter packetWriter)
         {
             throw new NotImplementedException();
-
-            packetWriter.WriteVarInt(0x49);
-
-            packetWriter.WriteChat(new Chat("Hello World!"));
-            packetWriter.WriteBool(false);
-            packetWriter.WriteBool(false);
         }
     }
 }

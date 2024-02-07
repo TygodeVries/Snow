@@ -18,7 +18,7 @@ namespace Snow.Network.Packets.Configuration.Clientbound
 
         public override void Create(PacketWriter packetWriter)
         {
-            packetWriter.WriteVarInt(0x08);
+            packetWriter.WritePacketID(this);
 
             packetWriter.WriteVarInt(1); // Number of flags enabled
             packetWriter.WriteString("minecraft:vanilla");

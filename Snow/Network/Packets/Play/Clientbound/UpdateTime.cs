@@ -10,7 +10,7 @@ namespace Snow.Network.Packets.Play.Clientbound
     {
         public override void Create(PacketWriter packetWriter)
         {
-            packetWriter.WriteVarInt(0x62);
+            packetWriter.WritePacketID(this);
 
             packetWriter.WriteLong(1000); // World time
             packetWriter.WriteLong(0); // Time of day

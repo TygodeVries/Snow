@@ -61,11 +61,11 @@ namespace Snow.Network.Mappings
         public static void Load()
         {
             Log.Send("Loading mappings...");
-            clientboundPackets = LoadPacketMappingsFromFile(@"Data/Packets/clientbound.packets");
-            serverboundPackets = LoadPacketMappingsFromFile(@"Data/Packets/serverbound.packets");
+            clientboundPackets = LoadPacketMappingsFromFile(@"Data/Packets/clientbound.packets", "Clientbound");
+            serverboundPackets = LoadPacketMappingsFromFile(@"Data/Packets/serverbound.packets", "Serverbound");
         }
 
-        private static Dictionary<ConnectionState, PacketMappings> LoadPacketMappingsFromFile(string path)
+        private static Dictionary<ConnectionState, PacketMappings> LoadPacketMappingsFromFile(string path, string direction)
         {
             string[] lines = File.ReadAllLines(path);
             Dictionary<ConnectionState, PacketMappings> result = new Dictionary<ConnectionState, PacketMappings>();
@@ -73,6 +73,7 @@ namespace Snow.Network.Mappings
 
             ConnectionState state = ConnectionState.HANDSHAKE;
             PacketMappings mappings = null;
+            string folder = "unknown";
 
             for (int i = 0; i < lines.Length + 1; i++)
             {
@@ -84,6 +85,9 @@ namespace Snow.Network.Mappings
                 }
 
                 string[] args = line.Split(' ');
+
+                if (args.Length < 2)
+                    continue;
 
                 if (args[0] == "$")
                 {
@@ -98,22 +102,39 @@ namespace Snow.Network.Mappings
                         continue;
 
                     // Get state
-                    state = (ConnectionState)Enum.Parse(typeof(ConnectionState), args[1]);
+                    state = (ConnectionState)Enum.Parse(typeof(ConnectionState), args[1].ToUpper());
+                    folder = args[1];
                     continue;
                 }
 
                 if (args[0].StartsWith("//"))
                     continue;
 
-                string fullTypeName = "Snow.Network.Packets." + args[1];
+                string fullTypeName = $"Snow.Network.Packets.{folder}.{direction}." + args[1];
 
                 Type type = Type.GetType(fullTypeName);
-                int id = int.Parse(args[0]);
+                int id = Convert.ToInt32(args[0], 16);;
 
                 mappings.Add(id, type);
             }
 
             return result;
+        }
+
+        public static int GetPacketIDOfPacket(ClientboundPacket packet)
+        {
+            // Example path 
+            // Snow.Network.Packets.Configuration.Clientbound.FeatureFlags
+            // 
+
+            string path = packet.GetType().ToString();
+            string[] folders = path.Split('.');
+
+            string state = folders[folders.Length - 3].ToUpper();
+            ConnectionState connectionState = (ConnectionState) Enum.Parse(typeof(ConnectionState), state);
+
+            int id = clientboundPackets[connectionState].FromType(packet.GetType());
+            return id;
         }
 
         public static ServerboundPacket CreateServerboundPacket(byte[] packet, PlayerConnection playerConnection)

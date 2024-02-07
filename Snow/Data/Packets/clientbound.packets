@@ -1,1 +1,39 @@
-﻿
+﻿$ Login
+0x02 LoginSuccess
+
+$ Configuration
+0x08 FeatureFlags
+0x02 FinishConfiguration
+0x05 RegistryData
+
+$ Play
+0x09 BlockUpdate
+0x0B ChangeDifficulty
+0x0C ChunkBatchFinished
+0x0D ChunkBatchStart
+0x25 ChunkDataAndUpdateLight
+0x11 Commands
+0x1B Disconnect
+0x20 GameEvent
+0x23 InitializeWorldBorder
+0x29 Login
+0x36 PlayerAbilities
+0x3C PlayerInfoUpdate
+0x40 RemoveEntities
+0x52 SetCenterChunk
+0x13 SetContainerContent
+0x54 SetDefaultSpawnPosition
+0x5A SetExperience
+0x5B SetHealth
+0x51 SetHeldItem
+0x6E SetTickingState
+0x01 SpawnEntity
+0x6F StepTick
+0x3E SynchronizePlayerPosition
+0x6D TeleportEntity
+0x70 UpdateAdvancements
+0x71 UpdateAttributes
+0x2C UpdateEntityPosition
+0x3F UpdateRecipeBook
+0x73 UpdateRecipes
+0x62 UpdateTime

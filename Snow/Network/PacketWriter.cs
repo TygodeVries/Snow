@@ -2,6 +2,7 @@
 using Snow.Formats;
 using Snow.Formats.Nbt;
 using Snow.Level;
+using Snow.Network.Mappings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,11 @@ namespace Snow.Network
         public void WriteByte(byte b)
         {
             bytes.Add(b);
+        }
+
+        public void WritePacketID(ClientboundPacket packet)
+        {
+            WriteVarInt(MappingsManager.GetPacketIDOfPacket(packet));
         }
 
         public void WriteByteArray(byte[] bytes)

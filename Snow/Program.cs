@@ -14,6 +14,7 @@ namespace Snow
     {
         static void Main(string[] args)
         {
+
             MappingsManager.Load();
 
             MinecraftServer minecraftServer = new MinecraftServer(4041);

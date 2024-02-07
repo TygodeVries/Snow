@@ -11,7 +11,7 @@ namespace Snow.Network.Packets.Configuration.Clientbound
     {
         public override void Create(PacketWriter packetWriter)
         {
-            packetWriter.WriteVarInt(0x05);
+            packetWriter.WritePacketID(this);
 
             NbtCompoundTag tag = NbtConverter.Convert(@"Data/registry_data.json", false);
             packetWriter.WriteByteArray(tag.ToByteArray());

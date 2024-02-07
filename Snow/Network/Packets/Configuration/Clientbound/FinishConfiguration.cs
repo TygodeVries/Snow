@@ -15,7 +15,7 @@ namespace Snow.Network.Packets.Configuration.Clientbound
 
         public override void Create(PacketWriter packetWriter)
         {
-            packetWriter.WriteVarInt(0x02);
+            packetWriter.WritePacketID(this);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Snow.Network.Packets.Play.Clientbound
 
         public override void Create(PacketWriter packetWriter)
         {
-            packetWriter.WriteVarInt(0x3C);
+            packetWriter.WritePacketID(this);
             packetWriter.WriteByte(action);
             packetWriter.WriteVarInt(1);
 

@@ -19,7 +19,7 @@ namespace Snow.Network.Packets.Login.Clientbound
 
         public override void Create(PacketWriter packetWriter)
         {
-            packetWriter.WriteVarInt(0x02);
+            packetWriter.WritePacketID(this);
             packetWriter.WriteUUID(uuid);
             packetWriter.WriteString(username);
             packetWriter.WriteVarInt(0); // Not providing any elements for now, Should be implemented later.
