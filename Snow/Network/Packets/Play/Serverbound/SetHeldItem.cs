@@ -17,7 +17,7 @@ namespace Snow.Network.Packets.Play.Serverbound
 
         }
 
-        public override void Use(PlayerConnection connection)
+        public override void Use(Connection connection)
         {
             connection.GetEntityPlayer().selectedHotbarSlot = slot;
         }

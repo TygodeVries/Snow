@@ -1,7 +1,7 @@
 ﻿using Snow.Admin;
-using Snow.Entities;
 using Snow.Formats;
 using Snow.Level;
+using Snow.Level.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +12,12 @@ namespace Snow.Network.Packets.Login.Serverbound
 {
     internal class LoginStart : ServerboundPacket
     {
-        public override void Use(PlayerConnection connection)
+        public override void Use(Connection connection)
         {
-            EntityPlayer entityPlayer = new EntityPlayer(connection);
+            Player entityPlayer = new Player(connection);
 
-            World world = connection.minecraftServer.GetWorld();
-            world.SpawnEntity(entityPlayer); // Spawn entity into world
+            LevelSpace levelSpace = connection.minecraftServer.GetLevelSpace();
+            levelSpace.SpawnEntity(entityPlayer); // Spawn entity into world
 
             entityPlayer.username = username;
 

@@ -21,7 +21,7 @@ namespace Snow.Network.Packets.Handshake.Serverbound
             nextState = packetReader.ReadVarInt();
         }
 
-        public override void Use(PlayerConnection connection)
+        public override void Use(Connection connection)
         {
 
             if (nextState == 1)

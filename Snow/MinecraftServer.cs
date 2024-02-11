@@ -11,22 +11,24 @@ namespace Snow
 {
     public class MinecraftServer
     {
-        TcpListener tcpListener;
-        bool isRunning;
 
-        public bool IsRunning()
+
+        private LevelSpace levelSpace;
+        public LevelSpace GetLevelSpace()
         {
-            return isRunning;
+            return levelSpace;
         }
+
+        TcpListener tcpListener;
 
         public MinecraftServer(int port)
         {
             tcpListener = new TcpListener(IPAddress.Any, port);
-            playerConnections = new List<PlayerConnection>();
-            isRunning = true;
+            playerConnections = new List<Connection>();
         }
 
-        public List<PlayerConnection> playerConnections;
+        public List<Connection> playerConnections;
+
 
         double totalMSTP = 0;
         public void Start()
@@ -34,7 +36,7 @@ namespace Snow
             tcpListener.Start();
 
             Log.Send("Server is running!");
-            while (isRunning)
+            while (true)
             {
                 DateTime startTime = DateTime.Now;
                 Tick();
@@ -65,14 +67,7 @@ namespace Snow
 
         public void Stop()
         {
-            isRunning = false;
-        }
-
-        World world = new World();
-
-        public World GetWorld()
-        {
-            return world;
+           
         }
 
         long tickCount = 0;
@@ -91,17 +86,16 @@ namespace Snow
                 SendKeepAlive();
             }
 
-            foreach(PlayerConnection connection in playerConnections)
+            foreach(Connection connection in playerConnections)
             {
                 connection.ReadPackets();
             }
 
-            world.Clean();
         }
 
         void SendKeepAlive()
         {
-            foreach(PlayerConnection player in playerConnections)
+            foreach(Connection player in playerConnections)
             {
                 player.SendPacket(new UpdateTime());
             }
@@ -112,7 +106,7 @@ namespace Snow
             if(tcpListener.Pending())
             {
                 TcpClient tcpClient = tcpListener.AcceptTcpClient();
-                PlayerConnection player = new PlayerConnection(tcpClient, this);
+                Connection player = new Connection(tcpClient, this);
 
                 playerConnections.Add(player);
             }

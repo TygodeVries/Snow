@@ -137,7 +137,7 @@ namespace Snow.Network.Mappings
             return id;
         }
 
-        public static ServerboundPacket CreateServerboundPacket(byte[] packet, PlayerConnection playerConnection)
+        public static ServerboundPacket CreateServerboundPacket(byte[] packet, Connection playerConnection)
         {
             try
             {

@@ -1,5 +1,5 @@
-﻿using Snow.Entities;
-using Snow.Formats;
+﻿using Snow.Formats;
+using Snow.Level.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +10,12 @@ namespace Snow.Network.Packets.Play.Clientbound
 {
     public class Login : ClientboundPacket
     {
-        public Login(EntityPlayer entityPlayer)
+        public Login(Player entityPlayer)
         {
             this.player = entityPlayer;
         }
        
-        EntityPlayer player;
+        Player player;
 
         public override void Create(PacketWriter packetWriter)
         {

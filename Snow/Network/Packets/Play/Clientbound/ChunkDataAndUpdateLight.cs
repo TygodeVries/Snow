@@ -12,17 +12,22 @@ namespace Snow.Network.Packets.Play.Clientbound
     {
         Chunk chunk;
 
-        public ChunkDataAndUpdateLight(Chunk chunk)
+        int x;
+        int z;
+
+        public ChunkDataAndUpdateLight(Chunk chunk, int x, int z)
         {
             this.chunk = chunk;
+            this.x = x;
+            this.z = z;
         }
 
         public override void Create(PacketWriter packetWriter)
         {
             packetWriter.WritePacketID(this);
 
-            packetWriter.WriteInt(chunk.x);
-            packetWriter.WriteInt(chunk.z);
+            packetWriter.WriteInt(x);
+            packetWriter.WriteInt(z);
 
             NbtCompoundTag heightmapsCompoundTag = chunk.GetHeightmaps();
             packetWriter.WriteCompoundTag(heightmapsCompoundTag);

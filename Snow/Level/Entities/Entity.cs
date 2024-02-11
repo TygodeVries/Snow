@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Snow.Entities
+namespace Snow.Level.Entities
 {
     public class Entity
     {
@@ -57,7 +57,7 @@ namespace Snow.Entities
             short encodedDeltaZ = (short)(4095.875 * deltaZ);
 
             UpdateEntityPosition updateEntityPosition = new UpdateEntityPosition(this, encodedDeltaX, encodedDeltaY, encodedDeltaZ);
-            world.BroadcastPacket(updateEntityPosition);
+            levelSpace.BroadcastPacket(updateEntityPosition);
 
             this.x += deltaX;
             this.y += deltaY;
@@ -75,17 +75,17 @@ namespace Snow.Entities
         private void MoveFar(double x, double y, double z, float yaw, float pitch)
         {
             TeleportEntity teleportEntity = new TeleportEntity(this, x, y, z, yaw, pitch);
-            world.BroadcastPacket(teleportEntity);
+            levelSpace.BroadcastPacket(teleportEntity);
 
             this.x = x;
             this.y = y;
             this.z = z;
         }
 
-        internal World world;
-        public World GetWorld()
+        internal LevelSpace levelSpace;
+        public LevelSpace GetWorld()
         {
-            return world;
+            return levelSpace;
         }
     }
 }

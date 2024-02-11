@@ -23,7 +23,7 @@ namespace Snow.Network.Packets.Play.Serverbound
             onGround = packetReader.ReadBool();
         }
 
-        public override void Use(PlayerConnection connection)
+        public override void Use(Connection connection)
         {
             connection.GetEntityPlayer().Teleport(x, y, z);
         }

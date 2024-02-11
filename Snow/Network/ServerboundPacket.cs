@@ -10,6 +10,6 @@ namespace Snow.Network
     {
         public abstract void Decode(PacketReader packetReader);
 
-        public abstract void Use(PlayerConnection connection);
+        public abstract void Use(Connection connection);
     }
 }

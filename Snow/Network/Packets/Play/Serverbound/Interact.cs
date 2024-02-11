@@ -1,4 +1,4 @@
-﻿using Snow.Entities;
+﻿using Snow.Level.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,12 +37,9 @@ namespace Snow.Network.Packets.Play.Serverbound
             sneaking = packetReader.ReadBool();
         }
 
-        public override void Use(PlayerConnection connection)
+        public override void Use(Connection connection)
         {
-            if(type == (int)InteractType.ATTACK)
-            {
-                Entity attacked = connection.GetEntityPlayer().world.GetEntityWithID(entityId);
-            }
+            
         }
 
         enum InteractType

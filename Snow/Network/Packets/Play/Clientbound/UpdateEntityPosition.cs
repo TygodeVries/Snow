@@ -1,4 +1,4 @@
-﻿using Snow.Entities;
+﻿using Snow.Level.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

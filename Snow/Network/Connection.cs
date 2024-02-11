@@ -1,7 +1,7 @@
 ﻿using Snow.Containers;
-using Snow.Entities;
 using Snow.Formats;
 using Snow.Level;
+using Snow.Level.Entities;
 using Snow.Network.Mappings;
 using Snow.Network.Packets.Configuration.Clientbound;
 using Snow.Network.Packets.Login.Clientbound;
@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Network
 {
-    public class PlayerConnection
+    public class Connection
     {
         /// <summary>
         /// Send a packet to a player connection
@@ -40,25 +40,19 @@ namespace Snow.Network
 
         }
 
-        public void RegisterEntity(Entity entity)
-        {
-            SendPacket(new SpawnEntity(entity));
-        }
 
-        public void SendAllEntitiesOfWorld(World world)
+        public void SendAllEntitiesOfWorld(LevelSpace levelSpace)
         {
-            foreach (Entity entity in world.GetAllEntities())
+            foreach (Entity entity in levelSpace.GetAllEntities())
             {
-                if(entity is EntityPlayer)
+                if(entity is Player)
                 {
-                    EntityPlayer player = (EntityPlayer)entity;
+                    Player player = (Player)entity;
                     if(player.GetConnection() == this)
                     {
                         continue;
                     }
                 }
-
-                RegisterEntity(entity);
             }
         }
 
@@ -77,11 +71,11 @@ namespace Snow.Network
             }
         }
 
-        EntityPlayer entityPlayer;
+        Player entityPlayer;
 
         public MinecraftServer minecraftServer;
 
-        public EntityPlayer GetEntityPlayer()
+        public Player GetEntityPlayer()
         {
             return entityPlayer;
         }
@@ -90,7 +84,7 @@ namespace Snow.Network
         public void Disconnect()
         {
             connected = false;
-            entityPlayer.world.RemoveEntity(entityPlayer);
+      //      entityPlayer.world.RemoveEntity(entityPlayer);
             minecraftServer.playerConnections.Remove(this);
             entityPlayer = null;
         }
@@ -99,13 +93,13 @@ namespace Snow.Network
 
 
         TcpClient client;
-        public PlayerConnection(TcpClient client, MinecraftServer minecraftServer)
+        public Connection(TcpClient client, MinecraftServer minecraftServer)
         {
             this.client = client;
             this.minecraftServer = minecraftServer;
         }
 
-        public void SendConnectionPackets(EntityPlayer entityPlayer, string playerName)
+        public void SendConnectionPackets(Player entityPlayer, string playerName)
         {
             this.entityPlayer = entityPlayer;   
 
@@ -225,8 +219,10 @@ namespace Snow.Network
 
         public void SendChunkData(int x, int z, World world)
         {
-            Chunk chunk = new Chunk(x, z, world);
-            SendPacket(new ChunkDataAndUpdateLight(chunk));
+
+            throw new NotImplementedException();
+     /*       Chunk chunk = new Chunk(x, z, world);
+            SendPacket(new ChunkDataAndUpdateLight(chunk)); */
         }
 
         private ConnectionState currentState = ConnectionState.HANDSHAKE;

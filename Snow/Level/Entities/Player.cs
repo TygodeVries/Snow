@@ -7,18 +7,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Snow.Entities
+namespace Snow.Level.Entities
 {
-    public class EntityPlayer : Entity
+    public class Player : Entity
     {
-        public EntityPlayer(PlayerConnection connection)
+        public Player(Connection connection)
         {
             this.connection = connection;
             this.type = 123;
+
         }
 
-        private PlayerConnection connection;
-        public PlayerConnection GetConnection() { return connection; }
+        private Connection connection;
+        public Connection GetConnection() { return connection; }
 
         public string username = "unnamed";
 
@@ -37,7 +38,7 @@ namespace Snow.Entities
         internal void SpawnClient()
         {
             UpdateInventory();
-            connection.SendAllEntitiesOfWorld(world);
+    //        connection.SendAllEntitiesOfWorld(world);
         }
 
 
