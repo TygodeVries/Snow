@@ -16,7 +16,7 @@ namespace Snow.Network.Packets.Login.Serverbound
         {
             Player entityPlayer = new Player(connection);
 
-            LevelSpace levelSpace = connection.minecraftServer.GetLevelSpace();
+            LevelSpace levelSpace = connection.minecraftServer;
             levelSpace.SpawnEntity(entityPlayer); // Spawn entity into world
 
             entityPlayer.username = username;
@@ -24,8 +24,6 @@ namespace Snow.Network.Packets.Login.Serverbound
             Log.Send($"{username} joined the server!");
 
             connection.SendConnectionPackets(entityPlayer, username);
-
-            entityPlayer.GetInventory().SetItem(36, new ItemStack(1, 0x01));
             entityPlayer.SpawnClient();
 
             connection.SetConnectionState(ConnectionState.PLAY);

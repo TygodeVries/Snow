@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Snow.Level
+namespace Snow.Levels
 {
     public abstract class ChunkSection
     {

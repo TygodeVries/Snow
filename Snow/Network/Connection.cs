@@ -1,117 +1,90 @@
-﻿using Snow.Containers;
+﻿using Snow.Entities;
 using Snow.Formats;
-using Snow.Level;
-using Snow.Level.Entities;
+using Snow.Levels;
 using Snow.Network.Mappings;
 using Snow.Network.Packets.Configuration.Clientbound;
 using Snow.Network.Packets.Login.Clientbound;
 using Snow.Network.Packets.Play.Clientbound;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Snow.Network
 {
     public class Connection
     {
-        /// <summary>
-        /// Send a packet to a player connection
-        /// </summary>
-        /// <param name="packet">The packet that will be send</param>
+        private ConnectionState currentState = ConnectionState.HANDSHAKE;
+        public ConnectionState GetConnectionState()
+        {
+            return currentState;
+        }
+        public void SetConnectionState(ConnectionState state)
+        {
+            currentState = state;
+        }
+
+        TcpClient client;
+        public Connection(Lobby lobby, TcpClient client)
+        {
+            this.lobby = lobby;
+            this.client = client;
+        }
+
         public void SendPacket(ClientboundPacket packet)
         {
-            // Create packet writer
             PacketWriter writer = new PacketWriter();
 
-            // Create packet
             packet.Create(writer);
             byte[] bytes = writer.ToByteArray();
 
-            // Calculate lenght
             byte[] lenghtBytes = VarInt.ToByteArray((uint)bytes.Length);
 
-            // Add lenght and data bytes together and send it to client
-            SendData(lenghtBytes.Concat(bytes).ToArray());
+            SendRawBytes(lenghtBytes.Concat(bytes).ToArray());
 
         }
-
-
-        public void SendAllEntitiesOfWorld(LevelSpace levelSpace)
+        public void SendRawBytes(byte[] data)
         {
-            foreach (Entity entity in levelSpace.GetAllEntities())
+            try
             {
-                if(entity is Player)
-                {
-                    Player player = (Player)entity;
-                    if(player.GetConnection() == this)
-                    {
-                        continue;
-                    }
-                }
+                client.GetStream().Write(data, 0, data.Length);
+            }
+            catch (Exception e)
+            {
+                    
             }
         }
-
-        private void SendData(byte[] data)
+        public void SendLevel(Level level)
         {
-            if (connected)
-            {
-                try
-                {
-                    client.GetStream().Write(data, 0, data.Length);
-                }
-                catch (Exception e)
-                {
-                    Disconnect();
-                }
-            }
+            throw new NotImplementedException();
+        }
+        public void SendChunk(int x, int z, Chunk chunk)
+        {
+            throw new NotImplementedException();
         }
 
-        Player entityPlayer;
-
-        public MinecraftServer minecraftServer;
-
-        public Player GetEntityPlayer()
+        private Player entity = null;
+        public Player GetEntity()
         {
-            return entityPlayer;
+            return entity;
         }
 
-
-        public void Disconnect()
+        private Lobby lobby;
+        public Lobby GetLobby()
         {
-            connected = false;
-      //      entityPlayer.world.RemoveEntity(entityPlayer);
-            minecraftServer.playerConnections.Remove(this);
-            entityPlayer = null;
+            return lobby;
         }
 
-        bool connected = true;
-
-
-        TcpClient client;
-        public Connection(TcpClient client, MinecraftServer minecraftServer)
+        internal void Connect(Lobby lobby, Player player)
         {
-            this.client = client;
-            this.minecraftServer = minecraftServer;
-        }
+            this.entity = player;   
 
-        public void SendConnectionPackets(Player entityPlayer, string playerName)
-        {
-            this.entityPlayer = entityPlayer;   
-
-            // #TODO Should wait for connection packet to see what the players name is.
-
-            SendPacket(new LoginSuccess(entityPlayer.uuid, playerName));
+            SendPacket(new LoginSuccess(player.GetUUID(), player.GetName()));
 
             SendPacket(new FeatureFlags());
             SendPacket(new RegistryData());
             SendPacket(new FinishConfiguration());
 
-            SendPacket(new Login(entityPlayer));
+            SendPacket(new Login(player));
             SendPacket(new ChangeDifficulty(0x00, false));
             SendPacket(new PlayerAbilities());
             SendPacket(new SetHeldItem(0x00));
@@ -119,7 +92,7 @@ namespace Snow.Network
             SendPacket(new Commands());
             SendPacket(new UpdateRecipeBook());
             SendPacket(new SynchronizePlayerPosition(0, 0, 0, 0, 0));
-            SendPacket(new PlayerInfoUpdate(0x00, entityPlayer.uuid));
+            SendPacket(new PlayerInfoUpdate(0x00, player.GetUUID()));
             SendPacket(new InitializeWorldBorder());
             SendPacket(new UpdateTime());
             SendPacket(new SetDefaultSpawnPosition());
@@ -127,28 +100,18 @@ namespace Snow.Network
             SendPacket(new SetTickingState());
             SendPacket(new StepTick());
             SendPacket(new SetCenterChunk(0, 0));
-
-            Inventory inventory = new Inventory(44);
-
-            ItemStack block = new ItemStack();
-            block.present = true;
-
-            inventory.SetItem(40, block);
-       //     SendPacket(new SetEntityMetadata());
             SendPacket(new UpdateAttributes());
             SendPacket(new UpdateAdvancements());
             SendPacket(new SetHealth());
             SendPacket(new SetExperience(0, 0, 0));
-
-            SendSpiralChunks();
+            SendLevel(lobby.GetCurrentLevel());
             SendPacket(new UpdateTime());
-
             SendPacket(new BlockUpdate(new Position(0, -3, 0), 1));
         }
 
 
         byte[] data = new byte[0];
-        public void ReadPackets()
+        internal void ReadPackets()
         {
             int available = client.Available;
             if (available > 0)
@@ -179,8 +142,7 @@ namespace Snow.Network
                 HandlePacket(packet);
             }
         }
-
-        void HandlePacket(byte[] packetData)
+        internal void HandlePacket(byte[] packetData)
         {
             ServerboundPacket packet = MappingsManager.CreateServerboundPacket(packetData, this);
 
@@ -192,51 +154,6 @@ namespace Snow.Network
 
             packet.Use(this);
         }
-
-        public void SendSpiralChunks()
-        {
-            World world = new World();
-
-            int radius = 5;
-            int centerX = 0;
-            int centerZ = 0;
-
-            SendPacket(new ChunkBatchStart());
-
-            int chunksSent = 0;
-            for (int x = centerX - radius; x <= centerX + radius; x++)
-            {
-                for (int z = centerZ - radius; z <= centerZ + radius; z++)
-                {
-                    SendChunkData(x, z, world);
-                    chunksSent++; // Increment the counter
-                }
-            }
-
-
-            SendPacket(new ChunkBatchFinished(chunksSent));
-        }
-
-        public void SendChunkData(int x, int z, World world)
-        {
-
-            throw new NotImplementedException();
-     /*       Chunk chunk = new Chunk(x, z, world);
-            SendPacket(new ChunkDataAndUpdateLight(chunk)); */
-        }
-
-        private ConnectionState currentState = ConnectionState.HANDSHAKE;
-
-        public ConnectionState GetConnectionState()
-        {
-            return currentState;
-        }
-
-        public void SetConnectionState(ConnectionState state)
-        {
-            currentState = state;
-        }
-
     }
 
     public enum ConnectionState

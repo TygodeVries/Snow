@@ -7,21 +7,19 @@ namespace Snow
 {
     internal class Program
     {
+        private static LevelManager levelManager = new LevelManager();
 
         static void Main(string[] args)
         {
             MappingsManager.Load();
-
-            AddonManager addonManager = new AddonManager();
-            addonManager.Load();
-
-            
-
-            MinecraftServer minecraftServer = new MinecraftServer(4041);
-            Thread thread = new Thread(minecraftServer.Start);
-            thread.Start();
+            levelManager.LoadLevels();
 
 
+            for (int i = 0; i < 10; i++)
+            {
+                Lobby lobby = new Lobby(4000 + i);
+                lobby.Start();
+            }
             Console.ReadLine();
         }
     }

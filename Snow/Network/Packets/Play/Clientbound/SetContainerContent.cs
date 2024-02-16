@@ -1,4 +1,5 @@
-﻿using Snow.Containers;
+﻿using Snow.Items;
+using Snow.Items.Containers;
 using Snow.Level;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace Snow.Network.Packets.Play.Clientbound
                 packetWriter.WriteItemStack(inventory.GetContent()[i]);
             }
 
-            packetWriter.WriteItemStack(new ItemStack());
+            packetWriter.WriteItemStack(null);
         }
     }
 }

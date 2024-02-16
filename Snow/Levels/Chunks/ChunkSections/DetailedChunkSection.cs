@@ -1,11 +1,12 @@
 ﻿using Snow.Formats;
+using Snow.Levels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Snow.Level.Chunks.ChunkSections
+namespace Snow.Levels
 {
     internal class DetailedChunkSection : ChunkSection
     {

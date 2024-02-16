@@ -47,18 +47,17 @@
   <ItemGroup>
     <Compile Include="Addons\Addon.cs" />
     <Compile Include="Addons\AddonManager.cs" />
-    <Compile Include="Level\Chunks\ChunkSections\DetailedChunkSection.cs" />
-    <Compile Include="Level\Chunks\ChunkSections\SolidChunkSection.cs" />
-    <Compile Include="Level\Entities\EntityType.cs" />
-    <Compile Include="Level\LevelManager.cs" />
-    <Compile Include="Level\LevelSpace.cs" />
-    <Compile Include="Level\WorldManager.cs" />
+    <Compile Include="Items\ItemStack.cs" />
+    <Compile Include="Items\ItemType.cs" />
+    <Compile Include="Levels\Chunks\ChunkSections\DetailedChunkSection.cs" />
+    <Compile Include="Levels\Chunks\ChunkSections\SolidChunkSection.cs" />
+    <Compile Include="Entities\EntityType.cs" />
+    <Compile Include="Levels\LevelManager.cs" />
     <Compile Include="Log.cs" />
-    <Compile Include="Containers\Inventory.cs" />
-    <Compile Include="Containers\Slot.cs" />
+    <Compile Include="Items\Containers\Inventory.cs" />
     <Compile Include="Formats\Vector.cs" />
-    <Compile Include="Level\Entities\Entity.cs" />
-    <Compile Include="Level\Entities\Player.cs" />
+    <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\Player.cs" />
     <Compile Include="Formats\BitSet.cs" />
     <Compile Include="Formats\Chat.cs" />
     <Compile Include="Formats\Identifier.cs" />
@@ -77,10 +76,9 @@
     <Compile Include="Formats\UUID.cs" />
     <Compile Include="Formats\VarInt.cs" />
     <Compile Include="Formats\VarLong.cs" />
-    <Compile Include="Level\Chunks\ChunkSections\ChunkSection.cs" />
-    <Compile Include="Level\ItemStack.cs" />
-    <Compile Include="Level\World.cs" />
-    <Compile Include="MinecraftServer.cs" />
+    <Compile Include="Levels\Chunks\ChunkSections\ChunkSection.cs" />
+    <Compile Include="Levels\Level.cs" />
+    <Compile Include="Lobby.cs" />
     <Compile Include="Network\PacketReader.cs" />
     <Compile Include="Network\Packets\Handshake\Serverbound\Handshake.cs" />
     <Compile Include="Network\Packets\Login\Serverbound\LoginStart.cs" />
@@ -131,7 +129,7 @@
     <Compile Include="Network\Mappings\PacketMappingsLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Level\Chunks\Chunk.cs" />
+    <Compile Include="Levels\Chunks\Chunk.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -146,8 +144,6 @@
     </None>
     <None Include="Network\Packets.note" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Servers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

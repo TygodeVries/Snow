@@ -5,8 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Snow.Level.Chunks.ChunkSections
-{
+namespace Snow.Levels { 
     internal class SolidChunkSection : ChunkSection
     {
         public int blockType = 0;

@@ -1,4 +1,5 @@
-﻿using Snow.Containers;
+﻿
+using Snow.Items.Containers;
 using Snow.Network;
 using Snow.Network.Packets.Play.Clientbound;
 using System;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Snow.Level.Entities
+namespace Snow.Entities
 {
     public class Player : Entity
     {
@@ -21,7 +22,11 @@ namespace Snow.Level.Entities
         private Connection connection;
         public Connection GetConnection() { return connection; }
 
-        public string username = "unnamed";
+        private string name = "unnamed";
+        public string GetName()
+        {
+            return name;
+        }
 
         private Inventory inventory = new Inventory(44);
         public Inventory GetInventory() { return inventory; }
@@ -38,7 +43,7 @@ namespace Snow.Level.Entities
         internal void SpawnClient()
         {
             UpdateInventory();
-    //        connection.SendAllEntitiesOfWorld(world);
+
         }
 
 

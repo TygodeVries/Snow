@@ -1,30 +1,84 @@
-﻿using System;
+﻿using Snow.Admin;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.AccessControl;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Snow.Addons
 {
-    internal class AddonManager
+    public class AddonManager
     {
-        public void Load()
+        private Lobby server;
+        public Lobby GetServer()
         {
-            string executableDirectory = Environment.CurrentDirectory;
+            return server;
+        }
 
-            foreach (string filename in Directory.GetFiles("Addons"))
+        public void LoadAllAddons()
+        {
+            foreach (string filename in Directory.GetDirectories("Addons"))
             {
+                LoadAddon(filename);
+            }
+        }
 
+        private List<Addon> addons = new List<Addon>();
 
-                Assembly assembly = Assembly.LoadFile(executableDirectory + "/" + filename);
-                Type type = assembly.GetType("SnowTestDLL.Main");
+        public void LoadAddon(string folder)
+        {
+            string name = null;
 
-                Addon addon = (Addon) Activator.CreateInstance(type);
+            try
+            {
+                string executableDirectory = Environment.CurrentDirectory;
+                string addonDirectory = $"{executableDirectory}/{folder}";
+                string addonFileData = File.ReadAllText($"{addonDirectory}/addon.json");
+
+                JsonDocument addonData = JsonDocument.Parse(addonFileData);
+
+                name = addonData.RootElement.GetProperty("details").GetProperty("name").GetString();
+                string version = addonData.RootElement.GetProperty("details").GetProperty("version").GetString();
+                string author = addonData.RootElement.GetProperty("details").GetProperty("author").GetString();
+                string startingFileName = addonData.RootElement.GetProperty("code").GetProperty("file").GetString();
+                string startingClassName = addonData.RootElement.GetProperty("code").GetProperty("class").GetString();
+
+                Assembly assembly = Assembly.LoadFile($"{addonDirectory}/scripts/{startingFileName}");
+                Type type = assembly.GetType(startingClassName);
+
+                Addon addon = (Addon)Activator.CreateInstance(type);
+                Log.Send($"Loaded addon {name} {version} by {author}.");
+                addons.Add(addon);
                 addon.Start();
+            
+            } catch(Exception e)
+            {
+                if (name == null)
+                {
+                    Log.Err($"Failed to load addon in folder {folder} because: \n" + e);
+                }
+                else
+                {
+                    Log.Err($"Failed to load addon {name} because: \n" + e);
+                }
+            }
+        }
+
+        public AddonManager(Lobby server)
+        {
+
+        }
+
+        public void StopAll()
+        {
+            for(int i = 0; i < addons.Count; i++)
+            {
+                Addon addon = addons[i];
+                addon.Stop();
             }
         }
     }

@@ -1,19 +1,29 @@
 ﻿using Snow.Formats;
-using Snow.Level;
-using Snow.Network;
 using Snow.Network.Packets.Play.Clientbound;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Snow.Level.Entities
+namespace Snow.Entities
 {
     public class Entity
     {
-        public int EntityID { get; set; }
-        internal UUID uuid;
+        private UUID uuid;
+        public void SetUUID(UUID uuid)
+        {
+            this.uuid = uuid;
+        }
+        public UUID GetUUID()
+        {
+            return uuid;
+        }
+
+        private int id;
+        public void SetId(int id)
+        {
+            this.id = id;
+        }
+        public int GetId()
+        {
+            return id;
+        }
 
         private double x;
         private double y;

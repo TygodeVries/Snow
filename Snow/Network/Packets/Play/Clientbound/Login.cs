@@ -1,5 +1,5 @@
-﻿using Snow.Formats;
-using Snow.Level.Entities;
+﻿using Snow.Entities;
+using Snow.Formats;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,20 +1,20 @@
 ﻿using Snow.Formats.Nbt;
-using Snow.Level.Chunks.ChunkSections;
+using Snow.Levels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Snow.Level
+namespace Snow.Levels
 {
     public class Chunk
     {
-        public World world;
+        public Level world;
 
         public ChunkSection[] chunkSections;
 
-        public Chunk(World world)
+        public Chunk(Level world)
         {
             chunkSections = new ChunkSection[world.SectionsPerColumn];
             for (int i = 0; i < world.SectionsPerColumn; i++)

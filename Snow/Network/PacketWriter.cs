@@ -1,6 +1,6 @@
-﻿using Snow.Containers;
-using Snow.Formats;
+﻿using Snow.Formats;
 using Snow.Formats.Nbt;
+using Snow.Items;
 using Snow.Level;
 using Snow.Network.Mappings;
 using System;
@@ -84,12 +84,12 @@ namespace Snow.Network
 
         public void WriteItemStack(ItemStack itemStack)
         {
-            if(itemStack.present)
+            if(itemStack != null)
             {
                 WriteBool(true);
-                WriteVarInt(itemStack.itemID);
-                WriteByte(itemStack.count);
-                WriteCompoundTag(itemStack.nbt);
+                WriteVarInt(itemStack.GetItemType().GetItemId());
+                WriteByte((byte) itemStack.GetAmount());
+                WriteCompoundTag(itemStack.GetNbtData());
             }
             else
             {

@@ -1,11 +1,12 @@
-﻿using Snow.Level;
+﻿using Snow.Items;
+using Snow.Level;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Snow.Containers
+namespace Snow.Items.Containers
 {
     public class Inventory
     {
@@ -18,7 +19,7 @@ namespace Snow.Containers
             content = new ItemStack[size];
             for(int i = 0; i < size; i++)
             {
-                content[i] = new ItemStack();
+                content[i] = null;
             }
         }
 

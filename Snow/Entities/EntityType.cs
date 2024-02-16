@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Snow.Containers
+namespace Snow.Entities
 {
-    public class Slot
+    public class EntityType
     {
-        public bool Present = false;
-
+        public int id;
     }
 }
