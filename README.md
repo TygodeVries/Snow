@@ -27,12 +27,3 @@ A: Sort of, current plans are to implement a way to create plugins using DLLs, P
 
 Q: Will work be done to implement vanilla features into 'Snow'?
 A: Probebly not. Some basic features will be provided but a full implementation of the server as it is now took monjang 10 years so catching up with that would require a lot of work.
-
-## Performance
-First of all, are these values saying this is running better then a spigot server? Not really, a spigot server is doing a LOT and I mean a LOT more then what this is doing, like caching chunks, that uses up a lot of ram, snow dousent do this yet, we dont even support chunks at the moment. So this is not even close to a fair comparason.
-
-Avarage MSPT for a void world
-0ms - 1ms (Please read above)
-
-Ram usage:
-Around 10mb  (Please read above)
