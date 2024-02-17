@@ -1,5 +1,4 @@
-﻿using Snow.Admin;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,10 +12,10 @@ namespace Snow.Addons
 {
     public class AddonManager
     {
-        private Lobby server;
-        public Lobby GetServer()
+        private Lobby lobby;
+        public Lobby GetLobby()
         {
-            return server;
+            return lobby;
         }
 
         public void LoadAllAddons()
@@ -35,6 +34,7 @@ namespace Snow.Addons
 
             try
             {
+                Log.Send($"[Addons] Loading addon at {folder}.");
                 string executableDirectory = Environment.CurrentDirectory;
                 string addonDirectory = $"{executableDirectory}/{folder}";
                 string addonFileData = File.ReadAllText($"{addonDirectory}/addon.json");
@@ -51,7 +51,7 @@ namespace Snow.Addons
                 Type type = assembly.GetType(startingClassName);
 
                 Addon addon = (Addon)Activator.CreateInstance(type);
-                Log.Send($"Loaded addon {name} {version} by {author}.");
+                Log.Send($"[Addons] Loaded addon '{name}' version '{version}' by '{author}'.");
                 addons.Add(addon);
                 addon.Start();
             

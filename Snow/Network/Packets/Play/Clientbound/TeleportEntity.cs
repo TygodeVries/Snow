@@ -1,4 +1,4 @@
-﻿using Snow.Level.Entities;
+﻿using Snow.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +32,7 @@ namespace Snow.Network.Packets.Play.Clientbound
         {
             packetWriter.WritePacketID(this);
 
-            packetWriter.WriteVarInt(entity.EntityID);
+            packetWriter.WriteVarInt(entity.GetId());
 
             packetWriter.WriteDouble(x);
             packetWriter.WriteDouble(y);

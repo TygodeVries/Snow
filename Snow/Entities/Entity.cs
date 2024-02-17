@@ -29,13 +29,15 @@ namespace Snow.Entities
         private double y;
         private double z;
 
-        /// <summary>
-        /// Returns a COPY of the location, use Teleport(x, y, z) to move the entity.
-        /// </summary>
-        /// <returns></returns>
         public Vector GetLocation()
         {
             return new Vector(x, y, z);
+        }
+
+        private Lobby lobby;
+        public void SetLobby(Lobby lobby)
+        {
+
         }
 
         public int type;
@@ -54,12 +56,6 @@ namespace Snow.Entities
             }
         }
 
-        /// <summary>
-        /// Move up to 8 blocks
-        /// </summary>
-        /// <param name="deltaX"></param>
-        /// <param name="deltaY"></param>
-        /// <param name="deltaZ"></param>
         private void MoveClose(float deltaX, float deltaY, float deltaZ)
         {
             short encodedDeltaX = (short) (4095.875 * deltaX);
@@ -67,35 +63,21 @@ namespace Snow.Entities
             short encodedDeltaZ = (short)(4095.875 * deltaZ);
 
             UpdateEntityPosition updateEntityPosition = new UpdateEntityPosition(this, encodedDeltaX, encodedDeltaY, encodedDeltaZ);
-            levelSpace.BroadcastPacket(updateEntityPosition);
+            lobby.BroadcastPacket(updateEntityPosition);
 
             this.x += deltaX;
             this.y += deltaY;
             this.z += deltaZ;
         }
 
-        /// <summary>
-        /// Move more then 8 blocks
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="z"></param>
-        /// <param name="yaw"></param>
-        /// <param name="pitch"></param>
         private void MoveFar(double x, double y, double z, float yaw, float pitch)
         {
             TeleportEntity teleportEntity = new TeleportEntity(this, x, y, z, yaw, pitch);
-            levelSpace.BroadcastPacket(teleportEntity);
+            lobby.BroadcastPacket(teleportEntity);
 
             this.x = x;
             this.y = y;
             this.z = z;
-        }
-
-        internal LevelSpace levelSpace;
-        public LevelSpace GetWorld()
-        {
-            return levelSpace;
         }
     }
 }

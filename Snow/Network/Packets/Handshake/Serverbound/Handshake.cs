@@ -27,7 +27,7 @@ namespace Snow.Network.Packets.Handshake.Serverbound
             if (nextState == 1)
             {
                 // #TODO implement status
-                connection.Disconnect();
+
             }
             else
             {

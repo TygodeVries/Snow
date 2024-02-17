@@ -1,7 +1,5 @@
-﻿using Snow.Admin;
+﻿using Snow.Entities;
 using Snow.Formats;
-using Snow.Level;
-using Snow.Level.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,23 +12,23 @@ namespace Snow.Network.Packets.Login.Serverbound
     {
         public override void Use(Connection connection)
         {
-            Player entityPlayer = new Player(connection);
+            Player player = new Player(connection);
 
-            LevelSpace levelSpace = connection.minecraftServer;
-            levelSpace.SpawnEntity(entityPlayer); // Spawn entity into world
+            Lobby lobby = connection.GetLobby();
+            lobby.SpawnEntity(player);
 
-            entityPlayer.username = username;
+            player.SetName(this.username);
 
             Log.Send($"{username} joined the server!");
 
-            connection.SendConnectionPackets(entityPlayer, username);
-            entityPlayer.SpawnClient();
+            connection.Connect(lobby, player);
+            player.SpawnClient();
 
             connection.SetConnectionState(ConnectionState.PLAY);
         }
 
         string username;
-        UUID uuid; // unused
+        UUID uuid;
 
         public override void Decode(PacketReader packetReader)
         {

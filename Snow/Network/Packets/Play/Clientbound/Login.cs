@@ -21,7 +21,7 @@ namespace Snow.Network.Packets.Play.Clientbound
         {
             packetWriter.WritePacketID(this);
 
-            packetWriter.WriteInt(player.EntityID);
+            packetWriter.WriteInt(player.GetId());
             packetWriter.WriteBool(false);
 
             

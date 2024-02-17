@@ -109,7 +109,6 @@ namespace Snow.Network
             SendPacket(new BlockUpdate(new Position(0, -3, 0), 1));
         }
 
-
         byte[] data = new byte[0];
         internal void ReadPackets()
         {

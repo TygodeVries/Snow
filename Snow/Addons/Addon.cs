@@ -14,9 +14,9 @@ namespace Snow.Addons
             return addonManager;
         }
 
-        public Lobby GetServer()
+        public Lobby GetLobby()
         {
-            return addonManager.GetServer();
+            return addonManager.GetLobby();
         }
         public virtual void Start() { }
 

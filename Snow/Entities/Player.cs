@@ -27,6 +27,11 @@ namespace Snow.Entities
         {
             return name;
         }
+        public void SetName(string str)
+        {
+            name = str;
+        }
+
 
         private Inventory inventory = new Inventory(44);
         public Inventory GetInventory() { return inventory; }

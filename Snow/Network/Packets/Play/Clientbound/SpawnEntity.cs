@@ -1,4 +1,4 @@
-﻿using Snow.Level.Entities;
+﻿using Snow.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +18,8 @@ namespace Snow.Network.Packets.Play.Clientbound
         public override void Create(PacketWriter packetWriter)
         {
             packetWriter.WritePacketID(this);
-            packetWriter.WriteVarInt(entity.EntityID);
-            packetWriter.WriteUUID(entity.uuid);
+            packetWriter.WriteVarInt(entity.GetId());
+            packetWriter.WriteUUID(entity.GetUUID());
 
             packetWriter.WriteVarInt(entity.type);
 

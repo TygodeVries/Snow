@@ -25,21 +25,12 @@ namespace Snow
         {
             tcpListener = new TcpListener(IPAddress.Any, port);
             playerConnections = new List<Connection>();
-        }
-
-        private bool IsRunning = false;
-
-        public void Start()
-        {
-            if(IsRunning)
-            {
-                Log.Err("attempted to start a server instance that was already running.");
-                return;
-            }
+            entities = new List<Entity>();
 
             Thread thread = new Thread(this.LobbyThread);
             thread.Start();
         }
+
         public void Stop()
         {
             addonManager.StopAll();
@@ -130,7 +121,7 @@ namespace Snow
 
             foreach(Connection connection in playerConnections)
             {
-                connection.SetLevel(level);
+                connection.SendLevel(level);
             }
         }
 

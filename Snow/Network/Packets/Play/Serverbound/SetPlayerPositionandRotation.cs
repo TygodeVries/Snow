@@ -31,7 +31,7 @@ namespace Snow.Network.Packets.Play.Serverbound
 
         public override void Use(Connection connection)
         {
-            connection.GetEntityPlayer().Teleport(x, y, z);
+            connection.GetEntity().Teleport(x, y, z);
         }
     }
 }

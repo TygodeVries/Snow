@@ -18,11 +18,21 @@ namespace Snow.Levels
     public class Level
     {
         public int SectionsPerColumn = 24;
-        Dictionary<(int x, int z), Chunk> chunks = new Dictionary<(int x, int z), Chunk>();
+        
 
-        public Chunk GetChunkAt(int x, int z)
+        private string name;
+        public void SetName(string name)
         {
-            return chunks[(x, z)];
+            this.name = name;
+        }
+        public string GetName()
+        {
+            return name;
+        }
+
+        public byte[] GetChunkData(int x, int z)
+        {
+
         }
     }
 }

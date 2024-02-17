@@ -1,7 +1,7 @@
 ﻿using Snow.Formats;
 using Snow.Formats.Nbt;
 using Snow.Items;
-using Snow.Level;
+using Snow.Levels;
 using Snow.Network.Mappings;
 using System;
 using System.Collections.Generic;
