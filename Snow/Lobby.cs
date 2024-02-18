@@ -11,6 +11,10 @@ using Snow.Formats;
 using Snow.Entities;
 using Snow.Server;
 using Snow.Commands;
+using Snow.Events;
+using System.Reflection;
+using Snow.Events.Args;
+using Snow.Items;
 namespace Snow
 {
     public class Lobby
@@ -34,9 +38,44 @@ namespace Snow
             tcpListener = new TcpListener(IPAddress.Any, port);
             playerConnections = new List<Connection>();
             entities = new List<Entity>();
+            eventManager = new EventManager();
 
             Thread thread = new Thread(this.LobbyThread);
             thread.Start();
+        }
+
+        private BlockMask blockMask;
+        public void SetBlockMask(BlockMask blockMask)
+        {
+            this.blockMask = blockMask;
+        }
+
+        public void SetBlockAt(int x, int y, int z, BlockType blockType)
+        {
+            SetBlockAt(x, y, z, blockType, null);
+        }
+
+        public void SetBlockAt(int x, int y, int z, BlockType blockType, Player player)
+        {
+            GetEventManager().ExecuteBlockPlace(new BlockPlaceEventArgs(player, new Position(x, y, z)));
+
+            GetBlockMask().SetBlock(blockType, x, y, z);
+        }
+
+        public BlockType GetBlockAt(int x, int y, int z)
+        {
+            BlockType? block = GetBlockMask().GetBlockAt(x, y, z);
+            if(block == null)
+            {
+                return GetCurrentLevel().GetBlockAt(x, y, z);
+            }
+
+            return block.Value;
+        }
+
+        public BlockMask GetBlockMask()
+        {
+            return blockMask;
         }
 
         public void Stop()
@@ -49,6 +88,8 @@ namespace Snow
 
             commandManager = new CommandManager();
             SetLevel(LevelManager.GetLevel(Configuration.GetDefaultLevelName()));
+
+            GetEventManager().RightClickBlock += BlockPlaceAttempt;
 
             Log.Send("Loading addons...");
             addonManager = new AddonManager(this);
@@ -67,6 +108,28 @@ namespace Snow
                 if ((int)(50 - mspt) > 0)
                     Thread.Sleep((int)(50 - mspt));
             }
+        }
+
+        private void BlockPlaceAttempt(object sender, RightClickBlockEventArgs e)
+        {
+            ItemStack itemStack = e.GetPlayer().GetItemMainInHand();
+            if (itemStack == null)
+                return;
+
+            if(itemStack.GetItemType().IsBlock)
+            {
+                int face = e.GetClickedFace();
+
+                Position blockPos = e.GetClickedBlock().GetAdjacent(face);
+                GetEventManager().ExecuteBlockPlace(new BlockPlaceEventArgs(e.GetPlayer(), blockPos));
+            }
+
+        }
+
+        private EventManager eventManager;
+        public EventManager GetEventManager()
+        {
+            return eventManager;
         }
 
         long tickCount = 0;

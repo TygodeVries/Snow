@@ -34,6 +34,13 @@ namespace Snow.Items
         public ItemStack(ItemType itemType)
         {
             this.itemType = itemType;
+            this.amount = 1;
+        }
+
+        public ItemStack(ItemType itemType, byte amount)
+        {
+            this.itemType = itemType;
+            this.amount = amount;
         }
     }
 }

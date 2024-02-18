@@ -81,6 +81,15 @@ namespace Snow.Network
             return value;
         }
 
+        public Position ReadPosition()
+        {
+            long l = ReadLong();
+
+            Position position = Position.FromLong(l);
+
+            return position;
+        }
+
         public long ReadLong()
         {
             byte[] item = new byte[8];

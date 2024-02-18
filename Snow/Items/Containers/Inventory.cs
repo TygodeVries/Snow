@@ -27,6 +27,11 @@ namespace Snow.Items.Containers
             content[index] = item;
         }
 
+        public ItemStack GetItem(int index)
+        {
+            return content[index];
+        }
+
         public ItemStack[] GetContent()
         {
             return content;

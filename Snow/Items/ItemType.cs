@@ -6,15 +6,24 @@ using System.Threading.Tasks;
 
 namespace Snow.Items
 {
-    public abstract class ItemType
+    public class ItemType
     {
-        protected int itemId = 1;
-        protected int customModelData;
-        protected string defaultName = "Unnamed Item";
 
-        public int GetItemId()
+        private string id;
+        public string GetId()
         {
-            return itemId;
+            return id;
+        }
+
+        private int networkId = 1;
+        private int customModelData;
+        private string defaultName = "Unnamed Item";
+
+        public bool IsBlock { get; protected set; }
+
+        public int GetNetworkId()
+        {
+            return networkId;
         }
 
         public string GetDefaultName()
@@ -27,10 +36,13 @@ namespace Snow.Items
             return customModelData;
         }
 
-        public virtual void OnRightClick()
-        { }
-
-        public virtual void OnLeftClick()
-        { }
+        public ItemType(string id, int networkId, int customModelData, string defaultName, bool isBlock)
+        {
+            this.id = id;
+            this.networkId = networkId;
+            this.customModelData = customModelData;
+            this.defaultName = defaultName;
+            IsBlock = isBlock;
+        }
     }
 }

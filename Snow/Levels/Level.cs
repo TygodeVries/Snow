@@ -1,4 +1,5 @@
-﻿using Snow.Formats;
+﻿using Snow.Commands;
+using Snow.Formats;
 using Snow.Formats.Nbt;
 using Snow.Levels;
 using Snow.Network;
@@ -88,6 +89,11 @@ namespace Snow.Levels
                     BakeChunk(x, z);
                 }
             }
+        }
+
+        public BlockType GetBlockAt(int x, int y, int z)
+        {
+            throw new NotImplementedException();
         }
 
         public Level(string path)

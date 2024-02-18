@@ -10,3 +10,4 @@ $ Play
 0x04 ChatCommand
 0x18 SetPlayerPositionandRotation
 0x0A CommandSuggestionsRequest
+0x35 UseItemOn

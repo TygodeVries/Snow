@@ -1,4 +1,5 @@
 ﻿using Snow.Entities;
+using Snow.Events.Args;
 using Snow.Formats;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,8 @@ namespace Snow.Network.Packets.Login.Serverbound
             player.SpawnClient();
 
             connection.SetConnectionState(ConnectionState.PLAY);
+
+            connection.GetLobby().GetEventManager().ExecutePlayerJoin(new PlayerJoinEventArgs(player));
         }
 
         string username;

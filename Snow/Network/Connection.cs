@@ -1,4 +1,5 @@
 ﻿using Snow.Entities;
+using Snow.Events.Args;
 using Snow.Formats;
 using Snow.Levels;
 using Snow.Network.Mappings;
@@ -113,6 +114,8 @@ namespace Snow.Network
             SendLevel(lobby.GetCurrentLevel());
             SendPacket(new UpdateTime());
             SendPacket(new BlockUpdate(new Position(0, -3, 0), 1));
+
+            
         }
 
         byte[] data = new byte[0];
@@ -127,7 +130,7 @@ namespace Snow.Network
                 data = data.Concat(dataRead).ToArray();
             }
 
-            if(data.Length > 3)
+            while(data.Length > 3)
             {
                 int lenght = VarInt.FromByteArray(data, out int bytesRead);
 

@@ -1,4 +1,5 @@
 ﻿
+using Snow.Items;
 using Snow.Items.Containers;
 using Snow.Network;
 using Snow.Network.Packets.Play.Clientbound;
@@ -48,9 +49,12 @@ namespace Snow.Entities
         internal void SpawnClient()
         {
             UpdateInventory();
-
         }
 
+        public ItemStack GetItemMainInHand()
+        {
+            return inventory.GetItem(36 + GetSelectedHotbarSlot());
+        }
 
         internal int selectedHotbarSlot = 0;
         public int GetSelectedHotbarSlot()

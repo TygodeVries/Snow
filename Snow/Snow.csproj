@@ -49,8 +49,14 @@
     <Compile Include="Addons\AddonManager.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandManager.cs" />
+    <Compile Include="Events\Args\BlockPlaceEventArgs.cs" />
+    <Compile Include="Events\Args\RightClickBlockEventArgs.cs" />
+    <Compile Include="Events\Args\PlayerJoinEventArgs.cs" />
+    <Compile Include="Events\EventManager.cs" />
     <Compile Include="Items\ItemStack.cs" />
     <Compile Include="Items\ItemType.cs" />
+    <Compile Include="Levels\BlockMask.cs" />
+    <Compile Include="Levels\BlockType.cs" />
     <Compile Include="Levels\Chunks\ChunkSections\DetailedChunkSection.cs" />
     <Compile Include="Levels\Chunks\ChunkSections\SolidChunkSection.cs" />
     <Compile Include="Entities\EntityType.cs" />
@@ -129,6 +135,7 @@
     <Compile Include="Network\Packets\Play\Clientbound\UpdateRecipeBook.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\UpdateRecipes.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\UpdateTime.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\UseItemOn.cs" />
     <Compile Include="Network\PacketWriter.cs" />
     <Compile Include="Network\ClientboundPacket.cs" />
     <Compile Include="Network\ServerboundPacket.cs" />
