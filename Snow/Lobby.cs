@@ -9,6 +9,7 @@ using Snow.Addons;
 using Snow.Levels;
 using Snow.Formats;
 using Snow.Entities;
+using Snow.Server;
 namespace Snow
 {
     public class Lobby
@@ -42,6 +43,8 @@ namespace Snow
             Log.Send("Loading addons...");
             addonManager = new AddonManager(this);
             addonManager.LoadAllAddons();
+
+            SetLevel(LevelManager.GetLevel(Configuration.GetDefaultLevelName()));
 
             Log.Send("Server is running!");
             while (true)
@@ -132,11 +135,11 @@ namespace Snow
         }
         public void SpawnEntity(Entity entity)
         {
-            entities.Add(entity);
-
+            entity.SetLobby(this);
             entity.SetUUID(UUID.Random());
             entity.SetId(lastEntityId);
 
+            entities.Add(entity);
             lastEntityId++;
         }
         public Entity GetEntityWithId(int id)

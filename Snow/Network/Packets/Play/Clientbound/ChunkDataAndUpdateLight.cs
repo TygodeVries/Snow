@@ -10,16 +10,19 @@ namespace Snow.Network.Packets.Play.Clientbound
 {
     public class ChunkDataAndUpdateLight : ClientboundPacket
     {
-        Chunk chunk;
+        public int x;
+        public int z;
 
-        int x;
-        int z;
+        NbtCompoundTag heightmap;
 
-        public ChunkDataAndUpdateLight(Chunk chunk, int x, int z)
+        byte[] data;
+
+        public ChunkDataAndUpdateLight(int x, int z, NbtCompoundTag heightmap, byte[] data)
         {
-            this.chunk = chunk;
             this.x = x;
             this.z = z;
+            this.heightmap = heightmap;
+            this.data = data;
         }
 
         public override void Create(PacketWriter packetWriter)
@@ -29,12 +32,10 @@ namespace Snow.Network.Packets.Play.Clientbound
             packetWriter.WriteInt(x);
             packetWriter.WriteInt(z);
 
-            NbtCompoundTag heightmapsCompoundTag = chunk.GetHeightmaps();
-            packetWriter.WriteCompoundTag(heightmapsCompoundTag);
+            packetWriter.WriteCompoundTag(heightmap);
 
-            byte[] chunkData = chunk.GetChunkData();
-            packetWriter.WriteVarInt(chunkData.Length);
-            packetWriter.WriteByteArray(chunkData);
+            packetWriter.WriteVarInt(data.Length);
+            packetWriter.WriteByteArray(data);
 
             int BLOCK_ENTITY_COUNT = 0;
             packetWriter.WriteVarInt(BLOCK_ENTITY_COUNT);

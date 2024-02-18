@@ -37,7 +37,7 @@ namespace Snow.Entities
         private Lobby lobby;
         public void SetLobby(Lobby lobby)
         {
-
+            this.lobby = lobby;
         }
 
         public int type;

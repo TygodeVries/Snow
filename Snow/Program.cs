@@ -10,9 +10,10 @@ namespace Snow
         static void Main(string[] args)
         {
             MappingsManager.Load();
+            LevelManager.CreateDefaults();
             LevelManager.LoadAllLevels();
 
-            Lobby lobby = new Lobby(25565);
+            Lobby lobby = new Lobby(4000);
 
             Console.ReadLine();
         }

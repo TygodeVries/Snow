@@ -52,6 +52,7 @@
     <Compile Include="Levels\Chunks\ChunkSections\DetailedChunkSection.cs" />
     <Compile Include="Levels\Chunks\ChunkSections\SolidChunkSection.cs" />
     <Compile Include="Entities\EntityType.cs" />
+    <Compile Include="Levels\LevelChunk.cs" />
     <Compile Include="Levels\LevelManager.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Items\Containers\Inventory.cs" />

@@ -1,4 +1,5 @@
 ﻿using Snow.Formats;
+using Snow.Formats.Nbt;
 using Snow.Levels;
 using Snow.Network;
 using Snow.Network.Packets.Play.Clientbound;
@@ -18,7 +19,6 @@ namespace Snow.Levels
     public class Level
     {
         public int SectionsPerColumn = 24;
-        
 
         private string name;
         public void SetName(string name)
@@ -30,9 +30,69 @@ namespace Snow.Levels
             return name;
         }
 
-        public byte[] GetChunkData(int x, int z)
-        {
+        private string folder;
 
+        Dictionary<(int, int), ChunkDataAndUpdateLight> packets = new Dictionary<(int, int), ChunkDataAndUpdateLight>();
+
+        public void SendChunkToConnection(Connection connection, int x, int z)
+        {
+            if(!packets.ContainsKey((x, z)))
+            {
+                connection.SendPacket(LevelManager.GetFallbackChunkPacket(x, z));
+            }
+            else
+            {
+                connection.SendPacket(packets[(x, z)]);
+            }
+        }
+
+
+        private void BakeChunk(int x, int z)
+        {
+            string executableDirectory = Environment.CurrentDirectory;
+            string chunksDirectory = $"{executableDirectory}/{folder}/Chunks";
+            string chunkPath = $"{chunksDirectory}/{x}.{z}.chunk";
+
+            if (!File.Exists(chunkPath))
+            {
+                return;
+            }
+
+            NbtCompoundTag heightmap = new NbtCompoundTag();
+
+            NbtLongArrayTag MOTION_BLOCKING = new NbtLongArrayTag();
+            NbtLongArrayTag WORLD_SURFACE = new NbtLongArrayTag();
+            MOTION_BLOCKING.values = new long[37];
+            WORLD_SURFACE.values = new long[37];
+            heightmap.AddField("MOTION_BLOCKING", MOTION_BLOCKING);
+            heightmap.AddField("WORLD_SURFACE", WORLD_SURFACE);
+
+            byte[] data;
+        
+            data = File.ReadAllBytes(chunkPath);
+
+            ChunkDataAndUpdateLight packet = new ChunkDataAndUpdateLight(x, z, heightmap, data);
+            packets.Add((x, z), packet);
+        }
+
+        public void Bake()
+        {
+            int size = 7;
+
+            int chunkCount = size * size;
+
+            for (int x = -size; x < size; x++)
+            {
+                for (int z = -size; z < size; z++)
+                {
+                    BakeChunk(x, z);
+                }
+            }
+        }
+
+        public Level(string path)
+        {
+            this.folder = path;
         }
     }
 }

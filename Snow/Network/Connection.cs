@@ -55,7 +55,13 @@ namespace Snow.Network
         }
         public void SendLevel(Level level)
         {
-            throw new NotImplementedException();
+            for(int x = -7; x < 7; x++)
+            {
+                for (int z = -7; z < 7; z++)
+                {
+                    level.SendChunkToConnection(this, x, z);
+                }
+            }
         }
         public void SendChunk(int x, int z, Chunk chunk)
         {
