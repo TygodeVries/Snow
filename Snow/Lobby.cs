@@ -10,11 +10,18 @@ using Snow.Levels;
 using Snow.Formats;
 using Snow.Entities;
 using Snow.Server;
+using Snow.Commands;
 namespace Snow
 {
     public class Lobby
     {
         TcpListener tcpListener;
+
+        private CommandManager commandManager;
+        public CommandManager GetCommandManager()
+        {
+            return commandManager;
+        }
 
         private List<Connection> playerConnections;
         public List<Connection> GetPlayerConnections()
@@ -40,11 +47,12 @@ namespace Snow
         {
             tcpListener.Start();
 
+            commandManager = new CommandManager();
+            SetLevel(LevelManager.GetLevel(Configuration.GetDefaultLevelName()));
+
             Log.Send("Loading addons...");
             addonManager = new AddonManager(this);
             addonManager.LoadAllAddons();
-
-            SetLevel(LevelManager.GetLevel(Configuration.GetDefaultLevelName()));
 
             Log.Send("Server is running!");
             while (true)

@@ -51,6 +51,7 @@ namespace Snow.Addons
                 Type type = assembly.GetType(startingClassName);
 
                 Addon addon = (Addon)Activator.CreateInstance(type);
+                addon.SetAddonManager(this);
                 Log.Send($"[Addons] Loaded addon '{name}' version '{version}' by '{author}'.");
                 addons.Add(addon);
                 addon.Start();
@@ -68,9 +69,9 @@ namespace Snow.Addons
             }
         }
 
-        public AddonManager(Lobby server)
+        public AddonManager(Lobby lobby)
         {
-
+            this.lobby = lobby;
         }
 
         public void StopAll()

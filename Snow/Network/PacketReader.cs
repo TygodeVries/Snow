@@ -81,6 +81,20 @@ namespace Snow.Network
             return value;
         }
 
+        public long ReadLong()
+        {
+            byte[] item = new byte[8];
+            Array.Copy(data, pointer, item, 0, 8);
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(item);
+            }
+            long value = BitConverter.ToInt64(item, 0);
+
+            pointer += 8;
+            return value;
+        }
+
         public float ReadFloat()
         {
             byte[] item = new byte[4];

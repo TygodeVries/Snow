@@ -69,7 +69,7 @@ namespace Snow.Network
         }
 
         private Player entity = null;
-        public Player GetEntity()
+        public Player GetPlayer()
         {
             return entity;
         }
@@ -95,7 +95,7 @@ namespace Snow.Network
             SendPacket(new PlayerAbilities());
             SendPacket(new SetHeldItem(0x00));
             SendPacket(new UpdateRecipes());
-            SendPacket(new Commands());
+            SendPacket(new Snow.Network.Packets.Play.Clientbound.Commands());
             SendPacket(new UpdateRecipeBook());
             SendPacket(new SynchronizePlayerPosition(0, 0, 0, 0, 0));
             SendPacket(new PlayerInfoUpdate(0x00, player.GetUUID()));

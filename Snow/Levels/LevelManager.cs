@@ -55,10 +55,9 @@ namespace Snow.Levels
             defaultChunkPacket = new ChunkDataAndUpdateLight(0, 0, heightmap, bytes);
         }
 
-        static byte[] defaultChunkData;
         static ChunkDataAndUpdateLight defaultChunkPacket;
 
-        public static ChunkDataAndUpdateLight GetFallbackChunkPacket(int x, int z)
+        internal static ChunkDataAndUpdateLight GetFallbackChunkPacket(int x, int z)
         {
             defaultChunkPacket.x = x;
             defaultChunkPacket.z = z;
@@ -87,7 +86,6 @@ namespace Snow.Levels
                 level.Bake();
                 long end = GC.GetTotalMemory(true);
 
-                Log.Send($"Mem size = {end - start} bytes.");
 
                 Log.Send($"[Level] Loaded level named '{name}'.");
             } catch (Exception ex)

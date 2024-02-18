@@ -37,3 +37,4 @@ $ Play
 0x3F UpdateRecipeBook
 0x73 UpdateRecipes
 0x62 UpdateTime
+0x10 CommandSuggestionsResponse

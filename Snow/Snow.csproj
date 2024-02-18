@@ -47,6 +47,8 @@
   <ItemGroup>
     <Compile Include="Addons\Addon.cs" />
     <Compile Include="Addons\AddonManager.cs" />
+    <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="Items\ItemStack.cs" />
     <Compile Include="Items\ItemType.cs" />
     <Compile Include="Levels\Chunks\ChunkSections\DetailedChunkSection.cs" />
@@ -83,11 +85,14 @@
     <Compile Include="Network\PacketReader.cs" />
     <Compile Include="Network\Packets\Handshake\Serverbound\Handshake.cs" />
     <Compile Include="Network\Packets\Login\Serverbound\LoginStart.cs" />
+    <Compile Include="Network\Packets\Play\Clientbound\CommandSuggestionsResponse.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\Disconnect.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\RemoveEntities.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\SpawnEntity.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\TeleportEntity.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\UpdateEntityPosition.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\ChatCommand.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\CommandSuggestionsRequest.cs" />
     <Compile Include="Network\Packets\Play\Serverbound\Interact.cs" />
     <Compile Include="Network\Packets\Play\Serverbound\SetHeldItem.cs" />
     <Compile Include="Network\Packets\Play\Serverbound\SetPlayerPosition.cs" />
