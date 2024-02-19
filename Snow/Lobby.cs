@@ -12,7 +12,6 @@ using Snow.Entities;
 using Snow.Server;
 using Snow.Commands;
 using Snow.Events;
-using System.Reflection;
 using Snow.Events.Args;
 using Snow.Items;
 namespace Snow
@@ -114,6 +113,9 @@ namespace Snow
         {
             ItemStack itemStack = e.GetPlayer().GetItemMainInHand();
             if (itemStack == null)
+                return;
+
+            if (e.insideBlock)
                 return;
 
             if(itemStack.GetItemType().IsBlock)

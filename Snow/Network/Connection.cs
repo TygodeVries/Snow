@@ -64,11 +64,7 @@ namespace Snow.Network
                 }
             }
         }
-        public void SendChunk(int x, int z, Chunk chunk)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         private Player entity = null;
         public Player GetPlayer()
         {

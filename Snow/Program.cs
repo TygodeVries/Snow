@@ -9,6 +9,7 @@ namespace Snow
     {
         static void Main(string[] args)
         {
+
             MappingsManager.Load();
             LevelManager.CreateDefaults();
             LevelManager.LoadAllLevels();

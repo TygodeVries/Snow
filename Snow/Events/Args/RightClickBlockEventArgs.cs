@@ -25,12 +25,15 @@ namespace Snow.Events.Args
         private int hand;
         public int GetHand() { return hand; }
 
-        public RightClickBlockEventArgs(Player player, Position clickedBlock, int clickedface, int hand)
+        public bool insideBlock;
+
+        public RightClickBlockEventArgs(Player player, Position clickedBlock, int clickedface, int hand, bool insideBlock)
         {
             this.player = player;
             this.clickedBlock = clickedBlock;
             this.hand = hand;
             this.clickedface = clickedface;
+            this.insideBlock = insideBlock;
         }
     }
 }

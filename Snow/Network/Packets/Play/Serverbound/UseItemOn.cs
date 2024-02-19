@@ -44,7 +44,7 @@ namespace Snow.Network.Packets.Play.Serverbound
 
         public override void Use(Connection connection)
         {
-            connection.GetLobby().GetEventManager().ExecuteRightClickBlock(new RightClickBlockEventArgs(connection.GetPlayer(), location, face, hand));
+            connection.GetLobby().GetEventManager().ExecuteRightClickBlock(new RightClickBlockEventArgs(connection.GetPlayer(), location, face, hand, insideBlock));
         }
     }
 }
