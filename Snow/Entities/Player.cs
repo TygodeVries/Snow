@@ -39,7 +39,7 @@ namespace Snow.Entities
 
         public void UpdateInventory()
         {
-            ClientboundPacket clientboundPacket = new SetContainerContent(0x00, inventory);
+            ClientboundPacket clientboundPacket = new SetContainerContentPacket(0x00, inventory);
             connection.SendPacket(clientboundPacket);
         }
        

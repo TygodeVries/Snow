@@ -83,11 +83,19 @@ namespace Snow.Network
 
         public Position ReadPosition()
         {
-            long l = ReadLong();
-
-            Position position = Position.FromLong(l);
+            byte[] bytes = ReadBytes(8);
+            Position position = Position.FromByteArray(bytes);
 
             return position;
+        }
+
+        public byte[] ReadBytes(int amount)
+        {
+            byte[] item = new byte[amount];
+            Array.Copy(data, pointer, item, 0, 8);
+            pointer += amount;
+
+            return item;
         }
 
         public long ReadLong()

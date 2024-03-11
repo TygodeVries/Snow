@@ -3,6 +3,7 @@ using System.Threading;
 using Snow.Addons;
 using Snow.Levels;
 using Snow.Network.Mappings;
+using Snow.Servers;
 namespace Snow
 {
     internal class Program
@@ -11,10 +12,8 @@ namespace Snow
         {
 
             MappingsManager.Load();
-            LevelManager.CreateDefaults();
-            LevelManager.LoadAllLevels();
 
-            Lobby lobby = new Lobby(4000);
+            Server lobby = new Server(4000);
 
             Console.ReadLine();
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Snow.Servers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,10 +13,10 @@ namespace Snow.Addons
 {
     public class AddonManager
     {
-        private Lobby lobby;
-        public Lobby GetLobby()
+        private Server server;
+        public Server GetServer()
         {
-            return lobby;
+            return server;
         }
 
         public void LoadAllAddons()
@@ -69,9 +70,9 @@ namespace Snow.Addons
             }
         }
 
-        public AddonManager(Lobby lobby)
+        public AddonManager(Server server)
         {
-            this.lobby = lobby;
+            this.server = server;
         }
 
         public void StopAll()

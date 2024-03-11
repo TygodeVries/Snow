@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Snow.Servers;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -20,9 +21,9 @@ namespace Snow.Addons
             this.addonManager = addonManager;
         }
 
-        public Lobby GetLobby()
+        public Server GetServer()
         {
-            return addonManager.GetLobby();
+            return addonManager.GetServer();
         }
         public virtual void Start() { }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,7 +28,7 @@ namespace Snow.Formats
             if (face == 1) position.y += 1;
 
             if(face == 2) position.z -= 1;
-            if (face == 3) position.y += 1;
+            if (face == 3) position.z += 1;
 
             if (face == 4) position.x -= 1;
             if (face == 5) position.x += 1;
@@ -55,23 +56,27 @@ namespace Snow.Formats
             return byteArray;
         }
 
-        public static Position FromLong(long l)
+        public static Position FromByteArray(byte[] bytes)
         {
-            int x = (int)(l >> 38);
-            int z = (int)((l >> 12) & 0x3FFFFFF);
-            int y = (int)(l & 0xFFF);
+            Array.Reverse(bytes);
 
-            x = SignExtend(x, 26);
-            z = SignExtend(z, 26);
-            y = SignExtend(y, 12);
+            long val = BitConverter.ToInt64(bytes, 0);
+            int x, y, z;
+            DecodePosition(val, out x, out y, out z);
 
             return new Position(x, y, z);
         }
 
-        static int SignExtend(int value, int bitCount)
+        static void DecodePosition(long val, out int x, out int y, out int z)
         {
-            int signBit = value & (1 << (bitCount - 1));
-            return (signBit != 0) ? (value | (~0 << bitCount)) : value;
+            x = (int)(val >> 38);
+            y = (int)((val & 0xFFF) << 52 >> 52);
+            z = (int)((val << 26) >> 38);
+
+            // Adjust for sign extension
+            if (x >= 1 << 25) x -= 1 << 26;
+            if (y >= 1 << 11) y -= 1 << 12;
+            if (z >= 1 << 25) z -= 1 << 26;
         }
     }
 }

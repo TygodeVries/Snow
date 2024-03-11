@@ -1,5 +1,7 @@
 ﻿using Snow.Formats;
 using Snow.Network.Packets.Play.Clientbound;
+using Snow.Servers;
+using Snow.Worlds;
 using System;
 namespace Snow.Entities
 {
@@ -29,15 +31,28 @@ namespace Snow.Entities
         private double y;
         private double z;
 
+        public World GetWorld()
+        {
+            return world;
+        }
+
+        World world;
+
+        internal void SetWorld(World world)
+        {
+            this.world = world;
+        }
+
         public Vector GetLocation()
         {
             return new Vector(x, y, z);
         }
 
-        private Lobby lobby;
-        public void SetLobby(Lobby lobby)
+        Server server;
+
+        public void SetServer(Server server)
         {
-            this.lobby = lobby;
+            this.server = server;
         }
 
         public int type;
@@ -56,14 +71,15 @@ namespace Snow.Entities
             }
         }
 
+
         private void MoveClose(float deltaX, float deltaY, float deltaZ)
         {
             short encodedDeltaX = (short) (4095.875 * deltaX);
             short encodedDeltaY = (short)(4095.875 * deltaY);
             short encodedDeltaZ = (short)(4095.875 * deltaZ);
 
-            UpdateEntityPosition updateEntityPosition = new UpdateEntityPosition(this, encodedDeltaX, encodedDeltaY, encodedDeltaZ);
-            lobby.BroadcastPacket(updateEntityPosition);
+            UpdateEntityPositionPacket updateEntityPosition = new UpdateEntityPositionPacket(this, encodedDeltaX, encodedDeltaY, encodedDeltaZ);
+            server.BroadcastPacket(updateEntityPosition);
 
             this.x += deltaX;
             this.y += deltaY;
@@ -72,8 +88,8 @@ namespace Snow.Entities
 
         private void MoveFar(double x, double y, double z, float yaw, float pitch)
         {
-            TeleportEntity teleportEntity = new TeleportEntity(this, x, y, z, yaw, pitch);
-            lobby.BroadcastPacket(teleportEntity);
+            TeleportEntityPacket teleportEntity = new TeleportEntityPacket(this, x, y, z, yaw, pitch);
+            server.BroadcastPacket(teleportEntity);
 
             this.x = x;
             this.y = y;

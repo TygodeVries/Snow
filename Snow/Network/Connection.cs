@@ -6,6 +6,8 @@ using Snow.Network.Mappings;
 using Snow.Network.Packets.Configuration.Clientbound;
 using Snow.Network.Packets.Login.Clientbound;
 using Snow.Network.Packets.Play.Clientbound;
+using Snow.Servers;
+using Snow.Worlds;
 using System;
 using System.Linq;
 using System.Net.Sockets;
@@ -25,9 +27,9 @@ namespace Snow.Network
         }
 
         TcpClient client;
-        public Connection(Lobby lobby, TcpClient client)
+        public Connection(Server server, TcpClient client)
         {
-            this.lobby = lobby;
+            this.server = server;
             this.client = client;
         }
 
@@ -47,21 +49,11 @@ namespace Snow.Network
         {
             try
             {
-                client.GetStream().Write(data, 0, data.Length);
+                client.GetStream().WriteAsync(data, 0, data.Length);
             }
             catch (Exception e)
             {
                     
-            }
-        }
-        public void SendLevel(Level level)
-        {
-            for(int x = -7; x < 7; x++)
-            {
-                for (int z = -7; z < 7; z++)
-                {
-                    level.SendChunkToConnection(this, x, z);
-                }
             }
         }
         
@@ -71,48 +63,69 @@ namespace Snow.Network
             return entity;
         }
 
-        private Lobby lobby;
-        public Lobby GetLobby()
+        private Server server;
+        public Server GetServer()
         {
-            return lobby;
+            return server;
         }
 
-        internal void Connect(Lobby lobby, Player player)
+        internal void Connect(Server lobby, Player player)
         {
             this.entity = player;   
 
-            SendPacket(new LoginSuccess(player.GetUUID(), player.GetName()));
+            SendPacket(new LoginSuccessPacket(player.GetUUID(), player.GetName()));
 
-            SendPacket(new FeatureFlags());
-            SendPacket(new RegistryData());
-            SendPacket(new FinishConfiguration());
+            SendPacket(new FeatureFlagsPacket());
+            SendPacket(new RegistryDataPacket());
+            SendPacket(new FinishConfigurationPacket());
 
-            SendPacket(new Login(player));
-            SendPacket(new ChangeDifficulty(0x00, false));
-            SendPacket(new PlayerAbilities());
-            SendPacket(new SetHeldItem(0x00));
-            SendPacket(new UpdateRecipes());
-            SendPacket(new Snow.Network.Packets.Play.Clientbound.Commands());
-            SendPacket(new UpdateRecipeBook());
-            SendPacket(new SynchronizePlayerPosition(0, 0, 0, 0, 0));
-            SendPacket(new PlayerInfoUpdate(0x00, player.GetUUID()));
-            SendPacket(new InitializeWorldBorder());
-            SendPacket(new UpdateTime());
-            SendPacket(new SetDefaultSpawnPosition());
-            SendPacket(new GameEvent(0x0D, 0));
-            SendPacket(new SetTickingState());
-            SendPacket(new StepTick());
-            SendPacket(new SetCenterChunk(0, 0));
-            SendPacket(new UpdateAttributes());
-            SendPacket(new UpdateAdvancements());
-            SendPacket(new SetHealth());
-            SendPacket(new SetExperience(0, 0, 0));
-            SendLevel(lobby.GetCurrentLevel());
-            SendPacket(new UpdateTime());
-            SendPacket(new BlockUpdate(new Position(0, -3, 0), 1));
+            SendPacket(new LoginPacket(player));
+            SendPacket(new ChangeDifficultyPacket(0x00, false));
+            SendPacket(new PlayerAbilitiesPacket());
+            SendPacket(new SetHeldItemPacket(0x00));
+            SendPacket(new UpdateRecipesPacket());
+            SendPacket(new Snow.Network.Packets.Play.Clientbound.CommandsPacket());
+            SendPacket(new UpdateRecipeBookPacket());
+            SendPacket(new SynchronizePlayerPositionPacket(0, 0, 0, 0, 0));
+            SendPacket(new PlayerInfoUpdatePacket(0x00, player.GetUUID()));
+            SendPacket(new InitializeWorldBorderPacket());
+            SendPacket(new UpdateTimePacket());
+            SendPacket(new SetDefaultSpawnPositionPacket());
+            SendPacket(new GameEventPacket(0x0D, 0));
+            SendPacket(new SetTickingStatePacket());
+            SendPacket(new StepTickPacket());
+            SendPacket(new SetCenterChunkPacket(0, 0));
+            SendPacket(new UpdateAttributesPacket());
+            SendPacket(new UpdateAdvancementsPacket());
+            SendPacket(new SetHealthPacket());
+            SendPacket(new SetExperiencePacket(0, 0, 0));
+
+            SendRenderDistance(player.GetWorld(), 7);
+
+            SendPacket(new UpdateTimePacket());
+            SendPacket(new BlockUpdatePacket(new Position(0, -3, 0), 1));
 
             
         }
+
+        public void SendRenderDistance(World world, int distance)
+        {
+            for(int x = -distance; x < distance; x++)
+            {
+                for (int z = -distance; z < distance; z++)
+                {
+                    Chunk chunk = world.GetChunk((x, z));
+                    SendChunk(chunk);
+                }
+            }
+        }
+
+        public void SendChunk(Chunk chunk)
+        {
+            ChunkDataAndUpdateLightPacket packet = chunk.CreatePacket();
+            SendPacket(packet);
+        }
+
 
         byte[] data = new byte[0];
         internal void ReadPackets()

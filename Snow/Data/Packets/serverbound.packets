@@ -1,13 +1,13 @@
 $ Handshake
-0x00 Handshake
+0x00 HandshakePacket
 
 $ Login
-0x00 LoginStart
+0x00 LoginStartPacket
 
 $ Play
-0x2C SetHeldItem
-0x17 SetPlayerPosition
-0x04 ChatCommand
-0x18 SetPlayerPositionandRotation
-0x0A CommandSuggestionsRequest
-0x35 UseItemOn
+0x2C SetHeldItemPacket
+0x17 SetPlayerPositionPacket
+0x04 ChatCommandPacket
+0x18 SetPlayerPositionandRotationPacket
+0x0A CommandSuggestionsRequestPacket
+0x35 UseItemOnPacket
