@@ -1,4 +1,6 @@
-﻿using Snow.Formats;
+﻿using Snow.Events;
+using Snow.Formats;
+using Snow.Items;
 using Snow.Network.Packets.Play.Clientbound;
 using Snow.Servers;
 using Snow.Worlds;
@@ -27,13 +29,31 @@ namespace Snow.Entities
             return id;
         }
 
-        private double x;
-        private double y;
-        private double z;
+        private double x = 0;
+        private double y = 0;
+        private double z = 0;
+
+        private int pitch;
+        private int yaw;
+
+        public int GetPitch()
+        {
+            return pitch;
+        }
+
+        public int GetYaw()
+        {
+            return yaw;
+        }
 
         public World GetWorld()
         {
             return world;
+        }
+
+        public Vector3 GetPosistion()
+        {
+            return new Vector3(x, y, z);
         }
 
         World world;
@@ -43,9 +63,9 @@ namespace Snow.Entities
             this.world = world;
         }
 
-        public Vector GetLocation()
+        public Vector3 GetLocation()
         {
-            return new Vector(x, y, z);
+            return new Vector3(x, y, z);
         }
 
         Server server;
@@ -55,45 +75,32 @@ namespace Snow.Entities
             this.server = server;
         }
 
+        public void Remove()
+        {
+            int[] ids = new int[] { this.id };
+            RemoveEntitiesPacket removeEntitiesPacket = new RemoveEntitiesPacket(ids);
+            GetWorld().RemoveFromEntities(this);
+        }
+
         public int type;
 
-        public void Teleport(double x, double y, double z)
+        public void Teleport(World world, double x, double y, double z, int yaw, int pitch)
         {
-            float distance = (float)Math.Sqrt((x - this.x) * (x - this.x) + (y - this.y) * (y - this.y) + (z - this.z) * (z - this.z));
-
-            if(distance < -1)
-            {
-                MoveClose((float) (x - this.x), (float) (y - this.y), (float) (z - this.z));
-            }
-            else
-            {
-                MoveFar(x, y, z, 0, 0);
-            }
-        }
-
-
-        private void MoveClose(float deltaX, float deltaY, float deltaZ)
-        {
-            short encodedDeltaX = (short) (4095.875 * deltaX);
-            short encodedDeltaY = (short)(4095.875 * deltaY);
-            short encodedDeltaZ = (short)(4095.875 * deltaZ);
-
-            UpdateEntityPositionPacket updateEntityPosition = new UpdateEntityPositionPacket(this, encodedDeltaX, encodedDeltaY, encodedDeltaZ);
-            server.BroadcastPacket(updateEntityPosition);
-
-            this.x += deltaX;
-            this.y += deltaY;
-            this.z += deltaZ;
-        }
-
-        private void MoveFar(double x, double y, double z, float yaw, float pitch)
-        {
-            TeleportEntityPacket teleportEntity = new TeleportEntityPacket(this, x, y, z, yaw, pitch);
-            server.BroadcastPacket(teleportEntity);
-
             this.x = x;
             this.y = y;
             this.z = z;
+            this.yaw = yaw;
+            this.pitch = pitch;
+
+            if (OnEntityMove != null) 
+                OnEntityMove.Invoke(this, new OnEntityMoveArgs(world, new Vector3(x, y, z)));
+            SetWorld(world);
+           
+
+
+            world.BroadcastPacket(new TeleportEntityPacket(this, x, y, z, yaw, pitch));
         }
+
+        public EventHandler<OnEntityMoveArgs> OnEntityMove;
     }
 }

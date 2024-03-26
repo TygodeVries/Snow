@@ -11,10 +11,11 @@ using Snow.Formats;
 using Snow.Entities;
 using Snow.Commands;
 using Snow.Events;
-using Snow.Events.Args;
 using Snow.Items;
 using Snow.Worlds;
 using Snow.Worlds.Generator;
+using System.IO;
+using System.Diagnostics.Tracing;
 
 namespace Snow.Servers
 {
@@ -34,42 +35,70 @@ namespace Snow.Servers
             return playerConnections;
         }
 
-        public Server(int port)
+        private Configuration configuration;
+        public Configuration GetConfiguration()
         {
+            return configuration;
+        }
+
+        string path;
+        public string GetWorkPath()
+        {
+            return path;
+        }
+
+        public Server(int port, string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            this.path = path;
             tcpListener = new TcpListener(IPAddress.Any, port);
             playerConnections = new List<Connection>();
             entities = new List<Entity>();
-            eventManager = new EventManager();
+
+            configuration = new Configuration($"{GetWorkPath()}/Server.json", "Data/SettingsTemplates/server.json");
+
+            CreateWorlds();
 
             Thread thread = new Thread(this.LobbyThread);
             thread.Start();
         }
 
-        public void SetBlockAt(int x, int y, int z, BlockType blockType)
+        private void CreateWorlds()
         {
-            SetBlockAt(x, y, z, blockType, null);
-        }
+            Directory.CreateDirectory($"{GetWorkPath()}/Worlds");
 
-        public void SetBlockAt(int x, int y, int z, BlockType blockType, Player player)
-        {
-            GetEventManager().ExecuteBlockPlace(new BlockPlaceEventArgs(player, new Position(x, y, z)));
+            foreach (string worldName in GetConfiguration().GetStringArray("worlds"))
+            {
+                string worldDir = $"{GetWorkPath()}/Worlds/{worldName}";
 
+                if (!Directory.Exists(worldDir))
+                {
+                    Directory.CreateDirectory(worldDir);
+                }
+
+                new World(worldName, this);
+            }
         }
 
         public void Stop()
         {
             addonManager.StopAll();
         }
+
+
         private void LobbyThread()
         {
+
+            addonManager = new AddonManager(this);
+            addonManager.LoadAllAddons();
+
             tcpListener.Start();
 
             commandManager = new CommandManager();
-
-            world = new World("Test World", this);
-            world.SetWorldGenerator(new FlatGenerator());
-
-            GetEventManager().RightClickBlock += BlockPlaceAttempt;
 
             Log.Send("Server is running!");
             while (true)
@@ -82,33 +111,11 @@ namespace Snow.Servers
                 // Wait until the next tick can be run.
                 double mspt = DateTime.Now.Subtract(startTime).TotalMilliseconds;
                 if ((int)(50 - mspt) > 0)
+                {
+                    Console.Title = $"MSPT: {mspt}";
                     Thread.Sleep((int)(50 - mspt));
+                }
             }
-        }
-
-        private void BlockPlaceAttempt(object sender, RightClickBlockEventArgs e)
-        {
-            ItemStack itemStack = e.GetPlayer().GetItemMainInHand();
-            if (itemStack == null)
-                return;
-
-            if (e.insideBlock)
-                return;
-
-            if(itemStack.GetItemType().IsBlock)
-            {
-                int face = e.GetClickedFace();
-
-                Position blockPos = e.GetClickedBlock().GetAdjacent(face);
-                GetEventManager().ExecuteBlockPlace(new BlockPlaceEventArgs(e.GetPlayer(), blockPos));
-            }
-
-        }
-
-        private EventManager eventManager;
-        public EventManager GetEventManager()
-        {
-            return eventManager;
         }
 
         long tickCount = 0;
@@ -124,14 +131,17 @@ namespace Snow.Servers
             AcceptNewClients();
             SendKeepAlive();
             ReadPackets();
+            GetAddonManager().Tick();
         }
+
+
         internal void SendKeepAlive()
         {
             if (GetTick() % 40 == 0)
             {
                 foreach (Connection player in playerConnections)
                 {
-                    player.SendPacket(new UpdateTimePacket());
+                    player.SendPacket(new KeepAlivePacket(10));
                 }
             }
         }
@@ -159,10 +169,16 @@ namespace Snow.Servers
             return addonManager;
         }
 
-        private World world;
-        public World GetWorld()
+
+        internal void AddWorld(World world)
         {
-            return world;
+            worlds.Add(world.GetName(), world);
+        }
+
+        private Dictionary<string, World> worlds = new Dictionary<string, World>();
+        public World GetWorld(string name)
+        {
+            return worlds[name];
         }
 
         private List<Entity> entities;
@@ -186,6 +202,11 @@ namespace Snow.Servers
 
         private int lastEntityId = 0;
 
+        public World GetDefaultWorld()
+        {
+            return GetWorld(GetConfiguration().GetString("default-world"));
+        }
+
         public void BroadcastPacket(ClientboundPacket clientboundPacket)
         {
             foreach(Connection connection in GetPlayerConnections())
@@ -193,5 +214,7 @@ namespace Snow.Servers
                 connection.SendPacket(clientboundPacket);
             }
         }
+
+        public EventHandler<OnPlayerJoinArgs> OnPlayerJoin;
     }
 }

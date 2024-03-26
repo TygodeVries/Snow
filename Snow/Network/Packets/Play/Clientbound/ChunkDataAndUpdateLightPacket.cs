@@ -1,10 +1,5 @@
 ﻿using Snow.Formats.Nbt;
-using Snow.Levels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
@@ -40,13 +35,51 @@ namespace Snow.Network.Packets.Play.Clientbound
             int BLOCK_ENTITY_COUNT = 0;
             packetWriter.WriteVarInt(BLOCK_ENTITY_COUNT);
 
-            byte[] light_flags = new byte[] { 0x00, 0x00, 0x00, 0x00 };
-            packetWriter.WriteByteArray(light_flags);
 
-            int SKYLIGHT = 0;
-            int BLOCKLIGHT = 0;
-            packetWriter.WriteVarInt(SKYLIGHT);
-            packetWriter.WriteVarInt(BLOCKLIGHT);
+            /*
+             *  Masks
+             */
+            BitArray skyLight = new BitArray(24 + 2);
+            skyLight.SetAll(true);
+            packetWriter.WriteBitArray(skyLight);
+
+
+            // Copy for blocks
+            packetWriter.WriteBitArray(skyLight);
+
+
+            BitArray skyLightEmpty = new BitArray(24 + 2);
+            skyLightEmpty.SetAll(false);
+            packetWriter.WriteBitArray(skyLightEmpty);
+
+
+            // Copy for blocks
+            packetWriter.WriteBitArray(skyLightEmpty);
+
+            /*
+             * Light
+             */
+            packetWriter.WriteVarInt(24 + 2);
+            for (int i = 0; i < 24 + 2; i++)
+            {
+                packetWriter.WriteVarInt(2048);
+                byte[] bytes = new byte[2048];
+                for (int j = 0; j < 2048; j++)
+                    bytes[j] = (byte)0xFF;
+                packetWriter.WriteByteArray(bytes);
+            }
+
+
+            // Copy for blocks
+            packetWriter.WriteVarInt(24 + 2);
+            for (int i = 0; i < 24 + 2; i++)
+            {
+                packetWriter.WriteVarInt(2048);
+                byte[] bytes = new byte[2048];
+                for (int j = 0; j < 2048; j++)
+                    bytes[j] = (byte)0xFF;
+                packetWriter.WriteByteArray(bytes);
+            }
         }
     }
 }

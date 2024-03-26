@@ -1,5 +1,5 @@
 ﻿using Snow.Entities;
-using Snow.Events.Args;
+using Snow.Events;
 using Snow.Formats;
 using Snow.Servers;
 using System;
@@ -17,18 +17,17 @@ namespace Snow.Network.Packets.Login.Serverbound
             Player player = new Player(connection);
 
             Server server = connection.GetServer();
-            server.GetWorld().SpawnEntity(player);
+            server.GetDefaultWorld().SpawnEntity(player);
 
             player.SetName(this.username);
 
             Log.Send($"{username} joined the server!");
 
             connection.Connect(server, player);
-            player.SpawnClient();
-
             connection.SetConnectionState(ConnectionState.PLAY);
 
-            connection.GetServer().GetEventManager().ExecutePlayerJoin(new PlayerJoinEventArgs(player));
+            player.SyncClient();
+
         }
 
         string username;

@@ -1,5 +1,5 @@
 ﻿using Snow.Entities;
-using Snow.Events.Args;
+using Snow.Events;
 using Snow.Formats;
 using System;
 using System.Collections.Generic;
@@ -44,7 +44,8 @@ namespace Snow.Network.Packets.Play.Serverbound
 
         public override void Use(Connection connection)
         {
-            connection.GetServer().GetEventManager().ExecuteRightClickBlock(new RightClickBlockEventArgs(connection.GetPlayer(), location, face, hand, insideBlock));
+            connection.GetPlayer().OnUseItem.Invoke(this,
+                new OnUseItemsArgs(connection.GetPlayer(), location, face, insideBlock));
         }
     }
 }

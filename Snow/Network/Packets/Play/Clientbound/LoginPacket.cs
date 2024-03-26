@@ -29,8 +29,10 @@ namespace Snow.Network.Packets.Play.Clientbound
             packetWriter.WriteString("minecraft:overworld");
 
             packetWriter.WriteVarInt(10);
-            packetWriter.WriteVarInt(5);
-            packetWriter.WriteVarInt(5);
+
+            int viewDistance = 10;
+            packetWriter.WriteVarInt(viewDistance);
+            packetWriter.WriteVarInt(viewDistance);
 
             packetWriter.WriteBool(false);
             packetWriter.WriteBool(false);

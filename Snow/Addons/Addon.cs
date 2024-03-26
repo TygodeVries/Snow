@@ -28,5 +28,13 @@ namespace Snow.Addons
         public virtual void Start() { }
 
         public virtual void Stop() { }
+
+        public virtual void Update() { }
+        
+        internal string dataPath;
+        public string GetDataPath()
+        {
+            return dataPath;
+        }
     }
 }

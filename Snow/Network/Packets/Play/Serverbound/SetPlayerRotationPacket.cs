@@ -1,30 +1,21 @@
-﻿using Snow.Formats;
+﻿using Snow.Entities;
+using Snow.Formats;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Snow.Network.Packets.Play.Serverbound
 {
-    public class SetPlayerPositionandRotationPacket : ServerboundPacket
+    internal class SetPlayerRotationPacket : ServerboundPacket
     {
-        double x;
-        double y;
-        double z;
-
         float yaw;
         float pitch;
-
         bool onGround;
 
         public override void Decode(PacketReader packetReader)
         {
-            x = packetReader.ReadDouble();
-            y = packetReader.ReadDouble();
-            z = packetReader.ReadDouble();
-
             yaw = packetReader.ReadFloat();
             pitch = packetReader.ReadFloat();
 
@@ -33,7 +24,10 @@ namespace Snow.Network.Packets.Play.Serverbound
 
         public override void Use(Connection connection)
         {
-            connection.GetPlayer().Teleport(connection.GetPlayer().GetWorld(), x, y, z, 0, 0);
+            Player player = connection.GetPlayer();
+            Vector3 position = player.GetPosistion();
+
+            player.Teleport(connection.GetPlayer().GetWorld(), position.x, position.y, position.z, 0, 0);
         }
     }
 }

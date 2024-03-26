@@ -6,6 +6,7 @@ using Snow.Network.Packets.Play.Clientbound;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Snow.Worlds
 {
@@ -53,6 +54,7 @@ namespace Snow.Worlds
 
             return data[index];
         }
+
 
         public ChunkDataAndUpdateLightPacket CreatePacket()
         {

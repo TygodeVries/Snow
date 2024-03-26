@@ -49,20 +49,23 @@
     <Compile Include="Addons\AddonManager.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandManager.cs" />
-    <Compile Include="Events\Args\BlockPlaceEventArgs.cs" />
-    <Compile Include="Events\Args\RightClickBlockEventArgs.cs" />
-    <Compile Include="Events\Args\PlayerJoinEventArgs.cs" />
-    <Compile Include="Events\EventManager.cs" />
+    <Compile Include="Events\OnBlockPlaceArgs.cs" />
+    <Compile Include="Events\OnEntityMoveArgs.cs" />
+    <Compile Include="Events\OnPlayerJoinArgs.cs" />
+    <Compile Include="Events\OnUseItemsArgs.cs" />
+    <Compile Include="Formats\AngleUtils.cs" />
+    <Compile Include="Formats\BitSet.cs" />
+    <Compile Include="Formats\TextComponent.cs" />
+    <Compile Include="Formats\Vector2.cs" />
     <Compile Include="Items\ItemStack.cs" />
     <Compile Include="Items\ItemType.cs" />
     <Compile Include="Formats\BlockType.cs" />
     <Compile Include="Entities\EntityType.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Items\Containers\Inventory.cs" />
-    <Compile Include="Formats\Vector.cs" />
+    <Compile Include="Formats\Vector3.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Player.cs" />
-    <Compile Include="Formats\BitSet.cs" />
     <Compile Include="Formats\Chat.cs" />
     <Compile Include="Formats\Identifier.cs" />
     <Compile Include="Formats\Nbt\NbtCompoundTag.cs" />
@@ -80,6 +83,9 @@
     <Compile Include="Formats\UUID.cs" />
     <Compile Include="Formats\VarInt.cs" />
     <Compile Include="Formats\VarLong.cs" />
+    <Compile Include="Network\Packets\Play\Clientbound\KeepAlivePacket.cs" />
+    <Compile Include="Network\Packets\Play\Clientbound\UnloadChunkPacket.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\SetPlayerRotationPacket.cs" />
     <Compile Include="Servers\Server.cs" />
     <Compile Include="Network\PacketReader.cs" />
     <Compile Include="Network\Packets\Handshake\Serverbound\HandshakePacket.cs" />
@@ -144,6 +150,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Data\SettingsTemplates\server.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Data\Packets\clientbound.packets">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

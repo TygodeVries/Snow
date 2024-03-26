@@ -4,6 +4,7 @@ using Snow.Items;
 using Snow.Levels;
 using Snow.Network.Mappings;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -69,6 +70,21 @@ namespace Snow.Network
         {
             WriteString(identifier.GetString());
         }
+        
+        public void WriteLongArray(long[] longs)
+        {
+            WriteVarInt(longs.Length);
+
+            for(int i = 0; i < longs.Length; i++)
+            {
+                WriteLong(longs[i]);
+            }
+        }
+
+        public void WriteTextComponent(TextComponent textComponent)
+        {
+            textComponent.Write(this);
+        }
 
         public void WriteString(string s)
         {
@@ -80,6 +96,39 @@ namespace Snow.Network
         public void WritePosition(Position pos)
         {
             WriteByteArray(pos.ToByteArray());
+        }
+
+        public void WriteBitArray(BitArray bitArray)
+        {
+            int numLongs = (bitArray.Length + 63) / 64; // Calculate the number of longs required
+
+            // Write the length in VarInt format
+            WriteVarInt(numLongs);
+
+            // Write the data
+            long[] data = ConvertBitArrayToLongArray(bitArray);
+            foreach (long value in data)
+            {
+                WriteLong(value);
+            }
+        }
+
+        private long[] ConvertBitArrayToLongArray(BitArray bitArray)
+        {
+            int numLongs = (bitArray.Length + 63) / 64;
+            long[] data = new long[numLongs];
+            for (int i = 0; i < numLongs; i++)
+            {
+                for (int j = 0; j < 64; j++)
+                {
+                    int index = i * 64 + j;
+                    if (index < bitArray.Length && bitArray[index])
+                    {
+                        data[i] |= (1L << j);
+                    }
+                }
+            }
+            return data;
         }
 
         public void WriteItemStack(ItemStack itemStack)
@@ -164,6 +213,11 @@ namespace Snow.Network
         public void WriteAngle(byte b)
         {
             WriteByte(b);
+        }
+
+        public void Clear()
+        {
+            bytes.Clear();
         }
     }
 }

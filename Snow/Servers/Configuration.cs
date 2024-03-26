@@ -8,22 +8,51 @@ using System.Threading.Tasks;
 
 namespace Snow.Servers
 {
-    internal class Configuration
-    {
-        public static void Reload()
-        {
-            string executableDirectory = Environment.CurrentDirectory;
-            string levelFileData = File.ReadAllText($"{executableDirectory}/server.json");
-            JsonDocument levelData = JsonDocument.Parse(levelFileData);
 
-            defaultLevelName = levelData.RootElement.GetProperty("default_level").GetString();
+
+    public class Configuration
+    {
+        private JsonDocument configFile;
+
+        public Configuration(string path, string template)
+        {
+            if(!File.Exists(path))
+            {
+                TextWriter stream = File.CreateText(path);
+                stream.Write(File.ReadAllText(template));
+                stream.Close();
+            }
+            string serverConfigFile = File.ReadAllText(path);
+            configFile = JsonDocument.Parse(serverConfigFile);
         }
 
-
-        static string defaultLevelName = "world";
-        public static string GetDefaultLevelName()
+        public string[] GetStringArray(string field)
         {
-            return defaultLevelName;
+            JsonElement element = configFile.RootElement.GetProperty(field);
+            var a = element.EnumerateArray();
+            string[] strings = new string[element.GetArrayLength()];
+
+            int indx = 0;
+            foreach( var item in a ) {
+                strings[indx++] = (string)item.GetString();
+            }
+
+            return strings;
+        }
+
+        public string GetString(string field)
+        {
+            return configFile.RootElement.GetProperty(field).GetString();
+        }
+
+        public int GetInt(string field)
+        {
+            return configFile.RootElement.GetProperty(field).GetInt32();
+        }
+
+        public double GetDouble(string field)
+        {
+            return configFile.RootElement.GetProperty(field).GetDouble();
         }
     }
 }

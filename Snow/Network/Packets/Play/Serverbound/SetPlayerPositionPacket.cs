@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Snow.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,7 +26,8 @@ namespace Snow.Network.Packets.Play.Serverbound
 
         public override void Use(Connection connection)
         {
-            connection.GetPlayer().Teleport(x, y, z);
+            Player player = connection.GetPlayer();
+            player.Teleport(connection.GetPlayer().GetWorld(), x, y, z, 0, 0);
         }
     }
 }

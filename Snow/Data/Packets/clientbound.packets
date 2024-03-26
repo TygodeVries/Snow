@@ -38,3 +38,6 @@ $ Play
 0x73 UpdateRecipesPacket
 0x62 UpdateTimePacket
 0x10 CommandSuggestionsResponsePacket
+0x1F UnloadChunkPacket
+0x24 KeepAlivePacket
+0x1B DisconnectPacket

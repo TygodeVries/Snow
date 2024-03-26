@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,46 +9,34 @@ namespace Snow.Formats
 {
     public class BitSet
     {
-        private readonly ulong[] bits;
-        public int Length { get; private set; }
+        public List<long> Out { get; set; }
 
-        public BitSet(int length)
+        public BitSet()
         {
-            this.Length = length;
-            int arrayLength = (length + 63) / 64;
-            this.bits = new ulong[arrayLength];
+            Out = new List<long>();
         }
 
-        public void Set(int index, bool value)
+        public void Set(int index)
         {
-            if (index < 0 || index >= Length)
-            {
-                throw new ArgumentOutOfRangeException(nameof(index), "Index out of range");
-            }
-
             int arrayIndex = index / 64;
             int bitIndex = index % 64;
-
-            if (value)
+            while (Out.Count <= arrayIndex)
             {
-                bits[arrayIndex] |= (ulong)1 << bitIndex;
+                Out.Add(0);
             }
-            else
-            {
-                bits[arrayIndex] &= ~((ulong)1 << bitIndex);
-            }
+            Out[arrayIndex] |= (1L << bitIndex);
         }
 
-        public byte[] ToByteArray()
+        public bool AllZero()
         {
-            byte[] result = new byte[(Length + 7) / 8];
-
-            for (int i = 0; i < bits.Length; i++)
+            foreach (var value in Out)
             {
-                BitConverter.GetBytes(bits[i]).CopyTo(result, i * 8);
+                if (value != 0)
+                {
+                    return false;
+                }
             }
-
-            return result;
+            return true;
         }
     }
 }

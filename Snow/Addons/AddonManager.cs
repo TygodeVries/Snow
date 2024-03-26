@@ -21,7 +21,10 @@ namespace Snow.Addons
 
         public void LoadAllAddons()
         {
-            foreach (string filename in Directory.GetDirectories("Addons"))
+            string addonFolder = $"{server.GetWorkPath()}/Addons";
+            Directory.CreateDirectory(addonFolder);
+
+            foreach (string filename in Directory.GetDirectories(addonFolder))
             {
                 LoadAddon(filename);
             }
@@ -36,8 +39,7 @@ namespace Snow.Addons
             try
             {
                 Log.Send($"[Addons] Loading addon at {folder}.");
-                string executableDirectory = Environment.CurrentDirectory;
-                string addonDirectory = $"{executableDirectory}/{folder}";
+                string addonDirectory = $"{Environment.CurrentDirectory}/{folder}";
                 string addonFileData = File.ReadAllText($"{addonDirectory}/addon.json");
 
                 JsonDocument addonData = JsonDocument.Parse(addonFileData);
@@ -48,10 +50,11 @@ namespace Snow.Addons
                 string startingFileName = addonData.RootElement.GetProperty("code").GetProperty("file").GetString();
                 string startingClassName = addonData.RootElement.GetProperty("code").GetProperty("class").GetString();
 
-                Assembly assembly = Assembly.LoadFile($"{addonDirectory}/scripts/{startingFileName}");
+                Assembly assembly = Assembly.LoadFile($"{addonDirectory}/{startingFileName}");
                 Type type = assembly.GetType(startingClassName);
 
                 Addon addon = (Addon)Activator.CreateInstance(type);
+                addon.dataPath = folder;
                 addon.SetAddonManager(this);
                 Log.Send($"[Addons] Loaded addon '{name}' version '{version}' by '{author}'.");
                 addons.Add(addon);
@@ -73,6 +76,14 @@ namespace Snow.Addons
         public AddonManager(Server server)
         {
             this.server = server;
+        }
+
+        public void Tick()
+        {
+            foreach(Addon addon in addons)
+            {
+                addon.Update();
+            }
         }
 
         public void StopAll()

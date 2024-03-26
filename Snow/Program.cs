@@ -13,7 +13,7 @@ namespace Snow
 
             MappingsManager.Load();
 
-            Server lobby = new Server(4000);
+            Server lobby = new Server(4000, "Server");
 
             Console.ReadLine();
         }
