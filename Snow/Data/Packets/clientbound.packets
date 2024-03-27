@@ -41,3 +41,6 @@ $ Play
 0x1F UnloadChunkPacket
 0x24 KeepAlivePacket
 0x1B DisconnectPacket
+0x63 SetTitleTextPacket
+0x64 SetTitleAnimationTimesPacket
+0x50 SetCameraPacket

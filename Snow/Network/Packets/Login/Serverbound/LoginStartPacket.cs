@@ -28,6 +28,10 @@ namespace Snow.Network.Packets.Login.Serverbound
 
             player.SyncClient();
 
+            EventHandler<OnPlayerJoinArgs> eventHandler = connection.GetServer().OnPlayerJoin;
+            if (eventHandler != null)
+                eventHandler.Invoke(this, new OnPlayerJoinArgs(player));
+
         }
 
         string username;

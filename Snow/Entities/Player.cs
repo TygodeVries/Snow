@@ -7,6 +7,7 @@ using Snow.Network;
 using Snow.Network.Packets.Play.Clientbound;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -20,8 +21,6 @@ namespace Snow.Entities
         {
             this.connection = connection;
             this.type = 87;
-
-            this.SetUUID(UUID.Random());
 
             this.OnEntityMove += ChunkSectionUpdate;
             this.OnUseItem += BlockPlaceExecutor;
@@ -66,11 +65,6 @@ namespace Snow.Entities
                     connection.SendPacket(packet);
                 }
             }
-
-            if (GetConnection().GetServer().OnPlayerJoin != null)
-            {
-                GetConnection().GetServer().OnPlayerJoin.Invoke(this, new OnPlayerJoinArgs(this));
-            }
         }
 
         public ItemStack GetItemMainInHand()
@@ -84,6 +78,23 @@ namespace Snow.Entities
             return selectedHotbarSlot;
         }
 
+        Gamemode gamemode;
+        public Gamemode GetGamemode()
+        { return gamemode; }
+
+        public void SetGamemode(Gamemode gamemode)
+        {
+            this.gamemode = gamemode;
+            GameEventPacket packet = new GameEventPacket(0x03, (int) gamemode);
+            GetConnection().SendPacket(packet);
+        }
+
+
+        public void SetCamera(Entity entity)
+        {
+            SetCameraPacket packet = new SetCameraPacket(entity.GetId());
+            GetConnection().SendPacket(packet);
+        }
 
         int chunkSectionX = 0;
         int chunkSectionZ = 0;
@@ -137,5 +148,60 @@ namespace Snow.Entities
                 GetWorld().OnBlockPlace.Invoke(this, new OnBlockPlaceArgs(this, blockPos, itemStack.GetItemType().blockType));
             }
         }
+
+        private void UpdatePlayerAbilities()
+        {
+            byte flags = 0x00;
+
+            if(flying) flags |= 0x02;
+            if(flyingAllowed) flags |= 0x04;
+
+            PlayerAbilitiesPacket packet = new PlayerAbilitiesPacket(flags, flyingSpeed, 0.1f);
+        }
+
+        private bool flying = false;
+        public void SetFlying(bool flying)
+        {
+            this.flying = flying;
+            UpdatePlayerAbilities();
+        }
+
+        private bool flyingAllowed = false;
+        public void SetAllowFlying(bool flyingAllowed)
+        {
+            this.flyingAllowed = flyingAllowed;
+            UpdatePlayerAbilities();
+        }
+
+        private float flyingSpeed = 0.05f;
+        /// <summary>
+        /// 0.05 by default.
+        /// </summary>
+        /// <param name="speed"></param>
+        public void SetFlyingSpeed(float flyingSpeed)
+        {
+            this.flyingSpeed = flyingSpeed;
+            UpdatePlayerAbilities();
+        }
+
+
+        public void SetTitleAnimationTimes(int fadein, int stay, int fadeout)
+        {
+            SetTitleAnimationTimesPacket packet = new SetTitleAnimationTimesPacket(fadein, stay, fadeout);
+            GetConnection().SendPacket(packet);
+        }
+        public void SendTitle(TextComponent textComponent)
+        {
+            SetTitleTextPacket setTitleTextPacket = new SetTitleTextPacket(textComponent);
+            GetConnection().SendPacket(setTitleTextPacket);
+        }
+    }
+
+    public enum Gamemode
+    {
+        SURVIVAL,
+        CREATIVE,
+        ADVENTURE,
+        SPECTAROR
     }
 }

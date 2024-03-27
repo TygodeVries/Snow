@@ -216,5 +216,6 @@ namespace Snow.Servers
         }
 
         public EventHandler<OnPlayerJoinArgs> OnPlayerJoin;
+        public EventHandler<OnPlayerJoinArgs> OnPlayerPreJoin;
     }
 }

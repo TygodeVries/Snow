@@ -84,6 +84,9 @@
     <Compile Include="Formats\VarInt.cs" />
     <Compile Include="Formats\VarLong.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\KeepAlivePacket.cs" />
+    <Compile Include="Network\Packets\Play\Clientbound\SetCameraPacket.cs" />
+    <Compile Include="Network\Packets\Play\Clientbound\SetTitleAnimationTimesPacket.cs" />
+    <Compile Include="Network\Packets\Play\Clientbound\SetTitleTextPacket.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\UnloadChunkPacket.cs" />
     <Compile Include="Network\Packets\Play\Serverbound\SetPlayerRotationPacket.cs" />
     <Compile Include="Servers\Server.cs" />

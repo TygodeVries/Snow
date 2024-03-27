@@ -114,7 +114,7 @@ namespace Snow.Network
 
             SendPacket(new LoginPacket(player));
             SendPacket(new ChangeDifficultyPacket(0x00, false));
-            SendPacket(new PlayerAbilitiesPacket());
+            SendPacket(new PlayerAbilitiesPacket(0x02, 0, 0.1f));
             SendPacket(new SetHeldItemPacket(0x00));
             SendPacket(new UpdateRecipesPacket());
             SendPacket(new Snow.Network.Packets.Play.Clientbound.CommandsPacket());
@@ -138,9 +138,16 @@ namespace Snow.Network
             SendPacket(new UpdateTimePacket());
             SendPacket(new BlockUpdatePacket(new Position(0, -3, 0), 1));
 
-            EventHandler<OnPlayerJoinArgs> eventHandler = this.GetServer().OnPlayerJoin;
+            EventHandler<OnPlayerJoinArgs> eventHandler = this.GetServer().OnPlayerPreJoin;
             if (eventHandler != null)
                 eventHandler.Invoke(this, new OnPlayerJoinArgs(player));
+
+            if(connected)
+            {
+                SendRenderDistance(player.GetWorld(), 7, new Vector3(player.GetPosistion().x / 16, 0, player.GetPosistion().z / 16));
+                SendPacket(new PlayerAbilitiesPacket(0x00, 0.05f, 0.1f));
+            }
+
         }
 
         public void Flush()

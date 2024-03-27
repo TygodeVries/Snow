@@ -69,6 +69,7 @@ namespace Snow.Worlds
 
             entity.SetWorld(this);
 
+            entity.SetUUID(UUID.Random());
             entity.SetId(currentEntityId);
             currentEntityId++;
             

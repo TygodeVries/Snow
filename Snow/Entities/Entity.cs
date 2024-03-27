@@ -92,11 +92,10 @@ namespace Snow.Entities
             this.yaw = yaw;
             this.pitch = pitch;
 
+            SetWorld(world);
+
             if (OnEntityMove != null) 
                 OnEntityMove.Invoke(this, new OnEntityMoveArgs(world, new Vector3(x, y, z)));
-            SetWorld(world);
-           
-
 
             world.BroadcastPacket(new TeleportEntityPacket(this, x, y, z, yaw, pitch));
         }
