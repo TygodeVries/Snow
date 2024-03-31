@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Levels
 {
-    public enum BlockType
+    public enum BlockType : short
     {
         AIR = 0,
         STONE = 1,

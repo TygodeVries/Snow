@@ -61,7 +61,6 @@ namespace Snow.Worlds
             return worldHeight;
         }
 
-
         private int currentEntityId = 0;
         public void SpawnEntity(Entity entity)
         {

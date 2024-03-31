@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Snow.Worlds
 {
@@ -20,40 +21,100 @@ namespace Snow.Worlds
         public Chunk(World world, int x, int z)
         {
             this.world = world;
-            data = new BlockType[16 * world.GetWorldHeight() * 16];
             this.x = x;
             this.z = z;
+
+            int cs = (int) Math.Floor(world.GetWorldHeight() / 16d);
+            
+            chunkSections = new ChunkSection[cs];
+
+            for(int i = 0; i < cs; i++)
+            {
+                chunkSections[i] = new SolidChunkSection(0);
+            }
         }
 
-        public BlockType[] data;
+        ChunkSection[] chunkSections;
 
-        public void SetBlockAt(Position position, BlockType blockType)
-        {
-            int x = position.x;
-            int y = position.y;
-            int z = position.z;
-
-            int Width = 16;
-            int Depth = 16;
-
-            int index = x + (z * Width) + (y * Width * Depth);
-
-            data[index] = blockType;
-        }
 
         public BlockType GetBlockAt(Position position)
         {
-            int x = position.x;
-            int y = position.y;
-            int z = position.z;
+            try
+            {
+                int cs = (int)Math.Floor(position.y / 16d);
 
-            int Width = 16;
-            int Depth = 16;
+                BlockType blockType = chunkSections[cs].Get(position.x % 16, position.y % 16, position.z % 16);
+                return blockType;
+            }  catch(Exception e)
+            {
+                Log.Err($"Failed to get block at {position.ToString()} because: " + e);
+            }
 
-            int index = x + (z * Width) + (y * Width * Depth);
-
-            return data[index];
+            return 0;
         }
+
+        public void Optimize()
+        {
+            for (int i = 0; i < chunkSections.Length; i++)
+            {
+                ChunkSection section = chunkSections[i];
+
+                if(section.GetType() == typeof(DetailedChunkSection))
+                {
+                    ((DetailedChunkSection)section).Optimize();
+                }
+            }
+        }
+
+        public void SetBlockAt(Position position, BlockType blockType)
+        {
+            try
+            {
+                int x = position.x;
+                int y = position.y;
+                int z = position.z;
+
+                int chunkSection = (int)Math.Floor(position.y / 16d);
+                ChunkSection section = chunkSections[chunkSection];
+
+                if (section.GetType() == typeof(DetailedChunkSection))
+                {
+                    ((DetailedChunkSection)section).Set(blockType, x, y % 16, z);
+                    return;
+                }
+                else if (section.GetType() == typeof(SolidChunkSection))
+                {
+                    SolidChunkSection detailedChunkSection = (SolidChunkSection)section;
+                    if (detailedChunkSection.Get(0, 0, 0) != blockType)
+                    {
+                        BlockType bt = detailedChunkSection.Get(0, 0, 0);
+                        DetailedChunkSection detailedChunk = new DetailedChunkSection();
+                        for (int a = 0; a < 16; a++)
+                        {
+                            for (int b = 0; b < 16; b++)
+                            {
+                                for (int c = 0; c < 16; c++)
+                                {
+                                    detailedChunk.Set(bt, a, b, c);
+                                }
+                            }
+                        }
+
+                        detailedChunk.Set(blockType, x, y % 16, z);
+
+                        chunkSections[chunkSection] = detailedChunk;
+                    }
+                }
+                else
+                {
+                    Log.Err("Invalid or uninemplemented sectionchunktype! type: " + section.GetType());
+                }
+            } catch(Exception e)
+            {
+                Log.Err($"Failed to setblock at {position.ToString()} because: " + e);
+            }
+        }
+
 
 
         public ChunkDataAndUpdateLightPacket CreatePacket()

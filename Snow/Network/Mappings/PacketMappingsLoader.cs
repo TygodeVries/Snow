@@ -160,6 +160,7 @@ namespace Snow.Network.Mappings
                 return serverboundPacket;
             } catch(Exception ex)
             {
+                Log.Err("Failed to create serverbound packet: " + ex);
                 return null;
             }
         }

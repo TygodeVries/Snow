@@ -59,7 +59,8 @@ namespace Snow.Network
                 client.GetStream().WriteAsync(data, 0, data.Length);
             }
             catch (Exception e)
-            {  
+            {
+                Console.WriteLine("Failed to write bytes to client: " + e);
             }
         }
         public async Task SendRawBytesAsync(byte[] data)
@@ -73,7 +74,7 @@ namespace Snow.Network
             }
             catch (Exception e)
             {
-                // Handle exception appropriately
+                Log.Send("Faile to send ray bytes async: " + e);
             }
         }
 
@@ -133,6 +134,7 @@ namespace Snow.Network
             SendPacket(new SetHealthPacket());
             SendPacket(new SetExperiencePacket(0, 0, 0));
 
+            SendChunk((0, 0));
             SendPacket(new InitializeWorldBorderPacket(0, 0, 10000, server.GetConfiguration().GetDouble("world-border"), 1, 1, 5));
 
             SendPacket(new UpdateTimePacket());
