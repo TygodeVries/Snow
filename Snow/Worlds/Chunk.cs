@@ -3,6 +3,7 @@ using Snow.Formats;
 using Snow.Formats.Nbt;
 using Snow.Levels;
 using Snow.Network.Packets.Play.Clientbound;
+using Snow.Worlds.Blocks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,8 @@ namespace Snow.Worlds
 
         public int x;
         public int z;
+
+        private List<ProgrammableBlock> programmableBlocks = new List<ProgrammableBlock>();
 
         public Chunk(World world, int x, int z)
         {
@@ -36,6 +39,13 @@ namespace Snow.Worlds
 
         ChunkSection[] chunkSections;
 
+        public void TickProgrammableBlocks()
+        {
+            foreach(ProgrammableBlock programmableBlock in programmableBlocks)
+            {
+                programmableBlock.Tick();
+            }
+        }
 
         public BlockType GetBlockAt(Position position)
         {

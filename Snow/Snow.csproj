@@ -148,6 +148,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Servers\Configuration.cs" />
+    <Compile Include="Worlds\Blocks\ProgrammableBlock.cs" />
+    <Compile Include="Worlds\Blocks\TestProgrammableBlock.cs" />
     <Compile Include="Worlds\Chunk.cs" />
     <Compile Include="Worlds\ChunkSection.cs" />
     <Compile Include="Worlds\Generator\FlatGenerator.cs" />

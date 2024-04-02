@@ -10,10 +10,8 @@ namespace Snow.Worlds.Generator
 {
     internal class FlatGenerator : WorldGenerator
     {
-        public override Chunk Generate(World world, int x, int z)
+        public override void Generate(Chunk chunk)
         {
-            Chunk chunk = new Chunk(world, x, z);
-
             for(int bx = 0; bx < 16; bx++)
             {
                 for (int bz = 0; bz < 16; bz++)
@@ -28,8 +26,6 @@ namespace Snow.Worlds.Generator
                     chunk.SetBlockAt(new Position(bx, 85, bz), BlockType.OAK_PLANKS);
                 }
             }
-
-            return chunk;
         }
     }
 }

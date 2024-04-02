@@ -8,10 +8,9 @@ namespace Snow.Worlds.Generator
 {
     public class VoidGenerator : WorldGenerator
     {
-        public override Chunk Generate(World world,int x, int z)
+        public override void Generate(Chunk chunk)
         {
-            Chunk chunk = new Chunk(world, x, z);
-            return chunk;
+            // Do nothing
         }
     }
 }

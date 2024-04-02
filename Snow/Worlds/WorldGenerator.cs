@@ -8,6 +8,6 @@ namespace Snow.Worlds
 {
     public abstract class WorldGenerator
     {
-        public abstract Chunk Generate(World world, int x, int z);
+        public abstract void Generate(Chunk chunk);
     }
 }

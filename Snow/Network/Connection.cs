@@ -60,7 +60,7 @@ namespace Snow.Network
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed to write bytes to client: " + e);
+                Disconnected();
             }
         }
         public async Task SendRawBytesAsync(byte[] data)
@@ -70,11 +70,11 @@ namespace Snow.Network
 
             try
             {
-                await client.GetStream().WriteAsync(data, 0, data.Length);
+                client.GetStream().WriteAsync(data, 0, data.Length);
             }
             catch (Exception e)
             {
-                Log.Send("Faile to send ray bytes async: " + e);
+                Disconnected();
             }
         }
 
@@ -160,16 +160,32 @@ namespace Snow.Network
 
         public void SendRenderDistance(World world, int distance, Vector3 centerChunk)
         {
-            
-            for(int x = -distance; x < distance; x++)
+            List<(int, int)> chunksToSend = new List<(int, int)>();
+
+            // Calculate distances for all chunks
+            for (int x = -distance; x < distance; x++)
             {
                 for (int z = -distance; z < distance; z++)
                 {
                     (int, int) location = (x + ((int)centerChunk.x), z + ((int)centerChunk.z));
-
-                    SendChunk(location);
+                    chunksToSend.Add(location);
                 }
             }
+
+            // Sort chunks based on distance from the center chunk
+            chunksToSend.Sort((a, b) => DistanceSquared(a, centerChunk).CompareTo(DistanceSquared(b, centerChunk)));
+
+            // Send chunks in sorted order
+            foreach (var chunk in chunksToSend)
+            {
+                SendChunk(chunk);
+            }
+        }
+
+        // Function to calculate squared distance between two chunks
+        private double DistanceSquared((int, int) chunkA, Vector3 chunkB)
+        {
+            return (chunkA.Item1 - chunkB.x) * (chunkA.Item1 - chunkB.x) + (chunkA.Item2 - chunkB.z) * (chunkA.Item2 - chunkB.z);
         }
 
         private List<(int, int)> clientLoadedChunks = new List<(int, int)>();
@@ -216,7 +232,7 @@ namespace Snow.Network
 
         public void Disconnected()
         {
-            if (!connected)
+            if (!connected || GetPlayer() == null)
                 return;
             connected = false;
             client.Close();

@@ -109,7 +109,8 @@ namespace Snow.Worlds
 
         public async Task LoadChunkAsync((int, int) location)
         {
-            Chunk chunk = await Task.Run(() => GetWorldGenerator().Generate(this, location.Item1, location.Item2));
+            Chunk chunk = new Chunk(this, location.Item1, location.Item2);
+            await Task.Run(() => GetWorldGenerator().Generate(chunk));
             loadedChunks.Add(location, chunk);
         }
         public void UnloadChunk((int, int) location)
@@ -129,17 +130,28 @@ namespace Snow.Worlds
 
         public void BroadcastPacket(ClientboundPacket packet, List<Connection> exclude)
         {
-            foreach (Entity entity in entities)
-            {
-                if (entity.GetType() == typeof(Player))
-                {
-                    Player player = (Player)entity;
+            List<Player> playersToSendPacket = new List<Player>();
 
-                    if (!exclude.Contains(player.GetConnection()))
+            lock (entities)
+            {
+                foreach (Entity entity in entities)
+                {
+                    if (entity.GetType() == typeof(Player))
                     {
-                        player.GetConnection().SendPacket(packet);
+                        Player player = (Player)entity;
+
+                        if (!exclude.Contains(player.GetConnection()))
+                        {
+                            playersToSendPacket.Add(player);
+                        }
                     }
                 }
+            }
+
+            // Now iterate over the list of players to send the packet
+            foreach (Player player in playersToSendPacket)
+            {
+                player.GetConnection().SendPacket(packet);
             }
         }
 
