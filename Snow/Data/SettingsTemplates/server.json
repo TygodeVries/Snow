@@ -1,5 +1,8 @@
 {
   "worlds": [ "Default" ],
   "default-world": "Default",
-  "world-border": 100000
+  "world-border": 100000,
+  "max-players": "10",
+  "online-players": "0",
+  "motd": "Running SNOW."
 }

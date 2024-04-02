@@ -92,6 +92,7 @@
     <Compile Include="Network\Packets\Play\Clientbound\SetTitleTextPacket.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\UnloadChunkPacket.cs" />
     <Compile Include="Network\Packets\Play\Serverbound\SetPlayerRotationPacket.cs" />
+    <Compile Include="Network\Packets\Status\Clientbound\StatusResponsePacket.cs" />
     <Compile Include="Servers\Server.cs" />
     <Compile Include="Network\PacketReader.cs" />
     <Compile Include="Network\Packets\Handshake\Serverbound\HandshakePacket.cs" />

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Snow.Network.Packets.Status.Clientbound;
+using Snow.Servers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,10 +26,21 @@ namespace Snow.Network.Packets.Handshake.Serverbound
         public override void Use(Connection connection)
         {
 
-            if (nextState == 1)
+            Console.WriteLine(nextState);
+
+            if (nextState == 99)
             {
                 // #TODO implement status
+                connection.SetConnectionState(ConnectionState.STATUS);
 
+                Servers.Configuration config = connection.GetServer().GetConfiguration();
+
+                StatusResponsePacket packet = new StatusResponsePacket("1.20.4", "765", config.GetString("max-players"), config.GetString("online-players"), config.GetString("motd"), "data:image/png;base64,<data>", "false", "false");
+
+                Log.Send("Motd requested.");
+
+                connection.SendPacket(packet);
+                return;
             }
             else
             {

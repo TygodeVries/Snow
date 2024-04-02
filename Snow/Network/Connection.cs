@@ -300,6 +300,7 @@ namespace Snow.Network
 
     public enum ConnectionState
     {
+        STATUS,
         HANDSHAKE,
         LOGIN,
         CONFIGURATION,

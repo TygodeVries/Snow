@@ -6,6 +6,9 @@ $ Configuration
 0x02 FinishConfigurationPacket
 0x05 RegistryDataPacket
 
+$ Status
+0x00 StatusResponsePacket
+
 $ Play
 0x09 BlockUpdatePacket
 0x0B ChangeDifficultyPacket

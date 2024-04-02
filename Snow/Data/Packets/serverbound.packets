@@ -12,3 +12,5 @@ $ Play
 0x0A CommandSuggestionsRequestPacket
 0x35 UseItemOnPacket
 0x19 SetPlayerRotationPacket
+
+$ Status
