@@ -7,7 +7,6 @@ No. I dont see anyone using this for anything public yet. It could be used as a 
 Documentation is not a thing, yet.
 
 ## Current 
-'snow' version p24.3.27.0
 Minecraft: 1.20.4
 Protocol: 765
 
