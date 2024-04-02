@@ -42,6 +42,9 @@ namespace Snow.Network
             Array.Copy(data, pointer, text, 0, toRead);
 
             string value = Encoding.UTF8.GetString(text);
+
+            pointer += toRead;
+
             return value;
         }
 

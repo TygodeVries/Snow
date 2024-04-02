@@ -26,9 +26,9 @@ namespace Snow.Network.Packets.Handshake.Serverbound
         public override void Use(Connection connection)
         {
 
-            Console.WriteLine(nextState);
+            Console.WriteLine($"Player attempted to connect to {serverAddress}:{port} using pv {protocolVersion}, next stage is {nextState}");
 
-            if (nextState == 99)
+            if (nextState == 1)
             {
                 // #TODO implement status
                 connection.SetConnectionState(ConnectionState.STATUS);
