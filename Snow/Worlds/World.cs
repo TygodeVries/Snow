@@ -81,6 +81,7 @@ namespace Snow.Worlds
                 con.Add(((Player) entity).GetConnection());
             }
 
+            entity.Spawn();
             BroadcastPacket(new SpawnEntityPacket(entity), con);
         }
         

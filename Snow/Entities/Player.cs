@@ -20,7 +20,7 @@ namespace Snow.Entities
         public Player(Connection connection)
         {
             this.connection = connection;
-            this.type = 87;
+            this.type = 124;
 
             this.OnEntityMove += ChunkSectionUpdate;
             this.OnUseItem += BlockPlaceExecutor;
@@ -50,6 +50,13 @@ namespace Snow.Entities
             connection.SendPacket(clientboundPacket);
         }
 
+        public override void Spawn()
+        {
+            PlayerInfoUpdatePacket updatePacket = new PlayerInfoUpdatePacket(this.GetUUID());
+            updatePacket.SetAddPlayerPayload(GetName());
+            GetWorld().BroadcastPacket(updatePacket, new List<Connection>() { this.GetConnection() });
+        }
+
         /// <summary>
         /// Spawn the client into the world
         /// </summary>
@@ -59,11 +66,21 @@ namespace Snow.Entities
 
             foreach(Entity entity in GetWorld().GetEntities())
             {
+                if (entity.GetType() == typeof(Player))
+                {
+                    Player player = (Player)entity;
+
+                    PlayerInfoUpdatePacket updatePacket = new PlayerInfoUpdatePacket(player.GetUUID());
+                    updatePacket.SetAddPlayerPayload(GetName());
+                    GetConnection().SendPacket(updatePacket);
+                }
+
                 if (entity != this)
                 {
                     SpawnEntityPacket packet = new SpawnEntityPacket(entity);
-                    connection.SendPacket(packet);
+                    GetConnection().SendPacket(packet);
                 }
+
             }
         }
 

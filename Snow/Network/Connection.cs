@@ -121,7 +121,11 @@ namespace Snow.Network
             SendPacket(new Snow.Network.Packets.Play.Clientbound.CommandsPacket());
             SendPacket(new UpdateRecipeBookPacket());
             SendPacket(new SynchronizePlayerPositionPacket(0, 100, 0, 0, 0));
-            SendPacket(new PlayerInfoUpdatePacket(0x00, player.GetUUID()));
+
+            PlayerInfoUpdatePacket playerInfoUpdatePacket = new PlayerInfoUpdatePacket(player.GetUUID());
+            playerInfoUpdatePacket.SetAddPlayerPayload(player.GetName());
+            SendPacket(playerInfoUpdatePacket);
+
             SendPacket(new InitializeWorldBorderPacket(0, 0, 1, 1, 1, 0, 0));
             SendPacket(new UpdateTimePacket());
             SendPacket(new SetDefaultSpawnPositionPacket());
@@ -216,6 +220,12 @@ namespace Snow.Network
 
             // Get the chunk
             Chunk chunk = await world.GetChunkAsync(location);
+
+            if(chunk == null)
+            {
+                // Failed to laod chunk?
+                return;
+            }
 
             // Create packet
             ChunkDataAndUpdateLightPacket packet = chunk.CreatePacket();

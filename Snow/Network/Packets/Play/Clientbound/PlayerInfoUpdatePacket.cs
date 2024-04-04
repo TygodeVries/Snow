@@ -4,49 +4,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Snow.Network.Packets.Play.Clientbound
 {
     public class PlayerInfoUpdatePacket : ClientboundPacket
     {
-        byte action;
+        byte? action = null;
         UUID uuid;
 
-        public PlayerInfoUpdatePacket(byte action, UUID uuid)
+        private string name;
+
+        private bool listed;
+
+        public PlayerInfoUpdatePacket(UUID uuid)
         {
-            this.action = action;
             this.uuid = uuid;
         }
 
+
+
         public override void Create(PacketWriter packetWriter)
         {
+            if(action == null)
+            {
+                Log.Err("No payload loaded onto PlayerInfoUpdatePacket");
+                return;
+            }
+
             packetWriter.WritePacketID(this);
-            packetWriter.WriteByte(action);
+            packetWriter.WriteByte(action.Value);
             packetWriter.WriteVarInt(1);
 
             packetWriter.WriteUUID(uuid);
 
-            switch (action)
+            if(action == 0x01)
             {
-                case 0x01:
-                    ConstructAddPlayerPacket(packetWriter);
-                    break;
-                case 0x02:
-                    ConstructInitializeChatPacket(packetWriter);
-                    break;
-                case 0x04:
-                    ConstructUpdateGameModePacket(packetWriter);
-                    break;
-                case 0x08:
-                    ConstructUpdateListedPacket(packetWriter);
-                    break;
-                case 0x10:
-                    ConstructUpdateLatencyPacket(packetWriter);
-                    break;
-                case 0x20:
-                    ConstructUpdateDisplayNamePacket(packetWriter);
-                    break;
+                packetWriter.WriteString(name);
+                packetWriter.WriteVarInt(0);
             }
+
         }
 
         private void ConstructUpdateDisplayNamePacket(PacketWriter packetWriter)
@@ -59,11 +56,6 @@ namespace Snow.Network.Packets.Play.Clientbound
             packetWriter.WriteVarInt(10);
         }
 
-        private void ConstructUpdateListedPacket(PacketWriter packetWriter)
-        {
-            packetWriter.WriteBool(true);
-        }
-
         private void ConstructUpdateGameModePacket(PacketWriter packetWriter)
         {
             packetWriter.WriteVarInt(1);
@@ -74,10 +66,10 @@ namespace Snow.Network.Packets.Play.Clientbound
             packetWriter.WriteBool(false);
         }
 
-        private void ConstructAddPlayerPacket(PacketWriter packetWriter)
+        public void SetAddPlayerPayload(string name)
         {
-            packetWriter.WriteString("TheSheepDev");
-            packetWriter.WriteVarInt(0);
+            action = 0x01;
+            this.name = name;
         }
     }
 }

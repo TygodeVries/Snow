@@ -101,5 +101,10 @@ namespace Snow.Entities
         }
 
         public EventHandler<OnEntityMoveArgs> OnEntityMove;
+
+        public virtual void Spawn()
+        {
+
+        }
     }
 }
