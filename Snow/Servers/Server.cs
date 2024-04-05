@@ -67,6 +67,18 @@ namespace Snow.Servers
             thread.Start();
         }
 
+        public void BroadcastMessage(TextComponent text)
+        {
+            foreach (Connection con in playerConnections)
+            {
+                Player player = con.GetPlayer();
+                if(player != null)
+                {
+                    player.SendSystemMessage(text);
+                }
+            }
+        }
+
         private void CreateWorlds()
         {
             Directory.CreateDirectory($"{GetWorkPath()}/Worlds");

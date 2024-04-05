@@ -80,6 +80,8 @@ namespace Snow.Entities
             int[] ids = new int[] { this.id };
             RemoveEntitiesPacket removeEntitiesPacket = new RemoveEntitiesPacket(ids);
             GetWorld().RemoveFromEntities(this);
+
+            GetWorld().BroadcastPacket(removeEntitiesPacket);
         }
 
         public int type;

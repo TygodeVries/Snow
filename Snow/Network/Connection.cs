@@ -247,6 +247,7 @@ namespace Snow.Network
             connected = false;
             client.Close();
             Log.Send($"{GetPlayer().GetName()} disconnected.");
+            GetServer().BroadcastMessage(new TextComponent($"{GetPlayer().GetName()} disconnected."));
             GetPlayer().Remove();
         }
 
