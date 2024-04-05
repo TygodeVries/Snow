@@ -47,3 +47,6 @@ $ Play
 0x63 SetTitleTextPacket
 0x64 SetTitleAnimationTimesPacket
 0x50 SetCameraPacket
+0x66 SoundEffectPacket
+0x69 SystemChatMessagePacket
+0x46 SetHeadRotationPacket

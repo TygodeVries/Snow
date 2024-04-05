@@ -38,8 +38,10 @@ namespace Snow.Network.Packets.Play.Clientbound
             packetWriter.WriteDouble(y);
             packetWriter.WriteDouble(z);
 
-            packetWriter.WriteByte((byte)(Math.Round(yaw)));
-            packetWriter.WriteByte((byte)(Math.Round(pitch)));
+            packetWriter.WriteByte((byte) (yaw * 255f / 360f));
+            packetWriter.WriteByte((byte) (pitch * 255f / 360f));
+
+
 
             packetWriter.WriteBool(false);
         }

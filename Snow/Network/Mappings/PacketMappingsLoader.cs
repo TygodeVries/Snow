@@ -133,6 +133,10 @@ namespace Snow.Network.Mappings
             ConnectionState connectionState = (ConnectionState) Enum.Parse(typeof(ConnectionState), state);
 
             int id = clientboundPackets[connectionState].FromType(packet.GetType());
+            if(id == -1)
+            {
+                Log.Err($"Id of packet type {packet} in state {connectionState} not set!");
+            }
             return id;
         }
 

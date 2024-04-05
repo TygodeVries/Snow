@@ -5,6 +5,7 @@ using Snow.Items;
 using Snow.Items.Containers;
 using Snow.Network;
 using Snow.Network.Packets.Play.Clientbound;
+using Snow.Network.Packets.Play.Serverbound;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Snow.Entities
 {
@@ -30,7 +32,7 @@ namespace Snow.Entities
         private Connection connection;
         public Connection GetConnection() { return connection; }
 
-        private string name = "unnamed";
+        private string name = "mrnoname";
         public string GetName()
         {
             return name;
@@ -84,9 +86,21 @@ namespace Snow.Entities
             }
         }
 
+        public void PlaySound(Identifier identifier, SoundSource soundSource, float volume, float pitch)
+        {
+            SoundEffectPacket packet = new SoundEffectPacket(identifier, soundSource, volume, pitch, 0);
+            GetConnection().SendPacket(packet);
+        }
+
         public ItemStack GetItemMainInHand()
         {
             return inventory.GetItem(36 + GetSelectedHotbarSlot());
+        }
+        
+        public void SendSystemMessage(TextComponent message)
+        {
+            SystemChatMessagePacket packet = new SystemChatMessagePacket(message, false);
+            GetConnection().SendPacket(packet);
         }
 
         internal int selectedHotbarSlot = 0;

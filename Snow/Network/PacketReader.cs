@@ -123,11 +123,12 @@ namespace Snow.Network
             {
                 Array.Reverse(item);
             }
-            float value = BitConverter.ToInt32(item, 0);
+            float value = BitConverter.ToSingle(item, 0);
 
             pointer += 4;
             return value;
         }
+
 
         public bool ReadBool()
         {

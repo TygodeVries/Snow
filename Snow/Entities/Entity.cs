@@ -33,15 +33,15 @@ namespace Snow.Entities
         private double y = 0;
         private double z = 0;
 
-        private int pitch;
-        private int yaw;
+        private float pitch;
+        private float yaw;
 
-        public int GetPitch()
+        public float GetPitch()
         {
             return pitch;
         }
 
-        public int GetYaw()
+        public float GetYaw()
         {
             return yaw;
         }
@@ -84,7 +84,7 @@ namespace Snow.Entities
 
         public int type;
 
-        public void Teleport(World world, double x, double y, double z, int yaw, int pitch)
+        public void Teleport(World world, double x, double y, double z, float yaw, float pitch)
         {
             this.x = x;
             this.y = y;
@@ -98,6 +98,7 @@ namespace Snow.Entities
                 OnEntityMove.Invoke(this, new OnEntityMoveArgs(world, new Vector3(x, y, z)));
 
             world.BroadcastPacket(new TeleportEntityPacket(this, x, y, z, yaw, pitch));
+            world.BroadcastPacket(new SetHeadRotationPacket(this, yaw));
         }
 
         public EventHandler<OnEntityMoveArgs> OnEntityMove;

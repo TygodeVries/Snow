@@ -33,7 +33,7 @@ namespace Snow.Network.Packets.Play.Serverbound
 
         public override void Use(Connection connection)
         {
-            connection.GetPlayer().Teleport(connection.GetPlayer().GetWorld(), x, y, z, 0, 0);
+            connection.GetPlayer().Teleport(connection.GetPlayer().GetWorld(), x, y, z, yaw, pitch);
         }
     }
 }

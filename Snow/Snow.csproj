@@ -88,8 +88,11 @@
     <Compile Include="Formats\VarLong.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\KeepAlivePacket.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\SetCameraPacket.cs" />
+    <Compile Include="Network\Packets\Play\Clientbound\SetHeadRotationPacket.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\SetTitleAnimationTimesPacket.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\SetTitleTextPacket.cs" />
+    <Compile Include="Network\Packets\Play\Clientbound\SoundEffectPacket.cs" />
+    <Compile Include="Network\Packets\Play\Clientbound\SystemChatMessagePacket.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\UnloadChunkPacket.cs" />
     <Compile Include="Network\Packets\Play\Serverbound\SetPlayerRotationPacket.cs" />
     <Compile Include="Network\Packets\Status\Clientbound\StatusResponsePacket.cs" />

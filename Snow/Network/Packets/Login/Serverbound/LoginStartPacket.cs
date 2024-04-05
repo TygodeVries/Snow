@@ -16,12 +16,19 @@ namespace Snow.Network.Packets.Login.Serverbound
         {
             Player player = new Player(connection);
 
+            player.SetName(this.username);
+
             Server server = connection.GetServer();
             server.GetDefaultWorld().SpawnEntity(player);
 
-            player.SetName(this.username);
-
             Log.Send($"{username} joined the server!");
+
+            foreach(Connection c in connection.GetServer().GetPlayerConnections())
+            {
+                if(c.GetPlayer() != null)
+                    c.GetPlayer().SendSystemMessage(new TextComponent($"{username} joined the server!"));
+            }
+
 
             connection.Connect(server, player);
             connection.SetConnectionState(ConnectionState.PLAY);
