@@ -16,6 +16,7 @@ using Snow.Worlds;
 using Snow.Worlds.Generator;
 using System.IO;
 using System.Diagnostics.Tracing;
+using System.Diagnostics;
 
 namespace Snow.Servers
 {
@@ -104,7 +105,6 @@ namespace Snow.Servers
 
         private void LobbyThread()
         {
-
             addonManager = new AddonManager(this);
             addonManager.LoadAllAddons();
 

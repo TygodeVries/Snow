@@ -6,6 +6,7 @@ using Snow.Network.Packets.Play.Clientbound;
 using Snow.Worlds.Blocks;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using static System.Collections.Specialized.BitVector32;
@@ -92,6 +93,7 @@ namespace Snow.Worlds
                     ((DetailedChunkSection)section).Set(blockType, x, y % 16, z);
                     return;
                 }
+
                 else if (section.GetType() == typeof(SolidChunkSection))
                 {
                     SolidChunkSection detailedChunkSection = (SolidChunkSection)section;
@@ -144,54 +146,116 @@ namespace Snow.Worlds
 
         byte[] GenerateChunkData()
         {
-            List<byte> finalDataList = new List<byte>();
-
+            MemoryStream memStream = new MemoryStream();
+    
             for (int i = 0; i < world.GetWorldHeight() / 16; i++)
             {
-                short blockCount = 0;
-                List<BlockType> pallet = new List<BlockType>();
 
-                byte[] data = new byte[16 * 16 * 16];
-                int index = 0;
-
-                for (int y = 0; y < 16; y++)
-                    for (int z = 0; z < 16; z++)
-                        for (int x = 0; x < 16; x++)
-                        {
-                            BlockType blockData = GetBlockAt(new Position(x, y + (i * 16), z));
-                            if (blockData != BlockType.AIR)
-                            {
-                                blockCount++;
-                            }
-
-                            if (!pallet.Contains(blockData))
-                            {
-                                pallet.Add(blockData);
-                            }
-
-                            data[index++] = (byte)pallet.IndexOf(blockData);
-                        }
-
-                byte[] palletData = VarInt.ToByteArray((uint)pallet.Count);
-                for (int m = 0; m < pallet.Count; m++)
+                if(chunkSections[i].GetType() == typeof(SolidChunkSection))
                 {
-                    palletData = palletData.Concat(VarInt.ToByteArray((uint)pallet[m])).ToArray();
+                    WriteFullChunkSection(memStream, i);
+                }
+                else {
+                    WriteDetailedChunkSection(memStream, i);
                 }
 
-                byte[] bitsPerBlock = new byte[] { 0x08 };
+                // Write biome data
 
-                byte[] blockCountData = BitConverter.GetBytes(blockCount);
-                if (BitConverter.IsLittleEndian)
-                    Array.Reverse(blockCountData);
+                // BPE = 0
+                memStream.WriteByte(0x00);
 
-                byte[] sectionData = blockCountData.Concat(bitsPerBlock).Concat(palletData)
-                                    .Concat(VarInt.ToByteArray((uint)(data.Length / 8))).Concat(data).ToArray();
+                // Write Type
+                byte[] biomeType = VarInt.ToByteArray((uint) 0);
+                memStream.Write(biomeType, 0, biomeType.Length);
 
-                finalDataList.AddRange(sectionData);
-                finalDataList.AddRange(new byte[] { 0, 0, 0 });
+                // Write data lenght (is always 0)
+                byte[] dataLenght = VarInt.ToByteArray((uint)0);
+                memStream.Write(dataLenght, 0, dataLenght.Length);
             }
 
-            return finalDataList.ToArray();
+            return memStream.ToArray();
+        }
+
+        private void WriteFullChunkSection(MemoryStream memStream, int i)
+        {
+            // Write blockcount
+            byte[] blockCountData = BitConverter.GetBytes((short) 9999);
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(blockCountData);
+            memStream.Write(blockCountData, 0, blockCountData.Length);
+
+
+            // Write bits per block
+            memStream.WriteByte(0x00);
+
+            // Write block id
+            byte[] id = VarInt.ToByteArray((uint)GetBlockAt(new Position(0, (i * 16), 0)));
+            memStream.Write(id, 0, id.Length);
+
+            // Write data lenght
+            byte[] dataLenght = VarInt.ToByteArray((uint)0);
+            memStream.Write(dataLenght, 0, dataLenght.Length);
+        }
+
+        private void WriteDetailedChunkSection(MemoryStream memStream, int i)
+        {
+            short blockCount = 0;
+            List<BlockType> pallet = new List<BlockType>();
+
+            byte[] data = new byte[16 * 16 * 16];
+
+            int index = 0;
+            // Get chunk data.
+            for (int y = 0; y < 16; y++)
+                for (int z = 0; z < 16; z++)
+                    for (int x = 0; x < 16; x++)
+                    {
+                        //#TODO
+                        // Bad fix, do correct later!
+                        int realX = Math.Abs(((x + 8) % 16) - 15);
+
+                        BlockType blockData = GetBlockAt(new Position(realX, y + (i * 16), z));
+                        if (blockData != BlockType.AIR)
+                        {
+                            blockCount++;
+                        }
+
+                        if (!pallet.Contains(blockData))
+                        {
+                            pallet.Add(blockData);
+                        }
+
+                        data[index++] = (byte)pallet.IndexOf(blockData);
+                    }
+
+            // Write blockcount
+            byte[] blockCountData = BitConverter.GetBytes(blockCount);
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(blockCountData);
+
+            memStream.Write(blockCountData, 0, blockCountData.Length);
+
+            // Write bits per block
+            byte[] bitsPerBlock = new byte[] { 0x08 };
+            memStream.Write(bitsPerBlock, 0, bitsPerBlock.Length);
+
+            // Write pallet data lenght
+            byte[] palletLenght = VarInt.ToByteArray((uint)pallet.Count);
+            memStream.Write(palletLenght, 0, palletLenght.Length);
+
+            // Write pallet data
+            for (int m = 0; m < pallet.Count; m++)
+            {
+                byte[] a = VarInt.ToByteArray((uint)pallet[m]);
+                memStream.Write(a, 0, a.Length);
+            }
+
+            // Write data lenght
+            byte[] b = VarInt.ToByteArray((uint)(data.Length / 8));
+            memStream.Write(b, 0, b.Length);
+
+            // Write data
+            memStream.Write(data, 0, data.Length);
         }
 
     }

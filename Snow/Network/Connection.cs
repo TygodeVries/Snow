@@ -11,6 +11,7 @@ using Snow.Worlds;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
@@ -41,13 +42,17 @@ namespace Snow.Network
         public void SendPacket(ClientboundPacket packet)
         {
             PacketWriter writer = new PacketWriter();
+            MemoryStream stream = new MemoryStream();
 
             packet.Create(writer);
             byte[] bytes = writer.ToByteArray();
 
             byte[] lenghtBytes = VarInt.ToByteArray((uint)bytes.Length);
 
-            SendRawBytes(lenghtBytes.Concat(bytes).ToArray());
+            stream.Write(lenghtBytes, 0, lenghtBytes.Length);
+            stream.Write(bytes, 0, bytes.Length);
+
+            SendRawBytes(stream.ToArray());
         }
         public void SendRawBytes(byte[] data)
         {
@@ -152,6 +157,8 @@ namespace Snow.Network
             {
                 SendRenderDistance(player.GetWorld(), 7, new Vector3(player.GetPosistion().x / 16, 0, player.GetPosistion().z / 16));
                 SendPacket(new PlayerAbilitiesPacket(0x00, 0.05f, 0.1f));
+                player.SetFlying(true);
+                player.SetAllowFlying(true);
             }
 
         }

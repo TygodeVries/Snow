@@ -6,6 +6,7 @@ using Snow.Network.Mappings;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,19 +17,20 @@ namespace Snow.Network
     {
         public byte[] ToByteArray()
         {
-            return bytes.ToArray();
+            return stream.ToArray();
         }
 
-        List<byte> bytes = new List<byte>();
+        MemoryStream stream = new MemoryStream();
 
         public void OverwriteAllBytes(byte[] bytes)
         {
-            this.bytes = bytes.ToList();
+            stream = new MemoryStream();
+            stream.Write(bytes, 0, bytes.Length);
         }
 
         public void WriteByte(byte b)
         {
-            bytes.Add(b);
+            stream.WriteByte(b);
         }
 
         public void WritePacketID(ClientboundPacket packet)
@@ -38,7 +40,7 @@ namespace Snow.Network
 
         public void WriteByteArray(byte[] bytes)
         {
-            this.bytes.AddRange(bytes);
+            stream.Write(bytes, 0, bytes.Length);
         }
 
         public void WriteUUID(UUID uuid)
@@ -217,7 +219,7 @@ namespace Snow.Network
 
         public void Clear()
         {
-            bytes.Clear();
+            stream = new MemoryStream();
         }
     }
 }

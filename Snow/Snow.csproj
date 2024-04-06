@@ -153,6 +153,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Servers\Configuration.cs" />
+    <Compile Include="Tests\ChunkPerformanceTest.cs" />
     <Compile Include="Worlds\Blocks\ProgrammableBlock.cs" />
     <Compile Include="Worlds\Blocks\TestProgrammableBlock.cs" />
     <Compile Include="Worlds\Chunk.cs" />
