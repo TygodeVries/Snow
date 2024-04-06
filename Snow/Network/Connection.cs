@@ -162,6 +162,15 @@ namespace Snow.Network
                 client.GetStream().Flush();
         }
 
+
+        private async Task SendChunksAsync(List<(int, int)> chunks)
+        {
+            foreach (var chunk in chunks)
+            {
+                await Task.Run(() => SendChunk(chunk));
+            }
+        }
+
         public void SendRenderDistance(World world, int distance, Vector3 centerChunk)
         {
             List<(int, int)> chunksToSend = new List<(int, int)>();
@@ -180,11 +189,9 @@ namespace Snow.Network
             chunksToSend.Sort((a, b) => DistanceSquared(a, centerChunk).CompareTo(DistanceSquared(b, centerChunk)));
 
             // Send chunks in sorted order
-            foreach (var chunk in chunksToSend)
-            {
-                SendChunk(chunk);
-            }
+            SendChunksAsync(chunksToSend);
         }
+
 
         // Function to calculate squared distance between two chunks
         private double DistanceSquared((int, int) chunkA, Vector3 chunkB)
@@ -205,7 +212,7 @@ namespace Snow.Network
         }
 
 
-        public async Task SendChunk((int, int) location)
+        public async void SendChunk((int, int) location)
         {
             // Check if chunk is already loaded
             if (HasLoadedChunkClientside(location))
@@ -231,7 +238,7 @@ namespace Snow.Network
             ChunkDataAndUpdateLightPacket packet = chunk.CreatePacket();
            
             // Send packet
-            await SendPacketAsync(packet);
+            SendPacketAsync(packet);
         }
 
         private bool connected = true; 

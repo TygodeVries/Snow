@@ -94,6 +94,7 @@
     <Compile Include="Network\Packets\Play\Clientbound\SoundEffectPacket.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\SystemChatMessagePacket.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\UnloadChunkPacket.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\ChatMessagePacket.cs" />
     <Compile Include="Network\Packets\Play\Serverbound\SetPlayerRotationPacket.cs" />
     <Compile Include="Network\Packets\Status\Clientbound\StatusResponsePacket.cs" />
     <Compile Include="Servers\Server.cs" />
