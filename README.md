@@ -19,5 +19,26 @@ Protocol: 765
 ## Why?
 I made this just for fun to see how far I could get. also so I can make plugins in C# cuz that sounded fun.
 
+# TODO
+- Inventory
+- Chunk saving and editing
+- Programmable Blocks (Tile entities)
+- Syncying block placing
+- hitdetection and server validation (raycasting)
+- Programmable Enities
+- Skins
+- Unloading Chunks
+- Custom items
+- Status effects
+- Time & Weather
+- Advancements
+- Water
+- Commands
+- Enchants & XP
+- Scoreboard
+- Crafting
+- Lighting
+- Perlin Noise
+
 ## wiki
 https://github.com/TygodeVries/Snow/wiki
