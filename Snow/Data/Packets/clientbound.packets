@@ -8,6 +8,7 @@ $ Configuration
 
 $ Status
 0x00 StatusResponsePacket
+0x01 PingResponsePacket
 
 $ Play
 0x09 BlockUpdatePacket

@@ -26,9 +26,15 @@ namespace Snow.Items
             return amount;
         }
 
+        NbtCompoundTag nbt = new NbtCompoundTag();
         public NbtCompoundTag GetNbtData()
         {
-            return new NbtCompoundTag();
+            return nbt;
+        }
+
+        public void SetNbtData(NbtCompoundTag tag)
+        {
+            this.nbt = tag;
         }
 
         public ItemStack(ItemType itemType)

@@ -31,7 +31,6 @@ namespace Snow.Worlds
             this.server = server;
             this.name = name;
 
-            server.AddWorld(this);
             Directory.CreateDirectory(GetFolder());
         }
 

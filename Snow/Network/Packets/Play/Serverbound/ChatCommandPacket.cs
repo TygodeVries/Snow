@@ -19,8 +19,10 @@ namespace Snow.Network.Packets.Play.Serverbound
         }
 
         public override void Use(Connection connection)
-        { 
-            connection.GetServer().GetCommandManager().RunCommand(connection.GetPlayer(), command);
+        {
+            string cmd = command.Split(' ')[0];
+            string args = command.Substring(cmd.Length);
+            connection.GetServer().GetCommandManager().Execute(cmd, args, connection.GetPlayer());
         }
     }
 }

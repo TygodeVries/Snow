@@ -15,7 +15,7 @@ namespace Snow.Network.Packets.Status.Clientbound
         public string max;
         public string online;
 
-        public string playerName = "test";
+        public string playerName = "";
         public string playerId = "4566e69f-c907-48ee-8d71-d7ba5aa00d20";
 
         public string description;
@@ -23,8 +23,9 @@ namespace Snow.Network.Packets.Status.Clientbound
         public string enforcesSecureChat;
         public string previewsChat;
 
-        public StatusResponsePacket(string version, string protocol, string max, string online, string description, string favicon, string enforcesSecureChat, string previewsChat)
+        public StatusResponsePacket(string version, string protocol, string max, string online, string description, string favicon, string enforcesSecureChat, string previewsChat, string peek)
         {
+            this.playerName = peek;
             this.version = version;
             this.protocol = protocol;
             this.max = max;

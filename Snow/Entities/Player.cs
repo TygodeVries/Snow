@@ -56,7 +56,7 @@ namespace Snow.Entities
         {
             PlayerInfoUpdatePacket updatePacket = new PlayerInfoUpdatePacket(this.GetUUID());
             updatePacket.SetAddPlayerPayload(GetName());
-            GetWorld().BroadcastPacket(updatePacket, new List<Connection>() { this.GetConnection() });
+            GetWorld().BroadcastPacket(updatePacket, new List<Connection>() { this.GetConnection() });   
         }
 
         /// <summary>
@@ -84,6 +84,9 @@ namespace Snow.Entities
                 }
 
             }
+
+            SetGamemode((Gamemode)Enum.Parse(typeof(Gamemode), GetConnection().GetServer().GetSettings().GetString("default-gamemode")));
+
         }
 
         public void PlaySound(Identifier identifier, SoundSource soundSource, float volume, float pitch)
@@ -118,6 +121,21 @@ namespace Snow.Entities
             this.gamemode = gamemode;
             GameEventPacket packet = new GameEventPacket(0x03, (int) gamemode);
             GetConnection().SendPacket(packet);
+
+            if(GetGamemode() == Gamemode.CREATIVE)
+            {
+                SetAllowFlying(true);
+            }
+            else if(GetGamemode() == Gamemode.SPECTATOR)
+            {
+                SetAllowFlying(false);
+                SetFlying(true);
+            }
+            else
+            {
+                SetAllowFlying(false);
+                SetFlying(false);
+            }
         }
 
 
@@ -233,6 +251,6 @@ namespace Snow.Entities
         SURVIVAL,
         CREATIVE,
         ADVENTURE,
-        SPECTAROR
+        SPECTATOR
     }
 }

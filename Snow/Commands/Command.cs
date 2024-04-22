@@ -9,28 +9,10 @@ namespace Snow.Commands
 {
     public class Command
     {
-        private string command;
-        public string GetCommand()
+        public virtual void Execute(Player player, string arguments)
         {
-            return command;
+            
         }
-
-        public Command(string command)
-        {
-            this.command = command;
-        }
-
-        public void Execute()
-        {
-            OnExecute.Invoke(this, new CommandArgs(null));
-        }
-
-        public void ExecuteAs(Player player)
-        {
-            OnExecute.Invoke(this, new CommandArgs(player));
-        }
-
-        public event EventHandler<CommandArgs> OnExecute;
     }
 
     public class CommandArgs

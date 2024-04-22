@@ -1,0 +1,5 @@
+{
+  "disconnect.stop": "The server has been closed.",
+  "motd": "This is a Snow server.",
+  "motd_tooltip": "Hello, World!"
+}

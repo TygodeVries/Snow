@@ -33,9 +33,9 @@ namespace Snow.Network.Packets.Handshake.Serverbound
                 // #TODO implement status
                 connection.SetConnectionState(ConnectionState.STATUS);
 
-                Servers.Configuration config = connection.GetServer().GetConfiguration();
+                Servers.Configuration config = connection.GetServer().GetSettings();
 
-                StatusResponsePacket packet = new StatusResponsePacket("1.20.4", "765", config.GetString("max-players"), config.GetString("online-players"), config.GetString("motd"), "data:image/png;base64,<data>", "false", "false");
+                StatusResponsePacket packet = new StatusResponsePacket("1.20.4", "765", config.GetString("max-players"), config.GetString("online-players"), connection.GetServer().GetLanguage().GetString("motd"), "data:image/png;base64,<data>", "false", "false", connection.GetServer().GetLanguage().GetString("motd_tooltip"));
 
                 Log.Send("Motd requested.");
 

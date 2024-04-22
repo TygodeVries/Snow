@@ -19,7 +19,7 @@ namespace Snow.Network.Packets.Login.Serverbound
             player.SetName(this.username);
 
             Server server = connection.GetServer();
-            server.GetDefaultWorld().SpawnEntity(player);
+            server.GetWorldManager().GetDefaultWorld().SpawnEntity(player);
 
             Log.Send($"{username} joined the server!");
 
@@ -34,10 +34,6 @@ namespace Snow.Network.Packets.Login.Serverbound
             connection.SetConnectionState(ConnectionState.PLAY);
 
             player.SyncClient();
-
-            EventHandler<OnPlayerJoinArgs> eventHandler = connection.GetServer().OnPlayerJoin;
-            if (eventHandler != null)
-                eventHandler.Invoke(this, new OnPlayerJoinArgs(player));
 
         }
 

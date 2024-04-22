@@ -34,7 +34,8 @@ namespace Snow.Network.Packets.Play.Clientbound
             foreach(string match in matches)
             {
                 packetWriter.WriteString(match);
-                packetWriter.WriteBool(false);
+                packetWriter.WriteBool(true);
+                packetWriter.WriteTextComponent(new Formats.TextComponent("Test"));
             }
         }
     }

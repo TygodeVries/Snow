@@ -6,71 +6,124 @@ using System.Threading;
 using Snow.Network;
 using Snow.Network.Packets.Play.Clientbound;
 using Snow.Addons;
-using Snow.Levels;
 using Snow.Formats;
 using Snow.Entities;
 using Snow.Commands;
 using Snow.Events;
-using Snow.Items;
 using Snow.Worlds;
-using Snow.Worlds.Generator;
 using System.IO;
-using System.Diagnostics.Tracing;
-using System.Diagnostics;
 
 namespace Snow.Servers
 {
     public class Server
     {
-        TcpListener tcpListener;
-
-        private CommandManager commandManager;
+        private CommandManager _commandManager;
         public CommandManager GetCommandManager()
         {
-            return commandManager;
+            return _commandManager;
         }
 
-        private List<Connection> playerConnections;
         public List<Connection> GetPlayerConnections()
         {
-            return playerConnections;
+            return GetConnectionListener().GetConnections();
         }
 
-        private Configuration configuration;
-        public Configuration GetConfiguration()
+        private Configuration _settings;
+        public Configuration GetSettings()
         {
-            return configuration;
+            return _settings;
         }
 
-        string path;
+        private Configuration _language;
+        public Configuration GetLanguage()
+        {
+            return _language;
+        }
+
+        string _workPath;
         public string GetWorkPath()
         {
-            return path;
+            return _workPath;
         }
 
-        public Server(int port, string path)
+        WorldManager _worldManager;
+        public WorldManager GetWorldManager()
         {
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
-            this.path = path;
-            tcpListener = new TcpListener(IPAddress.Any, port);
-            playerConnections = new List<Connection>();
-            entities = new List<Entity>();
-
-            configuration = new Configuration($"{GetWorkPath()}/Server.json", "Data/SettingsTemplates/server.json");
-
-            CreateWorlds();
-
-            Thread thread = new Thread(this.LobbyThread);
-            thread.Start();
+            return _worldManager;
         }
 
+        int _port;
+        public int GetPort()
+        {
+            return _port;
+        }
+
+        bool _running;
+        public bool IsRunning()
+        {
+            return _running;
+        }
+
+        long tickCount = 0;
+        public long GetTick()
+        {
+            return tickCount;
+        }
+
+        private ConnectionListener _connectionListener;
+        internal ConnectionListener GetConnectionListener()
+        {
+            return _connectionListener;
+        }
+
+        public Server(int port, string workPath)
+        {
+            _running = false;
+            _workPath = workPath;
+            _commandManager = new CommandManager();
+            _connectionListener = new ConnectionListener(port, this);
+            _worldManager = new WorldManager(this);
+
+            // Load configs
+            _settings = new Configuration($"{GetWorkPath()}/Settings.json", "Data/SettingsTemplates/Settings.json");
+            _language = new Configuration($"{GetWorkPath()}/Language.json", "Data/SettingsTemplates/Language.json");
+        }
+
+        /// <summary>
+        /// Start the server
+        /// </summary>
+        public void Start()
+        {
+            Log.Send($"Starting server on port {GetPort()}...");
+
+            GetCommandManager().RegisterBuildIn();
+            GetWorldManager().CreateConfigurationWorlds();
+            GetConnectionListener().Start();
+
+            Thread thr = new Thread(ServerThread);
+            thr.Start();
+        }
+
+        /// <summary>
+        /// Stop the server
+        /// </summary>
+        public void Stop()
+        {
+            addonManager.StopAll();
+
+            BroadcastPacket(new DisconnectPacket(new TextComponent(GetLanguage().GetString("disconned.stop"))));
+
+            Log.Send("Stopped the server.");
+            _running = false;
+        }
+
+        /// <summary>
+        /// Broadcast a message across the server
+        /// </summary>
+        /// <param name="text"></param>
         public void BroadcastMessage(TextComponent text)
         {
-            foreach (Connection con in playerConnections)
+            foreach (Connection con in GetPlayerConnections())
             {
                 Player player = con.GetPlayer();
                 if(player != null)
@@ -80,45 +133,25 @@ namespace Snow.Servers
             }
         }
 
-        private void CreateWorlds()
-        {
-            Directory.CreateDirectory($"{GetWorkPath()}/Worlds");
 
-            foreach (string worldName in GetConfiguration().GetStringArray("worlds"))
-            {
-                string worldDir = $"{GetWorkPath()}/Worlds/{worldName}";
-
-                if (!Directory.Exists(worldDir))
-                {
-                    Directory.CreateDirectory(worldDir);
-                }
-
-                new World(worldName, this);
-            }
-        }
-
-        public void Stop()
-        {
-            addonManager.StopAll();
-        }
-
-
-        private void LobbyThread()
+        /// <summary>
+        /// Thread hosting the accual server.
+        /// I don't recommend editing this unless you know what your doing.
+        /// </summary>
+        private void ServerThread()
         {
             addonManager = new AddonManager(this);
             addonManager.LoadAllAddons();
 
-            tcpListener.Start();
-
-            commandManager = new CommandManager();
+            _running = true;
 
             Log.Send("Server is running!");
-            while (true)
+            while (_running)
             {
                 DateTime startTime = DateTime.Now;
 
                 // Tick all things in this server
-                TickLobby();
+                Tick();
 
                 // Wait until the next tick can be run.
                 double mspt = DateTime.Now.Subtract(startTime).TotalMilliseconds;
@@ -129,94 +162,23 @@ namespace Snow.Servers
                 }
             }
         }
-
-        long tickCount = 0;
-        public long GetTick()
-        {
-            return tickCount;
-        }
         
-        internal void TickLobby()
+        /// <summary>
+        /// Runs every 50 ms to progress the server
+        /// </summary>
+        public void Tick()
         {
             tickCount++;
 
-            AcceptNewClients();
-            SendKeepAlive();
-            ReadPackets();
+            GetConnectionListener().Tick();
             GetAddonManager().Tick();
         }
 
-
-        internal void SendKeepAlive()
-        {
-            if (GetTick() % 40 == 0)
-            {
-                foreach (Connection player in playerConnections)
-                {
-                    player.SendPacket(new KeepAlivePacket(10));
-                }
-            }
-        }
-        internal void AcceptNewClients()
-        {
-            if (tcpListener.Pending())
-            {
-                TcpClient tcpClient = tcpListener.AcceptTcpClient();
-                Connection player = new Connection(this, tcpClient);
-                playerConnections.Add(player);
-            }
-        }
-
-        internal void ReadPackets()
-        {
-            foreach (Connection connection in playerConnections)
-            {
-                connection.ReadPackets();
-            }
-        }
 
         private AddonManager addonManager;
         public AddonManager GetAddonManager()
         {
             return addonManager;
-        }
-
-
-        internal void AddWorld(World world)
-        {
-            worlds.Add(world.GetName(), world);
-        }
-
-        private Dictionary<string, World> worlds = new Dictionary<string, World>();
-        public World GetWorld(string name)
-        {
-            return worlds[name];
-        }
-
-        private List<Entity> entities;
-        public List<Entity> GetEntities()
-        {
-            return entities;
-        }
-
-        public Entity GetEntityWithId(int id)
-        {
-            foreach (Entity entity in GetEntities())
-            {
-                if (entity.GetId() == id)
-                {
-                    return entity;
-                }
-            }
-
-            return null;
-        }
-
-        private int lastEntityId = 0;
-
-        public World GetDefaultWorld()
-        {
-            return GetWorld(GetConfiguration().GetString("default-world"));
         }
 
         public void BroadcastPacket(ClientboundPacket clientboundPacket)
@@ -226,8 +188,5 @@ namespace Snow.Servers
                 connection.SendPacket(clientboundPacket);
             }
         }
-
-        public EventHandler<OnPlayerJoinArgs> OnPlayerJoin;
-        public EventHandler<OnPlayerJoinArgs> OnPlayerPreJoin;
     }
 }

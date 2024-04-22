@@ -17,17 +17,17 @@ namespace Snow.Network.Packets.Play.Serverbound
         {
             transactionId = packetReader.ReadVarInt();
             text = packetReader.ReadString();
-
-            Log.Send(text);
         }
 
         public override void Use(Connection connection)
         {
             CommandManager manager = connection.GetServer().GetCommandManager();
+            Log.Send(text);
 
-            string[] suggestions = manager.GetSuggestions(text, connection.GetPlayer());
 
-            CommandSuggestionsResponsePacket response = new CommandSuggestionsResponsePacket(transactionId, text.Length, 0, suggestions);
+            string[] suggestions = manager.GetSuggestionFor(text);
+
+            CommandSuggestionsResponsePacket response = new CommandSuggestionsResponsePacket(transactionId, text.Length, 6, suggestions);
             connection.SendPacket(response);
 
         }

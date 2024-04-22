@@ -1,4 +1,5 @@
-﻿using Snow.Entities;
+﻿using Snow.Commands.Default;
+using Snow.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,41 +12,43 @@ namespace Snow.Commands
     {
         private Dictionary<string, Command> commands = new Dictionary<string, Command>();
 
-        public Command CreateCommand(string command)
+        public void RegisterCommand(string command, Command instance)
         {
-            command = command.ToLower();
-            Command cmd = new Command(command);
-            commands.Add(command, cmd);
-            return cmd;
+            commands.Add(command.ToLower(), instance);
         }
 
-        public string[] GetSuggestions(string text, Player player)
+        public void UnregisterCommand(string command)
         {
-            List<string> strings = new List<string>();
+            commands.Remove(command.ToLower());
+        }
 
-            foreach(string cmd in commands.Keys)
-            {
-                if(cmd.StartsWith(text))
-                {
-                    strings.Add(cmd);
-                }
-            }
-
-            return strings.ToArray();
-;        }
-
-        public void RunCommand(Player player, string command)
+        public void Execute(string command, string arguments)
         {
+            Command instance = commands[command.ToLower()];
+            instance.Execute(null, arguments);
+        }
 
-            string baseCommand = command.Split(' ')[0].ToLower();
-
-            if(!commands.ContainsKey(baseCommand))
+        public void Execute(string command, string arguments, Player player)
+        {
+            if (!commands.ContainsKey(command))
             {
-                Log.Err($"Command '{baseCommand} not found'");
+                player.SendSystemMessage(new Formats.TextComponent($"Unkown command '{command}'."));
                 return;
             }
 
-            commands[baseCommand].ExecuteAs(player);
+            Command instance = commands[command.ToLower()];
+            instance.Execute(player, arguments);
+        }
+
+        public string[] GetSuggestionFor(string current)
+        {
+            return new string[] { "#TODO" };
+        }
+
+        internal void RegisterBuildIn()
+        {
+            RegisterCommand("gamemode", new GamemodeCommand());
+            RegisterCommand("stop", new StopCommand());
         }
     }
 }

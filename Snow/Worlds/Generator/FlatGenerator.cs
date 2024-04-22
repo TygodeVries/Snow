@@ -12,13 +12,16 @@ namespace Snow.Worlds.Generator
     {
         public override void Generate(Chunk chunk)
         {
-            Random rng = new Random();
-
             for(int bx = 0; bx < 16; bx++)
             {
                 for (int bz = 0; bz < 16; bz++)
                 {
-                    chunk.SetBlockAt(new Position(bx, 70, bz), BlockType.COARSE_DIRT);
+                    int worldx = bx + (chunk.x * 16);
+                    int worldz = bz + (chunk.z * 16);
+
+                    float height = 100;
+
+                    chunk.SetBlockAt(new Position(bx, (int)height, bz), BlockType.COARSE_DIRT);
                 }
             }
         }

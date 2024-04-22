@@ -41,6 +41,7 @@ namespace Snow.Network
 
         public void SendPacket(ClientboundPacket packet)
         {
+
             PacketWriter writer = new PacketWriter();
             MemoryStream stream = new MemoryStream();
 
@@ -144,14 +145,10 @@ namespace Snow.Network
             SendPacket(new SetExperiencePacket(0, 0, 0));
 
             SendChunk((0, 0));
-            SendPacket(new InitializeWorldBorderPacket(0, 0, 10000, server.GetConfiguration().GetDouble("world-border"), 1, 1, 5));
+            SendPacket(new InitializeWorldBorderPacket(0, 0, 10000, server.GetSettings().GetDouble("world-border"), 1, 1, 5));
 
             SendPacket(new UpdateTimePacket());
             SendPacket(new BlockUpdatePacket(new Position(0, -3, 0), 1));
-
-            EventHandler<OnPlayerJoinArgs> eventHandler = this.GetServer().OnPlayerPreJoin;
-            if (eventHandler != null)
-                eventHandler.Invoke(this, new OnPlayerJoinArgs(player));
 
             if(connected)
             {

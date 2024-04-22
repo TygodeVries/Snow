@@ -11,11 +11,11 @@ namespace Snow
     {
         static void Main(string[] args)
         {
-
             MappingsManager.Load();
 
-            Server lobby = new Server(4041, "Server");
-            ChunkPerformanceTest.Test(lobby);
+            Server server = new Server(4041, "Server");
+            server.Start();
+
             Console.ReadLine();
         }
     }

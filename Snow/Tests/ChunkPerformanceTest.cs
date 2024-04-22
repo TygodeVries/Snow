@@ -27,7 +27,7 @@ namespace Snow.Tests
                 for (int y = 0; y < count; y++)
                 {
                     chunks++;
-                    Chunk chunk = new Chunk(server.GetDefaultWorld(), x, y);
+                    Chunk chunk = new Chunk(server.GetWorldManager().GetDefaultWorld(), x, y);
                     chunk.CreatePacket();
                 }
 
