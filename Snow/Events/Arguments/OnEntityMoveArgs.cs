@@ -1,4 +1,5 @@
-﻿using Snow.Formats;
+﻿using Snow.Entities;
+using Snow.Formats;
 using Snow.Worlds;
 using System;
 using System.Collections.Generic;
@@ -12,11 +13,14 @@ namespace Snow.Events.Arguments
     {
         public World toWorld;
         public Vector3 to;
+        public Entity entity;
 
-        public OnEntityMoveArgs(World toWorld, Vector3 to)
+
+        public OnEntityMoveArgs(World toWorld, Vector3 to, Entity entity)
         {
             this.to = to;
             this.toWorld = toWorld;
+            this.entity = entity;
         }
     }
 }

@@ -98,7 +98,7 @@ namespace Snow.Entities
             SetWorld(world);
 
             if (OnEntityMove != null) 
-                OnEntityMove.Invoke(this, new OnEntityMoveArgs(world, new Vector3(x, y, z)));
+                OnEntityMove.Invoke(this, new OnEntityMoveArgs(world, new Vector3(x, y, z), this));
 
             world.BroadcastPacket(new TeleportEntityPacket(this, x, y, z, yaw, pitch));
             world.BroadcastPacket(new SetHeadRotationPacket(this, yaw));
