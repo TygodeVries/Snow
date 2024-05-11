@@ -30,10 +30,6 @@ namespace Snow.Servers
             commandManager = new CommandManager();
             connectionListener = new ConnectionListener(port, this);
             worldManager = new WorldManager(this);
-
-            // Load configs
-            settings = new Configuration($"{GetWorkPath()}/Settings.json", "Data/SettingsTemplates/Settings.json");
-            language = new Configuration($"{GetWorkPath()}/Language.json", "Data/SettingsTemplates/Language.json");
         }
 
         private ItemManager itemManager;
@@ -79,6 +75,17 @@ namespace Snow.Servers
         public void Start()
         {
             Log.Send($"Starting server on port {GetPort()}...");
+
+            // Create work folder
+            if(!Directory.Exists(GetWorkPath()))
+            {
+                Log.Send("Creating working directory...");
+                Directory.CreateDirectory(GetWorkPath());
+            }
+
+            // Create configurations
+            settings = new Configuration($"{GetWorkPath()}/Settings.json", "Data/SettingsTemplates/Settings.json");
+            language = new Configuration($"{GetWorkPath()}/Language.json", "Data/SettingsTemplates/Language.json");
 
             GetCommandManager().RegisterBuildIn();
             GetWorldManager().CreateConfigurationWorlds();
@@ -194,7 +201,7 @@ namespace Snow.Servers
         public void OnPlayerJoinEvent(object sender, OnPlayerJoinArgs args)
         {
             args.player.GetInventory().SetItem(36, new ItemStack(GetItemManager().GetNamespace("snow:test")));
-
+            
             args.player.GetInventory().SetItem(37, new ItemStack(new ItemType("1", 2, 0, "", BlockType.OAK_PLANKS), (byte) 40));
         }
     }
