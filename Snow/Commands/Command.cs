@@ -9,7 +9,7 @@ namespace Snow.Commands
 {
     public class Command
     {
-        public virtual void Execute(Player player, string arguments)
+        public virtual void Execute(Player player, string[] arguments)
         {
             
         }

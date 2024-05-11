@@ -22,13 +22,13 @@ namespace Snow.Commands
             commands.Remove(command.ToLower());
         }
 
-        public void Execute(string command, string arguments)
+        public void Execute(string command, string[] arguments)
         {
             Command instance = commands[command.ToLower()];
             instance.Execute(null, arguments);
         }
 
-        public void Execute(string command, string arguments, Player player)
+        public void Execute(string command, string[] arguments, Player player)
         {
             if (!commands.ContainsKey(command))
             {
@@ -48,6 +48,7 @@ namespace Snow.Commands
         internal void RegisterBuildIn()
         {
             RegisterCommand("gamemode", new GamemodeCommand());
+            RegisterCommand("give", new GiveCommand());
             RegisterCommand("stop", new StopCommand());
         }
     }

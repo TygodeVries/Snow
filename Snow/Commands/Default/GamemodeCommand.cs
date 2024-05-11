@@ -10,11 +10,11 @@ namespace Snow.Commands.Default
 {
     public class GamemodeCommand : Command
     {
-        public override void Execute(Player player, string arguments)
+        public override void Execute(Player player, string[] arguments)
         {
             try
             {
-                Gamemode gamemode = (Gamemode)Enum.Parse(typeof(Gamemode), arguments.ToUpper());
+                Gamemode gamemode = (Gamemode)Enum.Parse(typeof(Gamemode), arguments[0].ToUpper());
                 player.SetGamemode(gamemode);
 
                 TextComponent textComponent = new TextComponent($"Updated gamemode to {gamemode.ToString().ToLower()}");
@@ -22,7 +22,7 @@ namespace Snow.Commands.Default
 
             }
             catch {
-                TextComponent textComponent = new TextComponent($"Gamemode '{arguments}' is unknown.");
+                TextComponent textComponent = new TextComponent($"Gamemode '{arguments[0]}' is unknown.");
                 player.SendSystemMessage(textComponent);
             }
         }

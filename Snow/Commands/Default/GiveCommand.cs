@@ -13,22 +13,22 @@ namespace Snow.Commands.Default
 {
     internal class GiveCommand : Command
     {
-        public override void Execute(Player player, string arguments)
+        public override void Execute(Player player, string[] arguments)
         {
             try
             {
                 Server server = player.GetConnection().GetServer();
                 ItemManager itemManager = server.GetItemManager();
 
-                player.GetInventory().AddItem(new ItemStack(itemManager.GetNamespace(arguments)));
+                player.GetInventory().AddItem(new ItemStack(itemManager.GetNamespace(arguments[0])));
 
-                TextComponent textComponent = new TextComponent($"Gave you an {arguments}");
+                TextComponent textComponent = new TextComponent($"Gave you an {arguments[0]}");
                 player.SendSystemMessage(textComponent);
 
             }
             catch
             {
-                TextComponent textComponent = new TextComponent($"Gamemode '{arguments}' is unknown.");
+                TextComponent textComponent = new TextComponent($"Item '{arguments[0]}' is unknown.");
                 player.SendSystemMessage(textComponent);
             }
         }
