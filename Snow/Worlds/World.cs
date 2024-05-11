@@ -1,5 +1,6 @@
 ﻿using Snow.Entities;
 using Snow.Events;
+using Snow.Events.Arguments;
 using Snow.Formats;
 using Snow.Levels;
 using Snow.Network;
@@ -8,70 +9,93 @@ using Snow.Servers;
 using Snow.Worlds.Generator;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 
 namespace Snow.Worlds
 {
     public class World
     {
-        List<Entity> entities = new List<Entity>();
 
-        public List<Entity> GetEntities()
+        /// <summary>
+        /// Create a new world.
+        /// </summary>
+        /// <param name="name">The name of the world</param>
+        /// <param name="server">The server this world is going to be used on</param>
+        /// <param name="worldHeight">Default world height is 384</param>
+        public World(string name, Server server, int worldHeight)
         {
-            return entities;
-        }
-
-        private Server server;
-
-        public World(string name, Server server)
-        {
-            this.server = server;
-            this.name = name;
+            this._server = server;
+            this._name = name;
+            this._worldHeight = worldHeight;
 
             Directory.CreateDirectory(GetFolder());
         }
 
-        private string name;
-        public string GetName() { return name; }
-
-        private WorldGenerator worldGenerator = null;
-        public void SetWorldGenerator(WorldGenerator worldGenerator)
+        public string GetFolder()
         {
-            this.worldGenerator = worldGenerator;
+            return $"{GetServer().GetWorkPath()}/Worlds/{GetName()}";
         }
 
+        private List<Entity> _entities = new List<Entity>();
+        public List<Entity> GetEntities()
+            { return _entities; }
+
+        private Server _server;
+        public Server GetServer()
+            { return _server; }
+
+
+        private string _name;
+        public string GetName()
+            { return _name; }
+
+        private WorldGenerator _worldGenerator = null;
+        public void SetWorldGenerator(WorldGenerator worldGenerator)
+            { this._worldGenerator = worldGenerator; }
+
+        private bool hasWarned = false;
         public WorldGenerator GetWorldGenerator()
         {
-            if(worldGenerator == null)
+            if(_worldGenerator == null)
             {
-                Log.Err("No world generator set. Using flat.");
-                worldGenerator = new FlatGenerator();
+                if(!hasWarned)
+                    Log.Warn($"The world generator in world {GetName()} is invalid. Switching to 'Flat'");
+                
+                hasWarned = true;
+
+                _worldGenerator = new FlatGenerator();
             }
 
-            return worldGenerator;
+            return _worldGenerator;
         }
 
-        int worldHeight = 24 * 16;
+        int _worldHeight = 24 * 16;
         public int GetWorldHeight()
         {
-            return worldHeight;
+            return _worldHeight;
         }
 
         private int currentEntityId = 0;
+
+        /// <summary>
+        /// Spawn an entity in the world
+        /// </summary>
+        /// <param name="entity"></param>
         public void SpawnEntity(Entity entity)
         {
-            entity.SetServer(server);
+            entity.SetServer(_server);
 
             entity.SetWorld(this);
 
             entity.SetUUID(UUID.Random());
             entity.SetId(currentEntityId);
             currentEntityId++;
-            
-            entities.Add(entity);
+
+            _entities.Add(entity);
 
 
             List<Connection> con = new List<Connection>();
@@ -84,80 +108,119 @@ namespace Snow.Worlds
             BroadcastPacket(new SpawnEntityPacket(entity), con);
         }
         
-        internal void RemoveFromEntities(Entity entity)
+        internal void RemoveEntity(Entity entity)
         {
-            entities.Remove(entity);
+            _entities.Remove(entity);
         }
 
-
-        public Dictionary<(int, int), Chunk> loadedChunks = new Dictionary<(int, int), Chunk>();
-
-
-        public async Task<Chunk> GetChunkAsync((int, int) location)
+        private Dictionary<(int, int), Chunk> loadedChunks = new Dictionary<(int, int), Chunk>();
+        public Chunk GetChunk((int, int) location)
         {
             if (loadedChunks.ContainsKey(location))
             {
                 return loadedChunks[location];
             }
 
-            // Load chunk asynchronously
-            await LoadChunkAsync(location);
+            Log.Err($"The chunk at {location} is not loaded. Please make sure to load the chunk before getting it.");
+            return null;
+        }
 
-            // After loading, return the loaded chunk
-            return loadedChunks[location];
+        public bool IsChunkLoaded((int, int) location)
+        {
+            return loadedChunks.ContainsKey(location);
         }
 
         public async Task LoadChunkAsync((int, int) location)
         {
             Chunk chunk = new Chunk(this, location.Item1, location.Item2);
             await Task.Run(() => GetWorldGenerator().Generate(chunk));
-            loadedChunks.Add(location, chunk);
+            lock (loadedChunks)
+            {
+                loadedChunks.Add(location, chunk);
+            }
         }
+
         public void UnloadChunk((int, int) location)
         {
             loadedChunks.Remove(location);
         }
 
-        public string GetFolder()
-        {
-            return $"{server.GetWorkPath()}/Worlds/{name}";
-        }
-
+        /// <summary>
+        /// Broadcast a packet in this world
+        /// </summary>
+        /// <param name="packet">The packet to broadcast</param>
         public void BroadcastPacket(ClientboundPacket packet)
         {
             BroadcastPacket(packet, new List<Connection>());
         }
 
+        /// <summary>
+        /// Broadcast a message but exludes a few clients
+        /// </summary>
+        /// <param name="packet">The packet</param>
+        /// <param name="exclude">A list of connections to ignore</param>
         public void BroadcastPacket(ClientboundPacket packet, List<Connection> exclude)
         {
-            List<Player> playersToSendPacket = new List<Player>();
-
-            lock (entities)
+            foreach (Player player in GetPlayers())
             {
-                foreach (Entity entity in entities)
+                if (!exclude.Contains(player.GetConnection()))
+                {
+                    player.GetConnection().SendPacket(packet);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get a list of all players in this world
+        /// </summary>
+        /// <returns></returns>
+        public List<Player> GetPlayers()
+        {
+            List<Player> players = new List<Player>();
+
+            lock (_entities)
+            {
+                foreach (Entity entity in _entities)
                 {
                     if (entity.GetType() == typeof(Player))
                     {
                         Player player = (Player)entity;
 
-                        if (!exclude.Contains(player.GetConnection()))
-                        {
-                            playersToSendPacket.Add(player);
-                        }
+                        players.Add(player);
                     }
                 }
             }
 
-            // Now iterate over the list of players to send the packet
-            foreach (Player player in playersToSendPacket)
-            {
-                player.GetConnection().SendPacket(packet);
-            }
+            return players;
         }
 
+        /// <summary>
+        /// Set a block to a posistion
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <param name="blockType"></param>
         public void SetBlockAt(int x, int y, int z, BlockType blockType)
         {
             SetBlockAt(x, y, z, blockType, null);
+        }
+
+        public BlockType? GetBlockAt(int x, int y, int z)
+        {
+            int chunkX = (int)Math.Floor(x / 16f);
+            int chunkZ = (int)Math.Floor(z / 16f);
+
+            if (!IsChunkLoaded((chunkX, chunkZ)))
+            {
+                return null;
+            }
+
+            Chunk chk = GetChunk((chunkX, chunkZ));
+
+            BlockType blockType = chk.GetBlockAt(new Position(ModuloNegative(x, 16), y, ModuloNegative(z, 16)));
+
+            return blockType;
         }
 
         public void SetBlockAt(int x, int y, int z, BlockType blockType, Player player)
@@ -167,9 +230,69 @@ namespace Snow.Worlds
             if(OnBlockPlace != null)
                 OnBlockPlace.Invoke(this, new OnBlockPlaceArgs(player, new Position(x, y, z), blockType));
 
+            int chunkX = (int) Math.Floor(x / 16f);
+            int chunkZ = (int)Math.Floor(z / 16f);
+
+            if (!IsChunkLoaded((chunkX, chunkZ)))
+            {
+                Log.Err($"Attempted to place a block at ({x}, {y}, {z}) in chunk that is unloaded. Make sure to load the chunk first.");
+                return;
+            }
+
+            // Update chunk to have block
+            Chunk chk = GetChunk((chunkX, chunkZ));
+
+            chk.SetBlockAt(new Position(ModuloNegative(x, 16), y, ModuloNegative(z, 16)), blockType);
+
+            // Create packet
+
+            BlockUpdatePacket packet = new BlockUpdatePacket(new Position(x, y, z), (int) blockType);
+            chk.BroadcastPacket(packet);
         }
 
+        private int ModuloNegative(int a, int b)
+        {
+            if (a < 0)
+                return b-(-a % b);
+
+            return a % b;
+        }
+        
         public EventHandler<OnBlockPlaceArgs> OnBlockPlace;
 
+        /// <summary>
+        /// Returns null if nothing is hit.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="direction"></param>
+        /// <param name="lenght"></param>
+        /// <param name="stepSize"></param>
+        /// <param name="ignore"></param>
+        /// <returns></returns>
+        public RaycastResult Raycast(Vector3 start, Vector3 direction, int lenght, float stepSize, BlockType[] ignore)
+        {
+            Vector3 nDirection = direction.Normalized();
+
+            Vector3 p = start.Clone();
+
+            for(int i = 0; i < (float) lenght * (1f / stepSize); i++)
+            {
+                p += nDirection / stepSize;
+
+                BlockType? blockType = GetBlockAt((int)p.x, (int)p.y, (int)p.z);
+                if(blockType == null)
+                {
+                    // Chunk not loaded.
+                    break;
+                }
+
+                if(!ignore.Contains((BlockType) blockType))
+                {
+                    return new RaycastResult(p);
+                }
+            }
+
+            return null;
+        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Snow.Entities;
 using Snow.Events;
+using Snow.Events.Arguments;
 using Snow.Formats;
+using Snow.Network.Packets.Play.Clientbound;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,8 +46,11 @@ namespace Snow.Network.Packets.Play.Serverbound
 
         public override void Use(Connection connection)
         {
-            connection.GetPlayer().OnUseItem.Invoke(this,
+            connection.GetPlayer().OnUseItem?.Invoke(this,
                 new OnUseItemsArgs(connection.GetPlayer(), location, face, insideBlock));
+
+            AcknowledgeBlockChangePacket packet = new AcknowledgeBlockChangePacket(sequence);
+            connection.SendPacket(packet);
         }
     }
 }

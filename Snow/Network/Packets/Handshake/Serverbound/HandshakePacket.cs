@@ -26,8 +26,6 @@ namespace Snow.Network.Packets.Handshake.Serverbound
         public override void Use(Connection connection)
         {
 
-            Console.WriteLine($"Player attempted to connect to {serverAddress}:{port} using pv {protocolVersion}, next stage is {nextState}");
-
             if (nextState == 1)
             {
                 // #TODO implement status
@@ -37,7 +35,6 @@ namespace Snow.Network.Packets.Handshake.Serverbound
 
                 StatusResponsePacket packet = new StatusResponsePacket("1.20.4", "765", config.GetString("max-players"), config.GetString("online-players"), connection.GetServer().GetLanguage().GetString("motd"), "data:image/png;base64,<data>", "false", "false", connection.GetServer().GetLanguage().GetString("motd_tooltip"));
 
-                Log.Send("Motd requested.");
 
                 connection.SendPacket(packet);
                 return;

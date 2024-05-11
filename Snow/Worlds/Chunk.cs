@@ -2,20 +2,24 @@
 using Snow.Formats;
 using Snow.Formats.Nbt;
 using Snow.Levels;
+using Snow.Network;
 using Snow.Network.Packets.Play.Clientbound;
 using Snow.Worlds.Blocks;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using static System.Collections.Specialized.BitVector32;
 
 namespace Snow.Worlds
 {
     public class Chunk
     {
         World world;
+        public World GetWorld()
+        {
+            return world;
+        }
+
+
 
         public int x;
         public int z;
@@ -35,6 +39,23 @@ namespace Snow.Worlds
             for(int i = 0; i < cs; i++)
             {
                 chunkSections[i] = new SolidChunkSection(0);
+            }
+        }
+
+        /// <summary>
+        /// Broadcast a packet to everyone who has this chunk loaded.
+        /// </summary>
+        public void BroadcastPacket(ClientboundPacket packet)
+        {
+            List<Player> players = GetWorld().GetPlayers();
+
+            foreach(Player player in players)
+            {
+                // Check if player has chunk loaded.
+                if (player.GetConnection().HasLoadedChunkClientside((x, z)))
+                {
+                    player.GetConnection().SendPacket(packet);
+                }
             }
         }
 
@@ -79,51 +100,55 @@ namespace Snow.Worlds
 
         public void SetBlockAt(Position position, BlockType blockType)
         {
-            try
+            lock (chunkSections)
             {
-                int x = position.x;
-                int y = position.y;
-                int z = position.z;
-
-                int chunkSection = (int)Math.Floor(position.y / 16d);
-                ChunkSection section = chunkSections[chunkSection];
-
-                if (section.GetType() == typeof(DetailedChunkSection))
+                try
                 {
-                    ((DetailedChunkSection)section).Set(blockType, x, y % 16, z);
-                    return;
-                }
+                    int x = position.x;
+                    int y = position.y;
+                    int z = position.z;
 
-                else if (section.GetType() == typeof(SolidChunkSection))
-                {
-                    SolidChunkSection detailedChunkSection = (SolidChunkSection)section;
-                    if (detailedChunkSection.Get(0, 0, 0) != blockType)
+                    int chunkSection = (int)Math.Floor(position.y / 16d);
+                    ChunkSection section = chunkSections[chunkSection];
+
+                    if (section.GetType() == typeof(DetailedChunkSection))
                     {
-                        BlockType bt = detailedChunkSection.Get(0, 0, 0);
-                        DetailedChunkSection detailedChunk = new DetailedChunkSection();
-                        for (int a = 0; a < 16; a++)
+                        ((DetailedChunkSection)section).Set(blockType, x, y % 16, z);
+                        return;
+                    }
+
+                    else if (section.GetType() == typeof(SolidChunkSection))
+                    {
+                        SolidChunkSection detailedChunkSection = (SolidChunkSection)section;
+                        if (detailedChunkSection.Get(0, 0, 0) != blockType)
                         {
-                            for (int b = 0; b < 16; b++)
+                            BlockType bt = detailedChunkSection.Get(0, 0, 0);
+                            DetailedChunkSection detailedChunk = new DetailedChunkSection();
+                            for (int a = 0; a < 16; a++)
                             {
-                                for (int c = 0; c < 16; c++)
+                                for (int b = 0; b < 16; b++)
                                 {
-                                    detailedChunk.Set(bt, a, b, c);
+                                    for (int c = 0; c < 16; c++)
+                                    {
+                                        detailedChunk.Set(bt, a, b, c);
+                                    }
                                 }
                             }
+
+                            detailedChunk.Set(blockType, x, y % 16, z);
+
+                            chunkSections[chunkSection] = detailedChunk;
                         }
-
-                        detailedChunk.Set(blockType, x, y % 16, z);
-
-                        chunkSections[chunkSection] = detailedChunk;
+                    }
+                    else
+                    {
+                        Log.Err("Invalid or uninemplemented sectionchunktype! type: " + section.GetType());
                     }
                 }
-                else
+                catch (Exception e)
                 {
-                    Log.Err("Invalid or uninemplemented sectionchunktype! type: " + section.GetType());
+                    Log.Err($"Failed to setblock at {position.ToString()} because: " + e);
                 }
-            } catch(Exception e)
-            {
-                Log.Err($"Failed to setblock at {position.ToString()} because: " + e);
             }
         }
 

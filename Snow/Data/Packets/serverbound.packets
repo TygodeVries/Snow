@@ -13,5 +13,7 @@ $ Play
 0x35 UseItemOnPacket
 0x19 SetPlayerRotationPacket
 0x05 ChatMessagePacket
+0x21 PlayerActionPacket
+
 $ Status
 0x01 PingRequestPacket

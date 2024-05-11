@@ -95,10 +95,16 @@ namespace Snow.Network
         public byte[] ReadBytes(int amount)
         {
             byte[] item = new byte[amount];
-            Array.Copy(data, pointer, item, 0, 8);
+            Array.Copy(data, pointer, item, 0, amount);
             pointer += amount;
 
             return item;
+        }
+
+        public byte ReadByte()
+        {
+            byte[] bytes = ReadBytes(1);
+            return bytes[0];
         }
 
         public long ReadLong()

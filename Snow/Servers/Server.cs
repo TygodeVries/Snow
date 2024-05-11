@@ -12,82 +12,66 @@ using Snow.Commands;
 using Snow.Events;
 using Snow.Worlds;
 using System.IO;
+using Snow.Items;
+using Snow.Events.Arguments;
+using Snow.Levels;
 
 namespace Snow.Servers
 {
     public class Server
     {
-        private CommandManager _commandManager;
-        public CommandManager GetCommandManager()
-        {
-            return _commandManager;
-        }
-
-        public List<Connection> GetPlayerConnections()
-        {
-            return GetConnectionListener().GetConnections();
-        }
-
-        private Configuration _settings;
-        public Configuration GetSettings()
-        {
-            return _settings;
-        }
-
-        private Configuration _language;
-        public Configuration GetLanguage()
-        {
-            return _language;
-        }
-
-        string _workPath;
-        public string GetWorkPath()
-        {
-            return _workPath;
-        }
-
-        WorldManager _worldManager;
-        public WorldManager GetWorldManager()
-        {
-            return _worldManager;
-        }
-
-        int _port;
-        public int GetPort()
-        {
-            return _port;
-        }
-
-        bool _running;
-        public bool IsRunning()
-        {
-            return _running;
-        }
-
-        long tickCount = 0;
-        public long GetTick()
-        {
-            return tickCount;
-        }
-
-        private ConnectionListener _connectionListener;
-        internal ConnectionListener GetConnectionListener()
-        {
-            return _connectionListener;
-        }
-
         public Server(int port, string workPath)
         {
-            _running = false;
-            _workPath = workPath;
-            _commandManager = new CommandManager();
-            _connectionListener = new ConnectionListener(port, this);
-            _worldManager = new WorldManager(this);
+            this.port = port;
+            running = false;
+            this.workPath = workPath;
+            eventManager = new EventManager();
+            itemManager = new ItemManager();
+            commandManager = new CommandManager();
+            connectionListener = new ConnectionListener(port, this);
+            worldManager = new WorldManager(this);
 
             // Load configs
-            _settings = new Configuration($"{GetWorkPath()}/Settings.json", "Data/SettingsTemplates/Settings.json");
-            _language = new Configuration($"{GetWorkPath()}/Language.json", "Data/SettingsTemplates/Language.json");
+            settings = new Configuration($"{GetWorkPath()}/Settings.json", "Data/SettingsTemplates/Settings.json");
+            language = new Configuration($"{GetWorkPath()}/Language.json", "Data/SettingsTemplates/Language.json");
         }
+
+        private ItemManager itemManager;
+        public ItemManager GetItemManager() => itemManager;
+
+        private CommandManager commandManager;
+        public CommandManager GetCommandManager() => commandManager;
+
+        public List<Connection> GetPlayerConnections() => GetConnectionListener().GetConnections();
+        private Configuration settings;
+        public Configuration GetSettings() => settings;
+
+        private Configuration language;
+        public Configuration GetLanguage() => language;
+
+        private EventManager eventManager;
+        public EventManager GetEventManager() => eventManager;
+
+        string workPath;
+        public string GetWorkPath() => workPath;
+
+        WorldManager worldManager;
+        public WorldManager GetWorldManager() => worldManager;
+
+        int port;
+        public int GetPort() => port;
+
+        bool running;
+        public bool IsRunning() => running;
+
+        long tickCount = 0;
+        public long GetTick() => tickCount;
+
+        private ConnectionListener connectionListener;
+        internal ConnectionListener GetConnectionListener() => connectionListener;
+
+        private AddonManager addonManager;
+        public AddonManager GetAddonManager() => addonManager;
 
         /// <summary>
         /// Start the server
@@ -102,6 +86,7 @@ namespace Snow.Servers
 
             Thread thr = new Thread(ServerThread);
             thr.Start();
+            TestCode();
         }
 
         /// <summary>
@@ -109,12 +94,12 @@ namespace Snow.Servers
         /// </summary>
         public void Stop()
         {
-            addonManager.StopAll();
+            GetAddonManager().StopAll();
 
-            BroadcastPacket(new DisconnectPacket(new TextComponent(GetLanguage().GetString("disconned.stop"))));
+            BroadcastPacket(new DisconnectPacket(new TextComponent(GetLanguage().GetString("disconnect.stop"))));
 
             Log.Send("Stopped the server.");
-            _running = false;
+            running = false;
         }
 
         /// <summary>
@@ -143,10 +128,12 @@ namespace Snow.Servers
             addonManager = new AddonManager(this);
             addonManager.LoadAllAddons();
 
-            _running = true;
+            running = true;
+
+            double[] pastTickTime = new double[20 * 5];
 
             Log.Send("Server is running!");
-            while (_running)
+            while (running)
             {
                 DateTime startTime = DateTime.Now;
 
@@ -157,9 +144,18 @@ namespace Snow.Servers
                 double mspt = DateTime.Now.Subtract(startTime).TotalMilliseconds;
                 if ((int)(50 - mspt) > 0)
                 {
-                    Console.Title = $"MSPT: {mspt}";
                     Thread.Sleep((int)(50 - mspt));
                 }
+
+                pastTickTime[GetTick() % pastTickTime.Length] = mspt;
+
+                double tot = 0;
+                for(int i = 0; i < pastTickTime.Length; i++)
+                {
+                    tot = pastTickTime[i];
+                }
+
+                Console.Title = $"MSPT (Over {pastTickTime.Length / 20} second(s)): {tot / (double) pastTickTime.Length}";
             }
         }
         
@@ -174,19 +170,32 @@ namespace Snow.Servers
             GetAddonManager().Tick();
         }
 
-
-        private AddonManager addonManager;
-        public AddonManager GetAddonManager()
-        {
-            return addonManager;
-        }
-
+        /// <summary>
+        /// Broadcast a packet server wide
+        /// </summary>
+        /// <param name="clientboundPacket"></param>
         public void BroadcastPacket(ClientboundPacket clientboundPacket)
         {
             foreach(Connection connection in GetPlayerConnections())
             {
                 connection.SendPacket(clientboundPacket);
             }
+        }
+
+
+        // #TODO
+        // REMOVE THIS IN LATER VERSION
+        public void TestCode()
+        {
+            GetItemManager().RegisterItemType(new ItemType("snow:test", 1, 0, "Test Item", Levels.BlockType.STONE));
+            GetEventManager().PlayerJoinEvent += OnPlayerJoinEvent;
+        }
+
+        public void OnPlayerJoinEvent(object sender, OnPlayerJoinArgs args)
+        {
+            args.player.GetInventory().SetItem(36, new ItemStack(GetItemManager().GetNamespace("snow:test")));
+
+            args.player.GetInventory().SetItem(37, new ItemStack(new ItemType("1", 2, 0, "", BlockType.OAK_PLANKS), (byte) 40));
         }
     }
 }

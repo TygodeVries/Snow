@@ -1,4 +1,5 @@
 ﻿$ Login
+0x00 DisconnectLoginPacket
 0x02 LoginSuccessPacket
 
 $ Configuration
@@ -11,6 +12,7 @@ $ Status
 0x01 PingResponsePacket
 
 $ Play
+0x05 AcknowledgeBlockChangePacket
 0x09 BlockUpdatePacket
 0x0B ChangeDifficultyPacket
 0x0C ChunkBatchFinishedPacket

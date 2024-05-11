@@ -1,11 +1,14 @@
 ﻿
 using Snow.Events;
+using Snow.Events.Arguments;
 using Snow.Formats;
 using Snow.Items;
 using Snow.Items.Containers;
+using Snow.Levels;
 using Snow.Network;
 using Snow.Network.Packets.Play.Clientbound;
 using Snow.Network.Packets.Play.Serverbound;
+using Snow.Worlds;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,6 +24,8 @@ namespace Snow.Entities
     {
         public Player(Connection connection)
         {
+            this.inventory = new Inventory(44, this, InventoryType.PlayerInventory);
+
             this.connection = connection;
             this.type = 124;
 
@@ -43,7 +48,7 @@ namespace Snow.Entities
         }
 
 
-        private Inventory inventory = new Inventory(44);
+        private Inventory inventory;
         public Inventory GetInventory() { return inventory; }
 
         public void UpdateInventory()
@@ -87,6 +92,7 @@ namespace Snow.Entities
 
             SetGamemode((Gamemode)Enum.Parse(typeof(Gamemode), GetConnection().GetServer().GetSettings().GetString("default-gamemode")));
 
+            GetConnection().GetServer().GetEventManager().PlayerJoinEvent?.Invoke(null, new OnPlayerJoinArgs(this));
         }
 
         public void PlaySound(Identifier identifier, SoundSource soundSource, float volume, float pitch)
@@ -194,7 +200,8 @@ namespace Snow.Entities
                 int face = args.face;
 
                 Position blockPos = args.position.GetAdjacent(face);
-                GetWorld().OnBlockPlace.Invoke(this, new OnBlockPlaceArgs(this, blockPos, itemStack.GetItemType().blockType));
+                GetWorld().OnBlockPlace?.Invoke(this, new OnBlockPlaceArgs(this, blockPos, itemStack.GetItemType().blockType));
+                GetWorld().SetBlockAt(blockPos.x, blockPos.y, blockPos.z, itemStack.GetItemType().blockType);
             }
         }
 
@@ -215,13 +222,45 @@ namespace Snow.Entities
             UpdatePlayerAbilities();
         }
 
+        Position _currentDiggingPosition = null;
+        public Position GetCurrentDigggingPosition()
+        {
+            return _currentDiggingPosition;
+        }
+
+        public bool IsDigging()
+        {
+            return _currentDiggingPosition != null;
+        }
+
+        public void StartDigging(Position position)
+        {
+            _currentDiggingPosition = position;
+
+            if(GetGamemode() == Gamemode.CREATIVE)
+            {
+                BreakBlock(_currentDiggingPosition);
+                _currentDiggingPosition = null;
+            }
+        }
+
+        public void CancelDigging()
+        {
+            _currentDiggingPosition = null;
+        }
+
+        public void BreakBlock(Position position)
+        {
+            GetWorld().SetBlockAt(position.x, position.y, position.z, BlockType.AIR);
+        }
+
         private bool flyingAllowed = false;
         public void SetAllowFlying(bool flyingAllowed)
         {
             this.flyingAllowed = flyingAllowed;
             UpdatePlayerAbilities();
         }
-
+        
         private float flyingSpeed = 0.05f;
         /// <summary>
         /// 0.05 by default.

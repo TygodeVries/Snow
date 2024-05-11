@@ -1,4 +1,5 @@
 ﻿using Snow.Events;
+using Snow.Events.Arguments;
 using Snow.Formats;
 using Snow.Items;
 using Snow.Network.Packets.Play.Clientbound;
@@ -79,7 +80,7 @@ namespace Snow.Entities
         {
             int[] ids = new int[] { this.id };
             RemoveEntitiesPacket removeEntitiesPacket = new RemoveEntitiesPacket(ids);
-            GetWorld().RemoveFromEntities(this);
+            GetWorld().RemoveEntity(this);
 
             GetWorld().BroadcastPacket(removeEntitiesPacket);
         }

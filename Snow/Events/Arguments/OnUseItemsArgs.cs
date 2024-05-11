@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Snow.Events
+namespace Snow.Events.Arguments
 {
     public class OnUseItemsArgs
     {

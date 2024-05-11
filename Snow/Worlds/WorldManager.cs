@@ -60,7 +60,7 @@ namespace Snow.Worlds
                 Log.Send($"Creating world named {name} for the first time...");
             }
 
-            World world = new World(name, server);
+            World world = new World(name, server, 384);
             
             // #TODO
             // Load world data from files

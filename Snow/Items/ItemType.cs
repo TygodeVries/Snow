@@ -38,13 +38,30 @@ namespace Snow.Items
             return customModelData;
         }
 
-        public ItemType(string id, int networkId, int customModelData, string defaultName, bool isBlock)
+        /// <summary>
+        /// Create a non-block item
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="networkId"></param>
+        /// <param name="customModelData"></param>
+        /// <param name="defaultName"></param>
+        public ItemType(string id, int networkId, int customModelData, string defaultName)
         {
             this.id = id;
             this.networkId = networkId;
             this.customModelData = customModelData;
             this.defaultName = defaultName;
-            IsBlock = isBlock;
+            IsBlock = false;
+        }
+
+        public ItemType(string id, int networkId, int customModelData, string defaultName, BlockType blockType)
+        {
+            this.id = id;
+            this.networkId = networkId;
+            this.customModelData = customModelData;
+            this.defaultName = defaultName;
+            this.blockType = blockType;
+            IsBlock = true;
         }
     }
 }

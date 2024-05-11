@@ -229,8 +229,13 @@ namespace Snow.Network
             Player player = GetPlayer();
             World world = player.GetWorld();
 
+            if(!world.IsChunkLoaded(location))
+            {
+                await world.LoadChunkAsync(location);
+            }
+
             // Get the chunk
-            Chunk chunk = await world.GetChunkAsync(location);
+            Chunk chunk = world.GetChunk(location);
 
             if(chunk == null)
             {
@@ -284,8 +289,10 @@ namespace Snow.Network
                 }
             }
 
-            // read up to 10 packets
-            for (int i = 0; i < 10; i++)
+            int maxPacketsPerTick = 60;
+
+            for (int i = 0; i < maxPacketsPerTick; i++)
+            {
                 if (data.Length > 3)
                 {
                     int lenght = VarInt.FromByteArray(data, out int bytesRead);
@@ -305,6 +312,11 @@ namespace Snow.Network
 
                     HandlePacket(packet);
                 }
+                else
+                {
+                    break;
+                }
+            }
         }
         internal void HandlePacket(byte[] packetData)
         {
