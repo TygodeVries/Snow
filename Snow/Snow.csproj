@@ -63,7 +63,9 @@
     <Compile Include="Formats\BitSet.cs" />
     <Compile Include="Formats\TextComponent.cs" />
     <Compile Include="Formats\Vector2.cs" />
+    <Compile Include="Items\BlockItemType.cs" />
     <Compile Include="Items\ItemManager.cs" />
+    <Compile Include="Items\ItemMaterial.cs" />
     <Compile Include="Items\ItemStack.cs" />
     <Compile Include="Items\ItemType.cs" />
     <Compile Include="Formats\BlockType.cs" />

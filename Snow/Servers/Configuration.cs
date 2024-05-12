@@ -14,9 +14,15 @@ namespace Snow.Servers
     {
         private JsonDocument configFile;
 
+
+        /// <summary>
+        /// If template is 'null' then the file will not be filed in.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="template"></param>
         public Configuration(string path, string template)
         {
-            if(!File.Exists(path))
+            if(template != null && !File.Exists(path))
             {
                 TextWriter stream = File.CreateText(path);
                 stream.Write(File.ReadAllText(template));

@@ -194,15 +194,14 @@ namespace Snow.Servers
         // REMOVE THIS IN LATER VERSION
         public void TestCode()
         {
-            GetItemManager().RegisterItemType(new ItemType("snow:test", 1, 0, "Test Item", Levels.BlockType.STONE));
+            
             GetEventManager().PlayerJoinEvent += OnPlayerJoinEvent;
         }
 
         public void OnPlayerJoinEvent(object sender, OnPlayerJoinArgs args)
         {
-            args.player.GetInventory().SetItem(36, new ItemStack(GetItemManager().GetNamespace("snow:test")));
+            args.player.GetInventory().SetItem(36, new ItemStack(GetItemManager().GetNamespace("namespace:chees")));
             
-            args.player.GetInventory().SetItem(37, new ItemStack(new ItemType("1", 2, 0, "", BlockType.OAK_PLANKS), (byte) 40));
         }
     }
 }

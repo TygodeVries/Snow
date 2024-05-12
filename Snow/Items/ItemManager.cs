@@ -8,25 +8,24 @@ namespace Snow.Items
 {
     public class ItemManager
     {
-        private List<ItemType> itemsTypes = new List<ItemType>();
+        private Dictionary<string, ItemType> itemsTypes = new Dictionary<string, ItemType>();
 
-        public ItemType GetNamespace(string ns)
+        public ItemType GetNamespace(string nameSpace)
         {
-            foreach(ItemType type in  itemsTypes)
+            if(itemsTypes.ContainsKey(nameSpace))
             {
-                if(type.GetId() == ns)
-                {
-                    return type;
-                }
+                return itemsTypes[nameSpace];
             }
-
-            Log.Err("Item with ID " + ns + " cant be found");
-            return null;
+            else
+            {
+                Log.Err("Cant find item named " + nameSpace);
+                return null;
+            }
         }
 
-        public void RegisterItemType(ItemType itemType)
+        public void RegisterItemType(string nameSpace, ItemType itemType)
         {
-            itemsTypes.Add(itemType);
+            itemsTypes.Add(nameSpace, itemType);
         }
     }
 }

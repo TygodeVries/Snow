@@ -1,4 +1,5 @@
-﻿using Snow.Servers;
+﻿using Snow.Items;
+using Snow.Servers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -50,15 +51,26 @@ namespace Snow.Addons
                 string startingFileName = addonData.RootElement.GetProperty("code").GetProperty("file").GetString();
                 string startingClassName = addonData.RootElement.GetProperty("code").GetProperty("class").GetString();
 
+
+                if(!File.Exists($"{addonDirectory}/{startingFileName}"))
+                {
+                    Log.Err($"DLL for addon {name} was not found.");
+                    return;
+                }
                 Assembly assembly = Assembly.LoadFile($"{addonDirectory}/{startingFileName}");
                 Type type = assembly.GetType(startingClassName);
 
                 Addon addon = (Addon)Activator.CreateInstance(type);
                 addon.dataPath = folder;
                 addon.SetAddonManager(this);
-                Log.Send($"[Addons] Loaded addon '{name}' version '{version}' by '{author}'.");
                 addons.Add(addon);
                 addon.Start();
+
+                LoadAddonItems(addon);
+
+                Log.Send($"[Addons] Loaded addon '{name}' version '{version}' by '{author}'.");
+               
+                
             
             } catch(Exception e)
             {
@@ -69,6 +81,37 @@ namespace Snow.Addons
                 else
                 {
                     Log.Err($"Failed to load addon {name} because: \n" + e);
+                }
+            }
+        }
+
+        public void LoadAddonItems(Addon addon)
+        {
+            string itemDataPath = addon.GetDataPath() + "/item";
+            if (!Directory.Exists(itemDataPath))
+            {
+                return;
+            }
+
+            string[] files = Directory.GetFiles(itemDataPath);
+            Log.Send($"Loading {files.Length} items...");
+
+            foreach (string file in files)
+            {
+                string addonFileData = File.ReadAllText(file);
+                JsonDocument addonData = JsonDocument.Parse(addonFileData);
+                string id = addonData.RootElement.GetProperty("id").GetString();
+
+                string material = addonData.RootElement.GetProperty("style").GetProperty("material").GetString();
+                string name = addonData.RootElement.GetProperty("style").GetProperty("name").GetString();
+                string modelData = addonData.RootElement.GetProperty("style").GetProperty("customModelData").GetString();
+
+                string places = addonData.RootElement.GetProperty("places").GetString();
+
+                if(places == null)
+                {
+                    ItemType itemType = new ItemType((ItemMaterial) Enum.Parse(typeof(ItemMaterial), material), name, int.Parse(modelData));
+                    GetServer().GetItemManager().RegisterItemType(id, itemType);
                 }
             }
         }

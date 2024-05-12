@@ -1,0 +1,54 @@
+{
+  "minecraft:worldgen/biome": {
+
+  },
+  "minecraft:chat_type": {
+
+  },
+  "minecraft:trim_pattern": {
+
+  },
+  "minecraft:trim_materia": {
+
+  },
+  "minecraft:wolf_variant": {
+
+  },
+
+  "minecraft:dimension_type": [
+    {
+      "name": "minecraft:overworld",
+      "id": 0,
+      "element": {
+        "piglin_safe": "0x00",
+        "natural": "0x01",
+        "ambient_light": "0.0f",
+        "monster_spawn_block_light_limit": 0,
+        "infiniburn": "#minecraft:infiniburn_overworld",
+        "respawn_anchor_works": "0x00",
+        "has_skylight": "0x01",
+        "bed_works": "0x01",
+        "effects": "minecraft:overworld",
+        "has_raids": "0x01",
+        "logical_height": 384,
+        "coordinate_scale": 1.0,
+        "monster_spawn_light_level": {
+          "type": "minecraft:uniform",
+          "value": {
+            "min_inclusive": 0,
+            "max_inclusive": 7
+          }
+        },
+        "min_y": -64,
+        "ultrawarm": "0x00",
+        "has_ceiling": "0x00",
+        "height": 384
+      }
+    }
+  ],
+
+  "minecraft:damage_type": [
+
+  ], "minecraft:banner_pattern": {
+
+} }

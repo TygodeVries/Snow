@@ -9,19 +9,9 @@ namespace Snow.Items
 {
     public class ItemType
     {
-
-        private string id;
-        public string GetId()
-        {
-            return id;
-        }
-
         private int networkId = 1;
         private int customModelData;
         private string defaultName = "Unnamed Item";
-
-        public bool IsBlock { get; protected set; }
-        public BlockType blockType;
 
         public int GetNetworkId()
         {
@@ -45,23 +35,11 @@ namespace Snow.Items
         /// <param name="networkId"></param>
         /// <param name="customModelData"></param>
         /// <param name="defaultName"></param>
-        public ItemType(string id, int networkId, int customModelData, string defaultName)
+        public ItemType(ItemMaterial material, string defaultName, int customModelData)
         {
-            this.id = id;
-            this.networkId = networkId;
+            this.networkId = (int) material;
             this.customModelData = customModelData;
             this.defaultName = defaultName;
-            IsBlock = false;
-        }
-
-        public ItemType(string id, int networkId, int customModelData, string defaultName, BlockType blockType)
-        {
-            this.id = id;
-            this.networkId = networkId;
-            this.customModelData = customModelData;
-            this.defaultName = defaultName;
-            this.blockType = blockType;
-            IsBlock = true;
         }
     }
 }

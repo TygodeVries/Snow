@@ -195,13 +195,14 @@ namespace Snow.Entities
             if (args.insideblock)
                 return;
 
-            if (itemStack.GetItemType().IsBlock)
+            if (itemStack.GetItemType().GetType() == typeof(BlockItemType))
             {
+                BlockItemType blockItemType = (BlockItemType) itemStack.GetItemType();
                 int face = args.face;
 
                 Position blockPos = args.position.GetAdjacent(face);
-                GetWorld().OnBlockPlace?.Invoke(this, new OnBlockPlaceArgs(this, blockPos, itemStack.GetItemType().blockType));
-                GetWorld().SetBlockAt(blockPos.x, blockPos.y, blockPos.z, itemStack.GetItemType().blockType);
+                GetWorld().OnBlockPlace?.Invoke(this, new OnBlockPlaceArgs(this, blockPos, blockItemType.blockType));
+                GetWorld().SetBlockAt(blockPos.x, blockPos.y, blockPos.z, blockItemType.blockType);
             }
         }
 
