@@ -64,6 +64,7 @@
     <Compile Include="Formats\TextComponent.cs" />
     <Compile Include="Formats\Vector2.cs" />
     <Compile Include="Items\BlockItemType.cs" />
+    <Compile Include="Items\ItemBehaviour.cs" />
     <Compile Include="Items\ItemManager.cs" />
     <Compile Include="Items\ItemMaterial.cs" />
     <Compile Include="Items\ItemStack.cs" />

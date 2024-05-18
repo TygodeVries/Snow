@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,7 +31,9 @@ namespace Snow.Addons
         public virtual void Stop() { }
 
         public virtual void Update() { }
-        
+
+        internal Assembly assembly;
+
         internal string dataPath;
         public string GetDataPath()
         {

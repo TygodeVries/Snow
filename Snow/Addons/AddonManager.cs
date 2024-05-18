@@ -62,6 +62,7 @@ namespace Snow.Addons
 
                 Addon addon = (Addon)Activator.CreateInstance(type);
                 addon.dataPath = folder;
+                addon.assembly = assembly;
                 addon.SetAddonManager(this);
                 addons.Add(addon);
                 addon.Start();
@@ -98,23 +99,45 @@ namespace Snow.Addons
 
             foreach (string file in files)
             {
-                string addonFileData = File.ReadAllText(file);
-                JsonDocument addonData = JsonDocument.Parse(addonFileData);
-                string id = addonData.RootElement.GetProperty("id").GetString();
-
-                string material = addonData.RootElement.GetProperty("style").GetProperty("material").GetString();
-                string name = addonData.RootElement.GetProperty("style").GetProperty("name").GetString();
-                string modelData = addonData.RootElement.GetProperty("style").GetProperty("customModelData").GetString();
-
-                string places = addonData.RootElement.GetProperty("places").GetString();
-
-                if(places == null)
+                try
                 {
-                    ItemType itemType = new ItemType((ItemMaterial) Enum.Parse(typeof(ItemMaterial), material), name, int.Parse(modelData));
-                    GetServer().GetItemManager().RegisterItemType(id, itemType);
+                    string addonFileData = File.ReadAllText(file);
+                    JsonDocument addonData = JsonDocument.Parse(addonFileData);
+                    string id = addonData.RootElement.GetProperty("id").GetString();
+
+                    string material = addonData.RootElement.GetProperty("style").GetProperty("material").GetString();
+                    string name = addonData.RootElement.GetProperty("style").GetProperty("name").GetString();
+                    int modelData = addonData.RootElement.GetProperty("style").GetProperty("customModelData").GetInt32();
+
+                    string behaviour = addonData.RootElement.GetProperty("code").GetProperty("behaviour").GetString();
+
+                    string places = addonData.RootElement.GetProperty("places").GetString();
+
+                    ItemBehaviour itemBehaviour = null;
+                    if(behaviour != null)
+                    {
+                        Type type = addon.assembly.GetType(behaviour);
+                        if(type == null)
+                        {
+                            throw new Exception("Could not find type " + behaviour);
+                        }
+                        itemBehaviour = (ItemBehaviour) Activator.CreateInstance(type);
+                    }
+
+
+                    if (places == null)
+                    {
+                        ItemType itemType = new ItemType((ItemMaterial)Enum.Parse(typeof(ItemMaterial), material), name, modelData, itemBehaviour);
+                        GetServer().GetItemManager().RegisterItemType(id, itemType);
+                    }
+                } catch(Exception e)
+                {
+                    Log.Err("Could not load item in " + file + " for addon " + addon + " because: " + e);
                 }
             }
         }
+
+        
 
         public AddonManager(Server server)
         {

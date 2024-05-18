@@ -28,6 +28,12 @@ namespace Snow.Items
             return customModelData;
         }
 
+        private ItemBehaviour itemBehaviour;
+        public ItemBehaviour GetItemBehaviour()
+        {
+            return itemBehaviour;
+        }
+
         /// <summary>
         /// Create a non-block item
         /// </summary>
@@ -35,11 +41,12 @@ namespace Snow.Items
         /// <param name="networkId"></param>
         /// <param name="customModelData"></param>
         /// <param name="defaultName"></param>
-        public ItemType(ItemMaterial material, string defaultName, int customModelData)
+        public ItemType(ItemMaterial material, string defaultName, int customModelData, ItemBehaviour itemBehaviour)
         {
             this.networkId = (int) material;
             this.customModelData = customModelData;
             this.defaultName = defaultName;
+            this.itemBehaviour = itemBehaviour;
         }
     }
 }

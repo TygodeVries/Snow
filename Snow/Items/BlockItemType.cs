@@ -12,7 +12,7 @@ namespace Snow.Items
        
         public BlockType blockType;
 
-        public BlockItemType(ItemMaterial material, int customModelData, string defaultName, BlockType blockType) : base(material, defaultName, customModelData)
+        public BlockItemType(ItemMaterial material, int customModelData, string defaultName, BlockType blockType) : base(material, defaultName, customModelData, null)
         {
             this.blockType = blockType;
         }

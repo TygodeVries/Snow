@@ -31,11 +31,21 @@ namespace Snow.Entities
 
             this.OnEntityMove += ChunkSectionUpdate;
             this.OnUseItem += BlockPlaceExecutor;
+            this.OnUseItem += ItemStackUseEvent;
+        }
 
+        private void ItemStackUseEvent(object sender, OnUseItemsArgs args)
+        {
+            GetItemInMainHand().GetItemType().GetItemBehaviour().OnUse(this);
         }
 
         private Connection connection;
         public Connection GetConnection() { return connection; }
+
+        public ItemStack GetItemInMainHand()
+        {
+            return GetInventory().GetItem(36 + selectedHotbarSlot);
+        }
 
         private string name = "mrnoname";
         public string GetName()

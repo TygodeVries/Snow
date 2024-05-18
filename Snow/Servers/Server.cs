@@ -15,6 +15,7 @@ using System.IO;
 using Snow.Items;
 using Snow.Events.Arguments;
 using Snow.Levels;
+using System.Diagnostics;
 
 namespace Snow.Servers
 {
@@ -139,6 +140,8 @@ namespace Snow.Servers
 
             double[] pastTickTime = new double[20 * 5];
 
+            Process currentProcess = System.Diagnostics.Process.GetCurrentProcess();
+
             Log.Send("Server is running!");
             while (running)
             {
@@ -162,7 +165,29 @@ namespace Snow.Servers
                     tot = pastTickTime[i];
                 }
 
-                Console.Title = $"MSPT (Over {pastTickTime.Length / 20} second(s)): {tot / (double) pastTickTime.Length}";
+                currentProcess.Refresh();
+                long memoryUsage = currentProcess.WorkingSet64;
+
+                string format = "B";
+                if(memoryUsage >= 1024)
+                {
+                    format = "KB";
+                    memoryUsage /= 1024;
+                }
+
+                if (memoryUsage >= 1024)
+                {
+                    format = "MB";
+                    memoryUsage /= 1024;
+                }
+
+                if (memoryUsage >= 1024)
+                {
+                    format = "GB";
+                    memoryUsage /= 1024;
+                }
+
+                Console.Title = $"MSPT ({pastTickTime.Length / 20} Seconds): {tot / (double) pastTickTime.Length} | RAM: {memoryUsage}{format}";
             }
         }
         
