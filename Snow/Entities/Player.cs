@@ -24,7 +24,7 @@ namespace Snow.Entities
     {
         public Player(Connection connection)
         {
-            this.inventory = new Inventory(44, this, InventoryType.PlayerInventory);
+            this.inventory = new Inventory(46, this, InventoryType.PlayerInventory);
 
             this.connection = connection;
             this.type = 124;
@@ -32,11 +32,30 @@ namespace Snow.Entities
             this.OnEntityMove += ChunkSectionUpdate;
             this.OnUseItem += BlockPlaceExecutor;
             this.OnUseItem += ItemStackUseEvent;
+            this.OnInventoryClick += InventoryClickExecutor;
         }
 
         private void ItemStackUseEvent(object sender, OnUseItemsArgs args)
         {
-            GetItemInMainHand().GetItemType().GetItemBehaviour().OnUse(this);
+            // Need to call this so blocks dont go away
+            UpdateInventory();
+            GetItemInMainHand()?.GetItemType().GetItemBehaviour()?.OnUse(this);
+        }
+
+        private ItemStack cursor;
+        public ItemStack GetCursor()
+        {
+            return cursor;
+        }
+
+        public void SetCursor(ItemStack itemStack)
+        {
+            cursor = itemStack;
+        }
+
+        public ItemStack GetOffhand()
+        {
+            return GetInventory().GetItem(45);
         }
 
         private Connection connection;
@@ -181,6 +200,7 @@ namespace Snow.Entities
         }
 
         public EventHandler<OnUseItemsArgs> OnUseItem;
+        public EventHandler<OnInventoryClickArgs> OnInventoryClick;
 
         public void Kick(string message)
         {
@@ -293,6 +313,34 @@ namespace Snow.Entities
         {
             SetTitleTextPacket setTitleTextPacket = new SetTitleTextPacket(textComponent);
             GetConnection().SendPacket(setTitleTextPacket);
+        }
+
+        public void InventoryClickExecutor(object sender, OnInventoryClickArgs args)
+        {
+            int slot = args.slot;
+            if (args.mode != 0)
+                return;
+
+            if(slot == -999)
+            {
+                return;
+            }
+
+            // Left mouse click
+            if(args.button == 0)
+            {
+                ItemStack slotContent = GetInventory().GetItem(slot);
+                ItemStack cursonContent = GetCursor();
+
+                SetCursor(slotContent);
+                GetInventory().SetItem(slot, cursonContent);
+            }
+
+            // Right mouse click
+            if(args.button == 1)
+            {
+
+            }
         }
     }
 

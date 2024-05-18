@@ -1,4 +1,5 @@
 ﻿using Snow.Formats.Nbt;
+using Snow.Formats.Nbt.Values;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,27 +27,35 @@ namespace Snow.Items
             return amount;
         }
 
-        NbtCompoundTag nbt = new NbtCompoundTag();
+        NbtCompoundTag nbt;
         public NbtCompoundTag GetNbtData()
         {
             return nbt;
         }
 
-        public void SetNbtData(NbtCompoundTag tag)
+        private string name;
+
+        public void GenerateNbt()
         {
-            this.nbt = tag;
+            string nameJson = $"{{\"text\":\"{name}\",\"italic\":false}}";
+            nbt = new NbtCompoundTag()
+                .AddField("display", new NbtCompoundTag()
+                    .AddField("Name", new NbtStringTag(nameJson)))
+                .AddField("CustomModelData", new NbtIntTag(GetItemType().GetCustomModelData()));
         }
 
-        public ItemStack(ItemType itemType)
+
+        public ItemStack(ItemType itemType) : this(itemType, 1)
         {
-            this.itemType = itemType;
-            this.amount = 1;
         }
 
         public ItemStack(ItemType itemType, byte amount)
         {
             this.itemType = itemType;
             this.amount = amount;
+            this.name = GetItemType().GetDefaultName();
+            GenerateNbt();
         }
+
     }
 }

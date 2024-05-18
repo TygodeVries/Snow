@@ -57,6 +57,7 @@
     <Compile Include="Commands\Default\StopCommand.cs" />
     <Compile Include="Events\Arguments\OnBlockPlaceArgs.cs" />
     <Compile Include="Events\Arguments\OnEntityMoveArgs.cs" />
+    <Compile Include="Events\Arguments\OnInventoryClickArgs.cs" />
     <Compile Include="Events\Arguments\OnPlayerJoinArgs.cs" />
     <Compile Include="Events\Arguments\OnUseItemsArgs.cs" />
     <Compile Include="Formats\AngleUtils.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Network\Packets\Play\Clientbound\SystemChatMessagePacket.cs" />
     <Compile Include="Network\Packets\Play\Clientbound\UnloadChunkPacket.cs" />
     <Compile Include="Network\Packets\Play\Serverbound\ChatMessagePacket.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\ClickContainerPacket.cs" />
     <Compile Include="Network\Packets\Play\Serverbound\PlayerActionPacket.cs" />
     <Compile Include="Network\Packets\Play\Serverbound\SetPlayerRotationPacket.cs" />
     <Compile Include="Network\Packets\Status\Clientbound\PingResponsePacket.cs" />

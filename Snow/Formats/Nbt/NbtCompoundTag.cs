@@ -17,10 +17,12 @@ namespace Snow.Formats.Nbt
             this.type = 0x0a;
         }
 
-        public void AddField(string name, NbtTag tag)
+        public NbtCompoundTag AddField(string name, NbtTag tag)
         {
             NbtCompoundTagEntry entry = new NbtCompoundTagEntry(name, tag);
             entries.Add(entry);
+
+            return this;
         }
 
         public byte[] ToByteArray()
