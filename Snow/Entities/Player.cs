@@ -30,16 +30,23 @@ namespace Snow.Entities
             this.type = 124;
 
             this.OnEntityMove += ChunkSectionUpdate;
-            this.OnUseItem += BlockPlaceExecutor;
-            this.OnUseItem += ItemStackUseEvent;
+            this.OnRightClickBlock += BlockPlaceExecutor;
+            this.OnRightClickBlock += ItemStackRightClickBlock;
+            this.OnRightClick += ItemStackRightClick;
             this.OnInventoryClick += InventoryClickExecutor;
         }
 
-        private void ItemStackUseEvent(object sender, OnUseItemsArgs args)
+        private void ItemStackRightClickBlock(object sender, OnRightClickBlockArgs args)
         {
             // Need to call this so blocks dont go away
             UpdateInventory();
-            GetItemInMainHand()?.GetItemType().GetItemBehaviour()?.OnUse(this);
+            GetItemInMainHand()?.GetItemType().GetItemBehaviour()?.OnRightClickBlock(this, args.position);
+        }
+
+        private void ItemStackRightClick(object sender, OnRightClickArgs args)
+        {
+            UpdateInventory();
+            GetItemInMainHand()?.GetItemType().GetItemBehaviour()?.OnRightClick(this);
         }
 
         private ItemStack cursor;
@@ -82,7 +89,7 @@ namespace Snow.Entities
 
         public void UpdateInventory()
         {
-            ClientboundPacket clientboundPacket = new SetContainerContentPacket(0x00, inventory);
+            ClientboundPacket clientboundPacket = new SetContainerContentPacket(0x00, inventory, GetCursor());
             connection.SendPacket(clientboundPacket);
         }
 
@@ -199,7 +206,8 @@ namespace Snow.Entities
             }
         }
 
-        public EventHandler<OnUseItemsArgs> OnUseItem;
+        public EventHandler<OnRightClickBlockArgs> OnRightClickBlock;
+        public EventHandler<OnRightClickArgs> OnRightClick;
         public EventHandler<OnInventoryClickArgs> OnInventoryClick;
 
         public void Kick(string message)
@@ -216,7 +224,7 @@ namespace Snow.Entities
             thr.Start();
         }
 
-        private void BlockPlaceExecutor(object sender, OnUseItemsArgs args)
+        private void BlockPlaceExecutor(object sender, OnRightClickBlockArgs args)
         {
             ItemStack itemStack = args.player.GetItemMainInHand();
             if (itemStack == null)
@@ -321,7 +329,7 @@ namespace Snow.Entities
             if (args.mode != 0)
                 return;
 
-            if(slot == -999)
+            if(slot == -999 || slot == -1)
             {
                 return;
             }
@@ -341,6 +349,8 @@ namespace Snow.Entities
             {
 
             }
+
+            UpdateInventory();
         }
     }
 

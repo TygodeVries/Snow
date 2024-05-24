@@ -15,6 +15,6 @@ $ Play
 0x05 ChatMessagePacket
 0x21 PlayerActionPacket
 0x0D ClickContainerPacket
-
+0x36 UseItemPacket
 $ Status
 0x01 PingRequestPacket

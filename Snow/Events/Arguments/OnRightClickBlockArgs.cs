@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Events.Arguments
 {
-    public class OnUseItemsArgs
+    public class OnRightClickBlockArgs
     {
         //connection.GetPlayer(), location, face, hand, insideBlock
 
@@ -18,7 +18,7 @@ namespace Snow.Events.Arguments
 
         public bool insideblock;
 
-        public OnUseItemsArgs(Player player, Position position, int face, bool insideblock)
+        public OnRightClickBlockArgs(Player player, Position position, int face, bool insideblock)
         {
             this.player = player;
             this.position = position;

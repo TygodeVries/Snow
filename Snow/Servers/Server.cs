@@ -27,14 +27,14 @@ namespace Snow.Servers
             running = false;
             this.workPath = workPath;
             eventManager = new EventManager();
-            itemManager = new ItemManager();
+            registry = new Registry();
             commandManager = new CommandManager();
             connectionListener = new ConnectionListener(port, this);
             worldManager = new WorldManager(this);
         }
 
-        private ItemManager itemManager;
-        public ItemManager GetItemManager() => itemManager;
+        private Registry registry;
+        public Registry GetRegistry() => registry;
 
         private CommandManager commandManager;
         public CommandManager GetCommandManager() => commandManager;
@@ -187,7 +187,7 @@ namespace Snow.Servers
                     memoryUsage /= 1024;
                 }
 
-                Console.Title = $"MSPT ({pastTickTime.Length / 20} Seconds): {tot / (double) pastTickTime.Length} | RAM: {memoryUsage}{format}";
+                Console.Title = $"Snow Server | MSPT ({pastTickTime.Length / 20} Seconds): {tot / (double) pastTickTime.Length} | RAM: {memoryUsage}{format}";
             }
         }
         
@@ -225,8 +225,7 @@ namespace Snow.Servers
 
         public void OnPlayerJoinEvent(object sender, OnPlayerJoinArgs args)
         {
-            args.player.GetInventory().SetItem(36, new ItemStack(GetItemManager().GetNamespace("namespace:chees")));
-            
+            args.player.GetInventory().SetItem(36, new ItemStack(GetRegistry().GetItemType("namespace:chees")));
         }
     }
 }

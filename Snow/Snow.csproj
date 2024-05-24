@@ -59,14 +59,15 @@
     <Compile Include="Events\Arguments\OnEntityMoveArgs.cs" />
     <Compile Include="Events\Arguments\OnInventoryClickArgs.cs" />
     <Compile Include="Events\Arguments\OnPlayerJoinArgs.cs" />
-    <Compile Include="Events\Arguments\OnUseItemsArgs.cs" />
+    <Compile Include="Events\Arguments\OnRightClickArgs.cs" />
+    <Compile Include="Events\Arguments\OnRightClickBlockArgs.cs" />
     <Compile Include="Formats\AngleUtils.cs" />
     <Compile Include="Formats\BitSet.cs" />
     <Compile Include="Formats\TextComponent.cs" />
     <Compile Include="Formats\Vector2.cs" />
     <Compile Include="Items\BlockItemType.cs" />
     <Compile Include="Items\ItemBehaviour.cs" />
-    <Compile Include="Items\ItemManager.cs" />
+    <Compile Include="Addons\Registry.cs" />
     <Compile Include="Items\ItemMaterial.cs" />
     <Compile Include="Items\ItemStack.cs" />
     <Compile Include="Items\ItemType.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Network\Packets\Play\Serverbound\ClickContainerPacket.cs" />
     <Compile Include="Network\Packets\Play\Serverbound\PlayerActionPacket.cs" />
     <Compile Include="Network\Packets\Play\Serverbound\SetPlayerRotationPacket.cs" />
+    <Compile Include="Network\Packets\Play\Serverbound\UseItemPacket.cs" />
     <Compile Include="Network\Packets\Status\Clientbound\PingResponsePacket.cs" />
     <Compile Include="Network\Packets\Status\Clientbound\StatusResponsePacket.cs" />
     <Compile Include="Network\Packets\Status\Serverbound\PingRequestPacket.cs" />

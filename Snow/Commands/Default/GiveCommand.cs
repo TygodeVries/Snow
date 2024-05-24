@@ -18,9 +18,9 @@ namespace Snow.Commands.Default
             try
             {
                 Server server = player.GetConnection().GetServer();
-                ItemManager itemManager = server.GetItemManager();
+                Registry nameSpace = server.GetRegistry();
 
-                player.GetInventory().AddItem(new ItemStack(itemManager.GetNamespace(arguments[0])));
+                player.GetInventory().AddItem(new ItemStack(nameSpace.GetItemType(arguments[0])));
 
                 TextComponent textComponent = new TextComponent($"Gave you an {arguments[0]}");
                 player.SendSystemMessage(textComponent);

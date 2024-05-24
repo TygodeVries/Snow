@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Snow.Items
 {
-    public class ItemManager
+    public class Registry
     {
         private Dictionary<string, ItemType> itemsTypes = new Dictionary<string, ItemType>();
 
-        public ItemType GetNamespace(string nameSpace)
+        public ItemType GetItemType(string nameSpace)
         {
             if(itemsTypes.ContainsKey(nameSpace))
             {

@@ -14,11 +14,13 @@ namespace Snow.Network.Packets.Play.Clientbound
 
         byte windowID;
         Inventory inventory;
+        ItemStack carriedItem;
 
-        public SetContainerContentPacket(byte windowID, Inventory inventory)
+        public SetContainerContentPacket(byte windowID, Inventory inventory, ItemStack carriedItem)
         {
             this.windowID = windowID;
             this.inventory = inventory;
+            this.carriedItem = carriedItem;
         }
 
         public override void Create(PacketWriter packetWriter)
@@ -34,7 +36,7 @@ namespace Snow.Network.Packets.Play.Clientbound
                 packetWriter.WriteItemStack(inventory.GetContent()[i]);
             }
 
-            packetWriter.WriteItemStack(null);
+            packetWriter.WriteItemStack(carriedItem);
         }
     }
 }

@@ -46,8 +46,8 @@ namespace Snow.Network.Packets.Play.Serverbound
 
         public override void Use(Connection connection)
         {
-            connection.GetPlayer().OnUseItem?.Invoke(this,
-                new OnUseItemsArgs(connection.GetPlayer(), location, face, insideBlock));
+            connection.GetPlayer().OnRightClickBlock?.Invoke(this,
+                new OnRightClickBlockArgs(connection.GetPlayer(), location, face, insideBlock));
 
             AcknowledgeBlockChangePacket packet = new AcknowledgeBlockChangePacket(sequence);
             connection.SendPacket(packet);

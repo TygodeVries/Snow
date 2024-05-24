@@ -21,7 +21,11 @@ namespace Snow.Network.Packets.Play.Serverbound
         public override void Use(Connection connection)
         {
             string cmd = command.Split(' ')[0];
-            string args = command.Substring(cmd.Length + 1);
+            string args = "";
+            if (command.Length > cmd.Length + 1)
+            {
+                 args = command.Substring(cmd.Length + 1);
+            }
             connection.GetServer().GetCommandManager().Execute(cmd, args.Split(' '), connection.GetPlayer());
         }
     }

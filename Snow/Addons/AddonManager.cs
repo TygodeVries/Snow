@@ -128,7 +128,7 @@ namespace Snow.Addons
                     if (places == null)
                     {
                         ItemType itemType = new ItemType((ItemMaterial)Enum.Parse(typeof(ItemMaterial), material), name, modelData, itemBehaviour);
-                        GetServer().GetItemManager().RegisterItemType(id, itemType);
+                        GetServer().GetRegistry().RegisterItemType(id, itemType);
                     }
                 } catch(Exception e)
                 {
