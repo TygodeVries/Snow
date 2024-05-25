@@ -111,7 +111,7 @@ namespace Snow.Worlds
         {
             foreach(Entity entity in  _entities)
             {
-                entity.OnEntityTick.Invoke(this, new EventArgs());
+                entity.OnEntityTick?.Invoke(this, new EventArgs());
             }
         }
 
