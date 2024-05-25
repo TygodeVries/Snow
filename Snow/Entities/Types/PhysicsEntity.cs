@@ -31,6 +31,10 @@ namespace Snow.Entities.Types
         }
 
         float gravity = -0.2f;
+        public void SetGravity(float gravity)
+        {
+            this.gravity = gravity;
+        }
 
         public void Physics(object sender, EventArgs eventArgs)
         {
