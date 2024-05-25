@@ -228,12 +228,7 @@ namespace Snow.Servers
         // REMOVE THIS IN LATER VERSION
         public void TestCode()
         {
-            GetEventManager().PlayerJoinEvent += OnPlayerJoinEvent;
-        }
-
-        public void OnPlayerJoinEvent(object sender, OnPlayerJoinArgs args)
-        {
-            args.player.GetInventory().SetItem(36, new ItemStack(GetRegistry().GetItemType("namespace:chees")));
+            
         }
     }
 }   
