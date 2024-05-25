@@ -68,7 +68,15 @@ namespace Snow.Worlds
             _worlds.Add(world.GetName(), world);
             return world;
         }
-        
+
+        public void TickEntities()
+        {
+            foreach (World world in _worlds.Values)
+            {
+                world.TickEntities();
+            }
+        }
+
         /// <summary>
         /// Get a world by name
         /// </summary>

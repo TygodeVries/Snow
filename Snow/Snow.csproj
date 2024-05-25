@@ -58,6 +58,7 @@
     <Compile Include="Entities\AI\Goal.cs" />
     <Compile Include="Entities\AI\Goals\WanderGoal.cs" />
     <Compile Include="Entities\AI\Intelligent.cs" />
+    <Compile Include="Entities\Types\PhysicsEntity.cs" />
     <Compile Include="Events\Arguments\OnBlockPlaceArgs.cs" />
     <Compile Include="Events\Arguments\OnEntityMoveArgs.cs" />
     <Compile Include="Events\Arguments\OnInventoryClickArgs.cs" />

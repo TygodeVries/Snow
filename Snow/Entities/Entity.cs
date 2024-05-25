@@ -16,6 +16,7 @@ namespace Snow.Entities
         {
             this.entityType = type;
         }
+        
         EntityType entityType;
 
         public EntityType GetEntityType()
@@ -110,6 +111,8 @@ namespace Snow.Entities
             SendPacketToClientsWithEntityLoaded(new TeleportEntityPacket(this, x, y, z, yaw, pitch));
             SendPacketToClientsWithEntityLoaded(new SetHeadRotationPacket(this, yaw));
         }
+
+        public EventHandler OnEntityTick;
 
         public void SendPacketToClientsWithEntityLoaded(ClientboundPacket packet)
         {

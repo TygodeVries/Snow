@@ -107,6 +107,14 @@ namespace Snow.Worlds
             entity.Spawn();
         }
         
+        public void TickEntities()
+        {
+            foreach(Entity entity in  _entities)
+            {
+                entity.OnEntityTick.Invoke(this, new EventArgs());
+            }
+        }
+
         internal void RemoveEntity(Entity entity)
         {
             _entities.Remove(entity);

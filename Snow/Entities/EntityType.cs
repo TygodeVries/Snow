@@ -8,7 +8,7 @@ namespace Snow.Entities
 {
     public enum EntityType
     {
-        AXELOTL = 5,
+        BAT = 5,
         PLAYER = 124
     }
 }

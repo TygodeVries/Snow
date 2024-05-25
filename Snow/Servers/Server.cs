@@ -201,7 +201,7 @@ namespace Snow.Servers
             GetConnectionListener().Tick();
             GetAddonManager().Tick();
             GetConnectionListener().DisconnectInactiveClients();
-
+            GetWorldManager().TickEntities();
             if(tickCount % 5 == 0)
             {
                 foreach(Connection connection in GetPlayerConnections())
