@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Snow.Entities
 {
-    public class EntityType
+    public enum EntityType
     {
-        public int id;
+        AXELOTL = 5,
+        PLAYER = 124
     }
 }

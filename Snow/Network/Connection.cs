@@ -124,7 +124,7 @@ namespace Snow.Network
             SendPacket(new PlayerAbilitiesPacket(0x02, 0, 0.1f));
             SendPacket(new SetHeldItemPacket(0x00));
             SendPacket(new UpdateRecipesPacket());
-            SendPacket(new Snow.Network.Packets.Play.Clientbound.CommandsPacket());
+            SendPacket(new CommandsPacket(GetServer().GetCommandManager().GetCommandsAsStrings()));
             SendPacket(new UpdateRecipeBookPacket());
             SendPacket(new SynchronizePlayerPositionPacket(0, 100, 0, 0, 0));
 
@@ -215,7 +215,6 @@ namespace Snow.Network
             return clientLoadedChunks.Contains(a);
         }
 
-
         public async void SendChunk((int, int) location)
         {
             // Check if chunk is already loaded
@@ -239,7 +238,7 @@ namespace Snow.Network
 
             if(chunk == null)
             {
-                // Failed to laod chunk?
+                // Failed to load chunk?
                 return;
             }
 
@@ -329,6 +328,69 @@ namespace Snow.Network
             }
 
             packet.Use(this);
+        }
+
+        public void SendEntities()
+        {
+            if(GetPlayer() == null)
+            {
+                return;
+            }
+
+            if (GetPlayer().GetWorld() == null)
+            {
+                return;
+            }
+            
+            
+            foreach(Entity entity in GetPlayer().GetWorld().GetEntities())
+            {
+                if(entity.GetId() == this.GetPlayer().GetId())
+                {
+                    continue;
+                }
+
+                double distance = Vector3.Distance(entity.GetLocation(), GetPlayer().GetLocation());
+
+                if (distance < GetServer().GetSettings().GetInt("entity-draw-distance"))
+                {
+                    LoadEntity(entity);
+                }
+                else
+                {
+                    UnloadEntity(entity);
+                }
+            }
+        }
+
+        List<int> loadedEntityIds = new List<int>();
+        public List<int> GetLoadedEntityIds()
+        {
+            return loadedEntityIds;
+        }
+
+        private void LoadEntity(Entity entity)
+        {
+            if(loadedEntityIds.Contains(entity.GetId()))
+            {
+                return;
+            }
+
+            SpawnEntityPacket packet = new SpawnEntityPacket(entity);
+            SendPacket(packet);
+            loadedEntityIds.Add(entity.GetId());
+        }
+
+        private void UnloadEntity(Entity entity)
+        {
+            if (!loadedEntityIds.Contains(entity.GetId()))
+            {
+                return;
+            }
+
+            RemoveEntitiesPacket packet = new RemoveEntitiesPacket(new int[1] { entity.GetId() });
+            SendPacket(packet);
+            loadedEntityIds.Remove(entity.GetId());
         }
     }
 

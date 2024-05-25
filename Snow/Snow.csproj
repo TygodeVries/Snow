@@ -55,6 +55,9 @@
     <Compile Include="Commands\Default\GamemodeCommand.cs" />
     <Compile Include="Commands\Default\GiveCommand.cs" />
     <Compile Include="Commands\Default\StopCommand.cs" />
+    <Compile Include="Entities\AI\Goal.cs" />
+    <Compile Include="Entities\AI\Goals\WanderGoal.cs" />
+    <Compile Include="Entities\AI\Intelligent.cs" />
     <Compile Include="Events\Arguments\OnBlockPlaceArgs.cs" />
     <Compile Include="Events\Arguments\OnEntityMoveArgs.cs" />
     <Compile Include="Events\Arguments\OnInventoryClickArgs.cs" />
@@ -77,7 +80,7 @@
     <Compile Include="Items\Containers\Inventory.cs" />
     <Compile Include="Formats\Vector3.cs" />
     <Compile Include="Entities\Entity.cs" />
-    <Compile Include="Entities\Player.cs" />
+    <Compile Include="Entities\Internal\Player.cs" />
     <Compile Include="Formats\Chat.cs" />
     <Compile Include="Formats\Identifier.cs" />
     <Compile Include="Formats\Nbt\NbtCompoundTag.cs" />

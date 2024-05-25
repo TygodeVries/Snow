@@ -105,7 +105,6 @@ namespace Snow.Worlds
             }
 
             entity.Spawn();
-            BroadcastPacket(new SpawnEntityPacket(entity), con);
         }
         
         internal void RemoveEntity(Entity entity)

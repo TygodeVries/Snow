@@ -200,6 +200,15 @@ namespace Snow.Servers
 
             GetConnectionListener().Tick();
             GetAddonManager().Tick();
+            GetConnectionListener().DisconnectInactiveClients();
+
+            if(tickCount % 5 == 0)
+            {
+                foreach(Connection connection in GetPlayerConnections())
+                {
+                    connection.SendEntities();
+                }
+            }
         }
 
         /// <summary>
@@ -219,7 +228,6 @@ namespace Snow.Servers
         // REMOVE THIS IN LATER VERSION
         public void TestCode()
         {
-            
             GetEventManager().PlayerJoinEvent += OnPlayerJoinEvent;
         }
 
@@ -228,4 +236,4 @@ namespace Snow.Servers
             args.player.GetInventory().SetItem(36, new ItemStack(GetRegistry().GetItemType("namespace:chees")));
         }
     }
-}
+}   

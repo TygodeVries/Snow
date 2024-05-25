@@ -22,6 +22,19 @@ namespace Snow.Servers
             return _playerConnections;
         }
 
+        public void DisconnectInactiveClients()
+        {
+            for(int i = 0; i < _playerConnections.Count; i++)
+            {
+                Connection con = _playerConnections[i];
+                if(!con.IsConnected())
+                {
+                    _playerConnections.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
         public ConnectionListener(int port, Server server)
         {
             _playerConnections = new List<Connection>();

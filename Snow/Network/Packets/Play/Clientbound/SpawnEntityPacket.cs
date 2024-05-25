@@ -21,7 +21,7 @@ namespace Snow.Network.Packets.Play.Clientbound
             packetWriter.WriteVarInt(entity.GetId());
             packetWriter.WriteUUID(entity.GetUUID());
 
-            packetWriter.WriteVarInt(entity.type);
+            packetWriter.WriteVarInt((int) entity.GetEntityType());
 
             packetWriter.WriteDouble(entity.GetLocation().x);
             packetWriter.WriteDouble(entity.GetLocation().y);

@@ -2,14 +2,27 @@
 using Snow.Events.Arguments;
 using Snow.Formats;
 using Snow.Items;
+using Snow.Network;
 using Snow.Network.Packets.Play.Clientbound;
 using Snow.Servers;
 using Snow.Worlds;
 using System;
+using System.Collections.Generic;
 namespace Snow.Entities
 {
-    public class Entity
+    public abstract class Entity
     {
+        public void SetType(EntityType type)
+        {
+            this.entityType = type;
+        }
+        EntityType entityType;
+
+        public EntityType GetEntityType()
+        {
+            return entityType;
+        }
+
         private UUID uuid;
         public void SetUUID(UUID uuid)
         {
@@ -78,14 +91,8 @@ namespace Snow.Entities
 
         public void Remove()
         {
-            int[] ids = new int[] { this.id };
-            RemoveEntitiesPacket removeEntitiesPacket = new RemoveEntitiesPacket(ids);
             GetWorld().RemoveEntity(this);
-
-            GetWorld().BroadcastPacket(removeEntitiesPacket);
         }
-
-        public int type;
 
         public void Teleport(World world, double x, double y, double z, float yaw, float pitch)
         {
@@ -100,8 +107,19 @@ namespace Snow.Entities
             if (OnEntityMove != null) 
                 OnEntityMove.Invoke(this, new OnEntityMoveArgs(world, new Vector3(x, y, z), this));
 
-            world.BroadcastPacket(new TeleportEntityPacket(this, x, y, z, yaw, pitch));
-            world.BroadcastPacket(new SetHeadRotationPacket(this, yaw));
+            SendPacketToClientsWithEntityLoaded(new TeleportEntityPacket(this, x, y, z, yaw, pitch));
+            SendPacketToClientsWithEntityLoaded(new SetHeadRotationPacket(this, yaw));
+        }
+
+        public void SendPacketToClientsWithEntityLoaded(ClientboundPacket packet)
+        {
+            foreach(Connection connection in GetWorld().GetServer().GetPlayerConnections())
+            {
+                if(connection.GetLoadedEntityIds().Contains(GetId()))
+                {
+                    connection.SendPacket(packet);
+                }
+            }
         }
 
         public EventHandler<OnEntityMoveArgs> OnEntityMove;

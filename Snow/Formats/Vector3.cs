@@ -43,5 +43,10 @@ namespace Snow.Formats
         {
             return new Vector3(a.x + b.x, a.y + b.y, a.z + b.z);
         }
+
+        public static double Distance(Vector3 a, Vector3 b)
+        {
+            return Math.Sqrt(Math.Pow(b.x - a.x, 2) + Math.Pow(b.y - a.y, 2) + Math.Pow(b.z - a.z, 2));
+        }
     }
 }

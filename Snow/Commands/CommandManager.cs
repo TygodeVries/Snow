@@ -40,9 +40,9 @@ namespace Snow.Commands
             instance.Execute(player, arguments);
         }
 
-        public string[] GetSuggestionFor(string current)
+        public string[] GetCommandsAsStrings()
         {
-            return new string[] { "#TODO" };
+            return commands.Keys.ToArray();
         }
 
         internal void RegisterBuildIn()

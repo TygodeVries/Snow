@@ -14,6 +14,7 @@ namespace Snow.Servers
     {
         private JsonDocument configFile;
 
+        private string path;
 
         /// <summary>
         /// If template is 'null' then the file will not be filed in.
@@ -22,7 +23,8 @@ namespace Snow.Servers
         /// <param name="template"></param>
         public Configuration(string path, string template)
         {
-            if(template != null && !File.Exists(path))
+            this.path = path;
+            if (template != null && !File.Exists(path))
             {
                 TextWriter stream = File.CreateText(path);
                 stream.Write(File.ReadAllText(template));
@@ -48,12 +50,27 @@ namespace Snow.Servers
 
         public string GetString(string field)
         {
-            return configFile.RootElement.GetProperty(field).GetString();
+            try
+            {
+                return configFile.RootElement.GetProperty(field).GetString();
+            } catch(Exception e)
+            {
+                Log.Err("Could not load string field " + field + " from configuration at " + path + "\n" + e);
+                return String.Empty;
+            }
         }
 
         public int GetInt(string field)
         {
-            return configFile.RootElement.GetProperty(field).GetInt32();
+            try
+            {
+                return configFile.RootElement.GetProperty(field).GetInt32();
+            }
+            catch (Exception e)
+            {
+                Log.Err("Could not load int field " + field + " from configuration at " + path + "\n" + e);
+                return -1;
+            }
         }
 
         public double GetDouble(string field)

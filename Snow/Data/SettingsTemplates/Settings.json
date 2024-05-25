@@ -4,5 +4,6 @@
   "world-border": 100000,
   "max-players": "10",
   "online-players": "0",
-  "default-gamemode": "CREATIVE"
+  "default-gamemode": "CREATIVE",
+  "entity-draw-distance": 50
 }

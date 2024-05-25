@@ -27,7 +27,7 @@ namespace Snow.Entities
             this.inventory = new Inventory(46, this, InventoryType.PlayerInventory);
 
             this.connection = connection;
-            this.type = 124;
+            this.SetType(EntityType.PLAYER);
 
             this.OnEntityMove += ChunkSectionUpdate;
             this.OnRightClickBlock += BlockPlaceExecutor;
@@ -107,23 +107,12 @@ namespace Snow.Entities
         {
             UpdateInventory();
 
-            foreach(Entity entity in GetWorld().GetEntities())
-            {
-                if (entity.GetType() == typeof(Player))
-                {
-                    Player player = (Player)entity;
-
-                    PlayerInfoUpdatePacket updatePacket = new PlayerInfoUpdatePacket(player.GetUUID());
-                    updatePacket.SetAddPlayerPayload(GetName());
-                    GetConnection().SendPacket(updatePacket);
-                }
-
-                if (entity != this)
-                {
-                    SpawnEntityPacket packet = new SpawnEntityPacket(entity);
-                    GetConnection().SendPacket(packet);
-                }
-
+            // Load in players
+            foreach(Player player in GetWorld().GetPlayers())
+            {   
+                PlayerInfoUpdatePacket updatePacket = new PlayerInfoUpdatePacket(player.GetUUID());
+                updatePacket.SetAddPlayerPayload(GetName());
+                GetConnection().SendPacket(updatePacket);
             }
 
             SetGamemode((Gamemode)Enum.Parse(typeof(Gamemode), GetConnection().GetServer().GetSettings().GetString("default-gamemode")));
