@@ -9,7 +9,7 @@ namespace Snow.Entities.AI
 {
     public abstract class Goal
     {
-        public abstract Vector3 GetGoalLocation();
+        public abstract Vector3d GetGoalLocation();
 
         public virtual void GoalReached()
         {

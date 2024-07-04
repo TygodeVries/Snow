@@ -152,7 +152,7 @@ namespace Snow.Network
 
             if(connected)
             {
-                SendRenderDistance(player.GetWorld(), 7, new Vector3(player.GetPosistion().x / 16, 0, player.GetPosistion().z / 16));
+                SendRenderDistance(player.GetWorld(), 7, new Vector3d(player.GetPosistion().x / 16, 0, player.GetPosistion().z / 16));
                 SendPacket(new PlayerAbilitiesPacket(0x00, 0.05f, 0.1f));
                 player.SetFlying(true);
                 player.SetAllowFlying(true);
@@ -175,7 +175,7 @@ namespace Snow.Network
             }
         }
 
-        public void SendRenderDistance(World world, int distance, Vector3 centerChunk)
+        public void SendRenderDistance(World world, int distance, Vector3d centerChunk)
         {
             List<(int, int)> chunksToSend = new List<(int, int)>();
 
@@ -198,7 +198,7 @@ namespace Snow.Network
 
 
         // Function to calculate squared distance between two chunks
-        private double DistanceSquared((int, int) chunkA, Vector3 chunkB)
+        private double DistanceSquared((int, int) chunkA, Vector3d chunkB)
         {
             return (chunkA.Item1 - chunkB.x) * (chunkA.Item1 - chunkB.x) + (chunkA.Item2 - chunkB.z) * (chunkA.Item2 - chunkB.z);
         }
@@ -350,7 +350,7 @@ namespace Snow.Network
                     continue;
                 }
 
-                double distance = Vector3.Distance(entity.GetLocation(), GetPlayer().GetLocation());
+                double distance = Vector3d.Distance(entity.GetLocation(), GetPlayer().GetLocation());
 
                 if (distance < GetServer().GetSettings().GetInt("entity-draw-distance"))
                 {

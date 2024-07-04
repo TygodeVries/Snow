@@ -9,9 +9,9 @@ namespace Snow.Worlds
 {
     public class RaycastResult
     {
-        public RaycastResult(Vector3 hitPoint) { this.hitPoint = hitPoint; }
+        public RaycastResult(Vector3d hitPoint) { this.hitPoint = hitPoint; }
 
-        public Vector3 hitPoint;
+        public Vector3d hitPoint;
 
 
     }

@@ -12,11 +12,11 @@ namespace Snow.Events.Arguments
     public class OnEntityMoveArgs
     {
         public World toWorld;
-        public Vector3 to;
+        public Vector3d to;
         public Entity entity;
 
 
-        public OnEntityMoveArgs(World toWorld, Vector3 to, Entity entity)
+        public OnEntityMoveArgs(World toWorld, Vector3d to, Entity entity)
         {
             this.to = to;
             this.toWorld = toWorld;

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Snow.Formats
 {
-    public class Vector3
+    public class Vector3d
     {
         public double x;
         public double y;
         public double z;
 
-        public Vector3(double x, double y, double z)
+        public Vector3d(double x, double y, double z)
         {
             this.x = x;
             this.y = y;
@@ -24,27 +24,27 @@ namespace Snow.Formats
             return Math.Sqrt(x * x + y * y + z * z);
         }
 
-        public Vector3 Clone()
+        public Vector3d Clone()
         {
-            return new Vector3(x, y, z);
+            return new Vector3d(x, y, z);
         }
 
-        public Vector3 Normalized()
+        public Vector3d Normalized()
         {
             return (this.Clone() / GetMagnitude());
         }
 
-        public static Vector3 operator /(Vector3 a, double b)
+        public static Vector3d operator /(Vector3d a, double b)
         {
-            return new Vector3(a.x / b, a.y / b, a.z / b);
+            return new Vector3d(a.x / b, a.y / b, a.z / b);
         }
 
-        public static Vector3 operator +(Vector3 a, Vector3 b)
+        public static Vector3d operator +(Vector3d a, Vector3d b)
         {
-            return new Vector3(a.x + b.x, a.y + b.y, a.z + b.z);
+            return new Vector3d(a.x + b.x, a.y + b.y, a.z + b.z);
         }
 
-        public static double Distance(Vector3 a, Vector3 b)
+        public static double Distance(Vector3d a, Vector3d b)
         {
             return Math.Sqrt(Math.Pow(b.x - a.x, 2) + Math.Pow(b.y - a.y, 2) + Math.Pow(b.z - a.z, 2));
         }

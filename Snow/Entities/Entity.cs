@@ -66,9 +66,9 @@ namespace Snow.Entities
             return world;
         }
 
-        public Vector3 GetPosistion()
+        public Vector3d GetPosistion()
         {
-            return new Vector3(x, y, z);
+            return new Vector3d(x, y, z);
         }
 
         World world;
@@ -78,9 +78,9 @@ namespace Snow.Entities
             this.world = world;
         }
 
-        public Vector3 GetLocation()
+        public Vector3d GetLocation()
         {
-            return new Vector3(x, y, z);
+            return new Vector3d(x, y, z);
         }
 
         Server server;
@@ -106,7 +106,7 @@ namespace Snow.Entities
             SetWorld(world);
 
             if (OnEntityMove != null) 
-                OnEntityMove.Invoke(this, new OnEntityMoveArgs(world, new Vector3(x, y, z), this));
+                OnEntityMove.Invoke(this, new OnEntityMoveArgs(world, new Vector3d(x, y, z), this));
 
             SendPacketToClientsWithEntityLoaded(new TeleportEntityPacket(this, x, y, z, yaw, pitch));
             SendPacketToClientsWithEntityLoaded(new SetHeadRotationPacket(this, yaw));

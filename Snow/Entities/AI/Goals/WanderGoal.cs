@@ -18,11 +18,11 @@ namespace Snow.Entities.AI.Goals
             this.distance = distance;
         }
 
-        public override Vector3 GetGoalLocation()
+        public override Vector3d GetGoalLocation()
         {
             Random random = new Random();
 
-            Vector3 goal = new Vector3(entity.GetLocation().x + random.Next(-distance, distance), entity.GetLocation().y + random.Next(-distance, distance), entity.GetLocation().z + random.Next(-distance, distance));
+            Vector3d goal = new Vector3d(entity.GetLocation().x + random.Next(-distance, distance), entity.GetLocation().y + random.Next(-distance, distance), entity.GetLocation().z + random.Next(-distance, distance));
             return goal;
         }
     }

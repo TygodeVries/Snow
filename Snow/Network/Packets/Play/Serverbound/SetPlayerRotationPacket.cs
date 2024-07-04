@@ -25,7 +25,7 @@ namespace Snow.Network.Packets.Play.Serverbound
         public override void Use(Connection connection)
         {
             Player player = connection.GetPlayer();
-            Vector3 position = player.GetPosistion();
+            Vector3d position = player.GetPosistion();
 
             player.Teleport(connection.GetPlayer().GetWorld(), position.x, position.y, position.z, yaw, pitch);
         }

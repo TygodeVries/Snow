@@ -191,7 +191,7 @@ namespace Snow.Entities
                 SetCenterChunkPacket packet = new SetCenterChunkPacket(chunkSectionX, chunkSectionZ);
                 GetConnection().SendPacket(packet);
 
-                connection.SendRenderDistance(GetWorld(), 7, new Vector3(chunkSectionX, 0, chunkSectionZ));
+                connection.SendRenderDistance(GetWorld(), 7, new Vector3d(chunkSectionX, 0, chunkSectionZ));
             }
         }
 

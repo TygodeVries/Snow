@@ -10,9 +10,9 @@ namespace Snow.Entities.Types
 {
     public abstract class PhysicsEntity : Entity
     {
-        private Vector3 velocity;
+        private Vector3d velocity;
 
-        public Vector3 GetVelocity()
+        public Vector3d GetVelocity()
         { return velocity; }
 
         public PhysicsEntity()
@@ -25,7 +25,7 @@ namespace Snow.Entities.Types
             this.OnEntityTick += Physics;
         }
 
-        public void SetVelocity(Vector3 vector)
+        public void SetVelocity(Vector3d vector)
         {
             this.velocity = vector;
         }
@@ -40,7 +40,7 @@ namespace Snow.Entities.Types
         {
             velocity.y += gravity;
 
-            Vector3 newLocation = this.GetLocation() + velocity;
+            Vector3d newLocation = this.GetLocation() + velocity;
 
             this.Teleport(this.GetWorld(), newLocation.x, newLocation.y, newLocation.z, this.GetYaw(), this.GetPitch());
         }

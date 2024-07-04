@@ -140,6 +140,12 @@ namespace Snow.Worlds
         public async Task LoadChunkAsync((int, int) location)
         {
             Chunk chunk = new Chunk(this, location.Item1, location.Item2);
+
+            if(File.Exists(GetFolder() + "/"))
+            {
+
+            }
+
             await Task.Run(() => GetWorldGenerator().Generate(chunk));
             lock (loadedChunks)
             {
@@ -276,11 +282,11 @@ namespace Snow.Worlds
         /// <param name="stepSize"></param>
         /// <param name="ignore"></param>
         /// <returns></returns>
-        public RaycastResult Raycast(Vector3 start, Vector3 direction, int lenght, float stepSize, BlockType[] ignore)
+        public RaycastResult Raycast(Vector3d start, Vector3d direction, int lenght, float stepSize, BlockType[] ignore)
         {
-            Vector3 nDirection = direction.Normalized();
+            Vector3d nDirection = direction.Normalized();
 
-            Vector3 p = start.Clone();
+            Vector3d p = start.Clone();
 
             for(int i = 0; i < (float) lenght * (1f / stepSize); i++)
             {

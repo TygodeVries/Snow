@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Snow.Formats
+namespace Snow.Mathematics
 {
-    internal class Vector2
+    public class Vector2d
     {
+        public double x;
+        public double y;
     }
 }

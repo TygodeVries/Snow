@@ -68,7 +68,7 @@
     <Compile Include="Formats\AngleUtils.cs" />
     <Compile Include="Formats\BitSet.cs" />
     <Compile Include="Formats\TextComponent.cs" />
-    <Compile Include="Formats\Vector2.cs" />
+    <Compile Include="Mathematics\Vector2d.cs" />
     <Compile Include="Items\BlockItemType.cs" />
     <Compile Include="Items\ItemBehaviour.cs" />
     <Compile Include="Addons\Registry.cs" />
@@ -79,7 +79,8 @@
     <Compile Include="Entities\EntityType.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Items\Containers\Inventory.cs" />
-    <Compile Include="Formats\Vector3.cs" />
+    <Compile Include="Mathematics\Vector2i.cs" />
+    <Compile Include="Mathematics\Vector3d.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Internal\Player.cs" />
     <Compile Include="Formats\Chat.cs" />
