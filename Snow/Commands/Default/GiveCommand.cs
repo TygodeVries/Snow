@@ -18,7 +18,7 @@ namespace Snow.Commands.Default
             try
             {
                 Server server = player.GetConnection().GetServer();
-                Registry nameSpace = server.GetRegistry();
+                ItemRegistry nameSpace = server.itemRegistry;
 
                 player.GetInventory().AddItem(new ItemStack(nameSpace.GetItemType(arguments[0])));
 

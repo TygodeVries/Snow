@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Items
 {
-    public class Registry
+    public class ItemRegistry
     {
         private Dictionary<string, ItemType> itemsTypes = new Dictionary<string, ItemType>();
 

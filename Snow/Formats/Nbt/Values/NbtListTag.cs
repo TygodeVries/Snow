@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Snow.Formats.Nbt.Values
 {
-    internal class NbtListTag : NbtTag
+    public class NbtListTag : NbtTag
     {
         public List<NbtTag> tags = new List<NbtTag>();
 

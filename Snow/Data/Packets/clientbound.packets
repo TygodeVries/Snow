@@ -3,9 +3,9 @@
 0x02 LoginSuccessPacket
 
 $ Configuration
-0x08 FeatureFlagsPacket
-0x02 FinishConfigurationPacket
-0x05 RegistryDataPacket
+0x03 FinishConfigurationPacket
+0x07 RegistryDataPacket
+0x0C FeatureFlagsPacket
 
 $ Status
 0x00 StatusResponsePacket

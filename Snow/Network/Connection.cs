@@ -7,6 +7,7 @@ using Snow.Network.Packets.Configuration.Clientbound;
 using Snow.Network.Packets.Login.Clientbound;
 using Snow.Network.Packets.Play.Clientbound;
 using Snow.Servers;
+using Snow.Servers.Registries;
 using Snow.Worlds;
 using System;
 using System.Collections.Generic;
@@ -114,9 +115,11 @@ namespace Snow.Network
             this.entity = player;   
 
             SendPacket(new LoginSuccessPacket(player.GetUUID(), player.GetName()));
+            /// Failed to load registries due to above errors??
 
-            SendPacket(new FeatureFlagsPacket());
-            SendPacket(new RegistryDataPacket());
+            SendRegistries();
+            SendPacket(new FeatureFlagsPacket(new string[] { "minecraft:vanilla" }));
+
             SendPacket(new FinishConfigurationPacket());
 
             SendPacket(new LoginPacket(player));
@@ -158,6 +161,16 @@ namespace Snow.Network
                 player.SetAllowFlying(true);
             }
 
+        }
+
+        internal void SendRegistries()
+        {
+            foreach(Registry registry in GetServer().GetRegistries())
+            {
+                Console.WriteLine(registry.GetType().Name);
+                registry.SendPacketToConnection(this);
+                Thread.Sleep(2000);
+            }
         }
 
         public void Flush()

@@ -8,20 +8,21 @@ namespace Snow.Network.Packets.Configuration.Clientbound
 {
     public class FeatureFlagsPacket : ClientboundPacket
     {
-        /* #TODO for full implementation
-        // Make features be able to be toggleable
-        */
-        public FeatureFlagsPacket()
+        public string[] features;
+        public FeatureFlagsPacket(string[] features)
         {
-
+            this.features = features;
         }
 
         public override void Create(PacketWriter packetWriter)
         {
             packetWriter.WritePacketID(this);
 
-            packetWriter.WriteVarInt(1); // Number of flags enabled
-            packetWriter.WriteString("minecraft:vanilla");
+            packetWriter.WriteVarInt(features.Length);
+            foreach(string feature in features)
+            {
+                packetWriter.WriteString(feature);
+            }
         }
     }
 }

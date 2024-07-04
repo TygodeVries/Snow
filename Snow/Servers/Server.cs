@@ -16,6 +16,7 @@ using Snow.Items;
 using Snow.Events.Arguments;
 using Snow.Levels;
 using System.Diagnostics;
+using Snow.Servers.Registries;
 
 namespace Snow.Servers
 {
@@ -27,14 +28,12 @@ namespace Snow.Servers
             running = false;
             this.workPath = workPath;
             eventManager = new EventManager();
-            registry = new Registry();
+            itemRegistry = new ItemRegistry();
             commandManager = new CommandManager();
             connectionListener = new ConnectionListener(port, this);
             worldManager = new WorldManager(this);
         }
 
-        private Registry registry;
-        public Registry GetRegistry() => registry;
 
         private CommandManager commandManager;
         public CommandManager GetCommandManager() => commandManager;
@@ -48,6 +47,8 @@ namespace Snow.Servers
 
         private EventManager eventManager;
         public EventManager GetEventManager() => eventManager;
+
+        public ItemRegistry itemRegistry;
 
         string workPath;
         public string GetWorkPath() => workPath;
@@ -84,6 +85,8 @@ namespace Snow.Servers
                 Directory.CreateDirectory(GetWorkPath());
             }
 
+            RegisterTempTestRegistries();
+
             // Create configurations
             settings = new Configuration($"{GetWorkPath()}/Settings.json", "Data/SettingsTemplates/Settings.json");
             language = new Configuration($"{GetWorkPath()}/Language.json", "Data/SettingsTemplates/Language.json");
@@ -94,7 +97,7 @@ namespace Snow.Servers
 
             Thread thr = new Thread(ServerThread);
             thr.Start();
-            TestCode();
+
         }
 
         /// <summary>
@@ -217,18 +220,42 @@ namespace Snow.Servers
         /// <param name="clientboundPacket"></param>
         public void BroadcastPacket(ClientboundPacket clientboundPacket)
         {
-            foreach(Connection connection in GetPlayerConnections())
+            foreach (Connection connection in GetPlayerConnections())
             {
                 connection.SendPacket(clientboundPacket);
             }
         }
 
-
-        // #TODO
-        // REMOVE THIS IN LATER VERSION
-        public void TestCode()
+        public List<Registry> registries = new List<Registry>();
+        public List<Registry> GetRegistries()
         {
-            
+            return registries;
         }
+
+        public void RegisterTempTestRegistries()
+        {
+
+            ArmorTrimMaterialRegistry armorTrimMaterialRegistry = new ArmorTrimMaterialRegistry();
+            registries.Add(armorTrimMaterialRegistry);
+
+            ArmorTrimPatternRegistry armorTrimPatternRegistry = new ArmorTrimPatternRegistry();
+            registries.Add(armorTrimPatternRegistry);
+
+            BannerPatternRegistry bannerPatternRegistry = new BannerPatternRegistry();
+            registries.Add(bannerPatternRegistry);
+
+            BiomeRegistry biomeRegistry = new BiomeRegistry();
+            registries.Add(biomeRegistry);
+
+            ChatTypeRegistry chatTypeRegistry = new ChatTypeRegistry();
+            registries.Add(chatTypeRegistry);
+
+            DimensionTypeRegistry dimensionTypeRegistry = new DimensionTypeRegistry();
+            registries.Add(dimensionTypeRegistry);
+
+            WolfVariantRegistry wolfVariantRegistry = new WolfVariantRegistry();
+            registries.Add(wolfVariantRegistry);
+        }
+
     }
 }   

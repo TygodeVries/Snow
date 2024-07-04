@@ -23,6 +23,7 @@ namespace Snow.Network.Packets.Login.Clientbound
             packetWriter.WriteUUID(uuid);
             packetWriter.WriteString(username);
             packetWriter.WriteVarInt(0); // Not providing any elements for now, Should be implemented later.
+            packetWriter.WriteBool(true); // Strict error handeling.
         }
     }
 }
