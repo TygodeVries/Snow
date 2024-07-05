@@ -254,7 +254,18 @@ namespace Snow.Servers
             registries.Add(dimensionTypeRegistry);
 
             WolfVariantRegistry wolfVariantRegistry = new WolfVariantRegistry();
+
+            WolfVariant wolfVariant = new WolfVariant(new Identifier("minecraft", "ashen"), "minecraft:entity/wolf/wolf_spotted", "minecraft:entity/wolf/wolf_spotted_tame", "minecraft:entity/wolf/wolf_spotted_angry", "#minecraft:is_savanna");
+            wolfVariantRegistry.wolfVariants.Add(wolfVariant);
+            
             registries.Add(wolfVariantRegistry);
+
+
+            PaintingVariantRegistry paintingVariantRegistry = new PaintingVariantRegistry();
+            PaintingVariant paintingVariant = new PaintingVariant(new Identifier("minecraft", "featherfall"), "minecraft:featherfall", 1, 1);
+            paintingVariantRegistry.paintingVariants.Add(paintingVariant);
+
+            registries.Add(paintingVariantRegistry);
         }
 
     }

@@ -36,8 +36,9 @@ namespace Snow.Servers.Registries
                 effects.AddField("grass_color", new NbtIntTag(biomeEffects.grassColor));
                 effects.AddField("grass_color_modifier", new NbtStringTag(biomeEffects.grassColorModifier));
                 
-
                 tag.AddField("effects", effects);
+
+                entries.Add(new RegistryDataPacketEntry(entry.identifier, true, tag));
             }
 
             connection.SendPacket(new RegistryDataPacket(new Identifier("minecraft", "worldgen/biome"), entries));
@@ -46,10 +47,21 @@ namespace Snow.Servers.Registries
 
     public class Biome
     {
+        public Identifier identifier;
+
         public byte hasRain;
         public float temperature;
         public float downfall;
         public BiomeEffects biomeEffects;
+
+        public Biome(Identifier identifier, byte hasRain, float temperature, float downfall, BiomeEffects biomeEffects)
+        {
+            this.identifier = identifier;
+            this.hasRain = hasRain;
+            this.temperature = temperature;
+            this.downfall = downfall;
+            this.biomeEffects = biomeEffects;
+        }
     }
 
     public class BiomeEffects

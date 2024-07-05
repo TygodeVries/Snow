@@ -25,6 +25,8 @@ namespace Snow.Servers.Registries
                 tag.AddField("message_id", new NbtStringTag(entry.messageId));
                 tag.AddField("scaling", new NbtStringTag(entry.scaling));
                 tag.AddField("exhaustion", new NbtFloatTag(entry.exhaustion));
+
+                entries.Add(new RegistryDataPacketEntry(entry.identifier, true, tag));
             }
 
             connection.SendPacket(new RegistryDataPacket(new Identifier("minecraft", "damage_type"), entries));
@@ -33,8 +35,18 @@ namespace Snow.Servers.Registries
 
     public class DamageType
     {
+        public Identifier identifier;
+
         public string messageId;
         public string scaling;
         public float exhaustion;
+
+        public DamageType(Identifier identifier, string messageId, string scaling, float exhaustion)
+        {
+            this.identifier = identifier;
+            this.messageId = messageId;
+            this.scaling = scaling;
+            this.exhaustion = exhaustion;
+        }
     }
 }

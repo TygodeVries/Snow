@@ -26,6 +26,8 @@ namespace Snow.Servers.Registries
                 tag.AddField("template_item", new NbtStringTag(entry.templateItem));
                 tag.AddField("description", new NbtStringTag(entry.description));
                 tag.AddField("decal", new NbtByteTag(entry.decal));
+
+                entries.Add(new RegistryDataPacketEntry(entry.identifier, true, tag));
             }
 
             connection.SendPacket(new RegistryDataPacket(new Identifier("minecraft", "trim_pattern"), entries));
@@ -34,9 +36,20 @@ namespace Snow.Servers.Registries
 
     public class ArmorTrimPattern
     {
+        public Identifier identifier;
+
         public string assetId { get; set; }
         public string templateItem { get; set; }
         public string description { get; set; }
         public byte decal { get; set; }
+
+        public ArmorTrimPattern(Identifier identifier, string assetId, string templateItem, string description, byte decal)
+        {
+            this.identifier = identifier;
+            this.assetId = assetId;
+            this.templateItem = templateItem;
+            this.description = description;
+            this.decal = decal;
+        }
     }
 }

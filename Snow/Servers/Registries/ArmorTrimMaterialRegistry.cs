@@ -27,6 +27,8 @@ namespace Snow.Servers.Registries
                 tag.AddField("ingredient", new NbtStringTag(entry.ingredient));
                 tag.AddField("item_model_index", new NbtFloatTag(entry.itemModelIndex));
                 tag.AddField("description", new NbtStringTag(entry.description));
+
+                entries.Add(new RegistryDataPacketEntry(entry.identifier, true, tag));
             }
 
             connection.SendPacket(new RegistryDataPacket(new Identifier("minecraft", "trim_material"), entries));
@@ -35,6 +37,8 @@ namespace Snow.Servers.Registries
 
     public class ArmorTrimMaterial
     {
+        public Identifier identifier;
+
         /// <summary>
         /// The trim color model to render
         /// Located at trims/color_palettes
@@ -45,8 +49,9 @@ namespace Snow.Servers.Registries
         // add override_armor_materials later.
         public string description { get; set; }
 
-        public ArmorTrimMaterial(string assetName, string ingredient, float itemModelIndex, string description)
+        public ArmorTrimMaterial(Identifier identifier, string assetName, string ingredient, float itemModelIndex, string description)
         {
+            this.identifier = identifier;
             this.assetName = assetName;
             this.ingredient = ingredient;
             this.itemModelIndex = itemModelIndex;

@@ -11,39 +11,42 @@ using System.Threading.Tasks;
 
 namespace Snow.Servers.Registries
 {
-    public class BannerPatternRegistry : Registry
+    public class PaintingVariantRegistry : Registry
     {
-        public List<BannerPattern> bannerPattern = new List<BannerPattern>();
+        public List<PaintingVariant> paintingVariants = new List<PaintingVariant>();
 
         public override void SendPacketToConnection(Connection connection)
         {
             List<RegistryDataPacketEntry> entries = new List<RegistryDataPacketEntry>();
 
-            foreach (BannerPattern entry in bannerPattern)
+            foreach (PaintingVariant entry in paintingVariants)
             {
                 NbtCompoundTag tag = new NbtCompoundTag();
                 tag.AddField("asset_id", new NbtStringTag(entry.assetId));
-                tag.AddField("translation_key", new NbtStringTag(entry.translationKey));
+                tag.AddField("width", new NbtIntTag(entry.width));
+                tag.AddField("height", new NbtIntTag(entry.height));
 
                 entries.Add(new RegistryDataPacketEntry(entry.identifier, true, tag));
             }
 
-            connection.SendPacket(new RegistryDataPacket(new Identifier("minecraft", "banner_pattern"), entries));
+            connection.SendPacket(new RegistryDataPacket(new Identifier("minecraft", "painting_variant"), entries));
         }
     }
 
-    public class BannerPattern
+    public class PaintingVariant
     {
         public Identifier identifier;
 
-        public string assetId { get; set; }
-        public string translationKey { get; set; }
+        public string assetId;
+        public int width;
+        public int height;
 
-        public BannerPattern(Identifier identifier, string assetId, string translationKey)
+        public PaintingVariant(Identifier identifier, string assetId, int width, int height)
         {
             this.identifier = identifier;
             this.assetId = assetId;
-            this.translationKey = translationKey;
+            this.width = width;
+            this.height = height;
         }
     }
 }

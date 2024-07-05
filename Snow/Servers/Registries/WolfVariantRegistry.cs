@@ -26,6 +26,8 @@ namespace Snow.Servers.Registries
                 tag.AddField("tame_texture", new NbtStringTag(entry.tameTexture));
                 tag.AddField("angry_texture", new NbtStringTag(entry.angryTexture));
                 tag.AddField("biomes", new NbtStringTag(entry.biomes));
+
+                entries.Add(new RegistryDataPacketEntry(entry.identifier, true, tag));
             }
 
             connection.SendPacket(new RegistryDataPacket(new Identifier("minecraft", "wolf_variant"), entries));
@@ -34,13 +36,16 @@ namespace Snow.Servers.Registries
 
     public class WolfVariant
     {
+        public Identifier identifier;
+
         public string wildTexture;
         public string tameTexture;
         public string angryTexture;
         public string biomes;
 
-        public WolfVariant(string wildTexture, string tameTexture, string angryTexture, string biomes)
+        public WolfVariant(Identifier identifier, string wildTexture, string tameTexture, string angryTexture, string biomes)
         {
+            this.identifier = identifier;
             this.wildTexture = wildTexture;
             this.tameTexture = tameTexture;
             this.angryTexture = angryTexture;

@@ -169,7 +169,7 @@ namespace Snow.Network
             {
                 Console.WriteLine(registry.GetType().Name);
                 registry.SendPacketToConnection(this);
-                Thread.Sleep(2000);
+                Thread.Sleep(100);
             }
         }
 

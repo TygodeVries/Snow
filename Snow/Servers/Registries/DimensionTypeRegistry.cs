@@ -40,6 +40,8 @@ namespace Snow.Servers.Registries
                 tag.AddField("has_raids", new NbtByteTag(entry.hasRaids));
                 tag.AddField("monster_spawn_light_level", new NbtIntTag(entry.monsterSpawnLightLevel));
                 tag.AddField("monster_spawn_block_light_limit", new NbtIntTag(entry.monsterSpawnBlockLightLimit));
+
+                entries.Add(new RegistryDataPacketEntry(entry.identifier, true, tag));
             }
 
             connection.SendPacket(new RegistryDataPacket(new Identifier("minecraft", "dimension_type"), entries));
@@ -48,6 +50,8 @@ namespace Snow.Servers.Registries
 
     public class DimensionType
     {
+        public Identifier identifier;
+
         public byte hasSkylight;
         public byte hasCeiling;
         public byte ultrawarm;
@@ -66,8 +70,9 @@ namespace Snow.Servers.Registries
         public int monsterSpawnLightLevel;
         public int monsterSpawnBlockLightLimit;
 
-        public DimensionType(byte hasSkylight, byte hasCeiling, byte ultrawarm, byte natural, double coordinateScale, byte bedWorks, byte respawnAnchorWorks, int minY, int height, int logicalHeight, string infiniburn, string effects, float ambientLight, byte piglinSafe, byte hasRaids, int monsterSpawnLightLevel, int monsterSpawnBlockLightLimit)
+        public DimensionType(Identifier identifier, byte hasSkylight, byte hasCeiling, byte ultrawarm, byte natural, double coordinateScale, byte bedWorks, byte respawnAnchorWorks, int minY, int height, int logicalHeight, string infiniburn, string effects, float ambientLight, byte piglinSafe, byte hasRaids, int monsterSpawnLightLevel, int monsterSpawnBlockLightLimit)
         {
+            this.identifier = identifier;
             this.hasSkylight = hasSkylight;
             this.hasCeiling = hasCeiling;
             this.ultrawarm = ultrawarm;

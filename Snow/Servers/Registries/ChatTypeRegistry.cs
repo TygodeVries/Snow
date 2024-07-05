@@ -49,6 +49,7 @@ namespace Snow.Servers.Registries
                 tag.AddField("chat", chatTag);
                 tag.AddField("narration", narrationTag);
 
+                entries.Add(new RegistryDataPacketEntry(entry.identifier, true, tag));
             }
 
             connection.SendPacket(new RegistryDataPacket(new Identifier("minecraft", "chat_type"), entries));
@@ -57,11 +58,13 @@ namespace Snow.Servers.Registries
 
     public class ChatType
     {
+        public Identifier identifier;
         public Decoration chat;
         public Decoration narration;
 
-        public ChatType(Decoration chat, Decoration narration)
+        public ChatType(Identifier identifier, Decoration chat, Decoration narration)
         {
+            this.identifier = identifier;
             this.chat = chat;
             this.narration = narration;
         }
