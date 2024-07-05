@@ -117,12 +117,13 @@ namespace Snow.Network
             SendPacket(new LoginSuccessPacket(player.GetUUID(), player.GetName()));
             /// Failed to load registries due to above errors??
 
-            SendRegistries();
+            GetServer().registryManager.SendAll(this);
             SendPacket(new FeatureFlagsPacket(new string[] { "minecraft:vanilla" }));
 
             SendPacket(new FinishConfigurationPacket());
 
-            SendPacket(new LoginPacket(player));
+            Configuration settings = GetServer().GetSettings();
+            SendPacket(new LoginPacket(player.GetId(), false, new List<Identifier> { new Identifier("snow", "world")}, 7, 7, false, false, false, 0, new Identifier("snow", "world"), new byte[8] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07}, 0x00, 0x00, false, true, 0, false));
             SendPacket(new ChangeDifficultyPacket(0x00, false));
             SendPacket(new PlayerAbilitiesPacket(0x02, 0, 0.1f));
             SendPacket(new SetHeldItemPacket(0x00));
@@ -161,16 +162,6 @@ namespace Snow.Network
                 player.SetAllowFlying(true);
             }
 
-        }
-
-        internal void SendRegistries()
-        {
-            foreach(Registry registry in GetServer().GetRegistries())
-            {
-                Console.WriteLine(registry.GetType().Name);
-                registry.SendPacketToConnection(this);
-                Thread.Sleep(100);
-            }
         }
 
         public void Flush()

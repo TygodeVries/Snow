@@ -137,10 +137,7 @@ namespace Snow.Network
         {
             if(itemStack != null)
             {
-                WriteBool(true);
-                WriteVarInt(itemStack.GetItemType().GetNetworkId());
-                WriteByte((byte) itemStack.GetAmount());
-                WriteCompoundTag(itemStack.GetNbtData());
+                
             }
             else
             {

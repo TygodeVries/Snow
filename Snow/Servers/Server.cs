@@ -17,6 +17,7 @@ using Snow.Events.Arguments;
 using Snow.Levels;
 using System.Diagnostics;
 using Snow.Servers.Registries;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Snow.Servers
 {
@@ -85,8 +86,6 @@ namespace Snow.Servers
                 Directory.CreateDirectory(GetWorkPath());
             }
 
-            RegisterTempTestRegistries();
-
             // Create configurations
             settings = new Configuration($"{GetWorkPath()}/Settings.json", "Data/SettingsTemplates/Settings.json");
             language = new Configuration($"{GetWorkPath()}/Language.json", "Data/SettingsTemplates/Language.json");
@@ -94,6 +93,9 @@ namespace Snow.Servers
             GetCommandManager().RegisterBuildIn();
             GetWorldManager().CreateConfigurationWorlds();
             GetConnectionListener().Start();
+
+            registryManager.CreateRegistries();
+            RegisterTempTestRegistries();
 
             Thread thr = new Thread(ServerThread);
             thr.Start();
@@ -232,40 +234,33 @@ namespace Snow.Servers
             return registries;
         }
 
+        public RegistryManager registryManager { get; } = new RegistryManager();
+
+
         public void RegisterTempTestRegistries()
         {
 
-            ArmorTrimMaterialRegistry armorTrimMaterialRegistry = new ArmorTrimMaterialRegistry();
-            registries.Add(armorTrimMaterialRegistry);
+            string[] damages = new string[] { 
+                "in_fire", "campfire", "lightning_bolt", "on_fire", "lava", "hot_floor", "in_wall", "cramming", 
+                "drown", "starve", "cactus", "fall", "fly_into_wall", "out_of_world", "generic", "magic",
+                "wither", "dragon_breath", "dry_out", "sweet_berry_bush", "freeze", "stalagmite", "outside_border",
+                "generic_kill"};
+            foreach(string damage in damages)
+            {
+                registryManager.AddDamageType(new DamageType(new Identifier("minecraft", damage), "onFire", "never", 0.0f));
+            }
 
-            ArmorTrimPatternRegistry armorTrimPatternRegistry = new ArmorTrimPatternRegistry();
-            registries.Add(armorTrimPatternRegistry);
-
-            BannerPatternRegistry bannerPatternRegistry = new BannerPatternRegistry();
-            registries.Add(bannerPatternRegistry);
-
-            BiomeRegistry biomeRegistry = new BiomeRegistry();
-            registries.Add(biomeRegistry);
-
-            ChatTypeRegistry chatTypeRegistry = new ChatTypeRegistry();
-            registries.Add(chatTypeRegistry);
-
-            DimensionTypeRegistry dimensionTypeRegistry = new DimensionTypeRegistry();
-            registries.Add(dimensionTypeRegistry);
-
-            WolfVariantRegistry wolfVariantRegistry = new WolfVariantRegistry();
-
-            WolfVariant wolfVariant = new WolfVariant(new Identifier("minecraft", "ashen"), "minecraft:entity/wolf/wolf_spotted", "minecraft:entity/wolf/wolf_spotted_tame", "minecraft:entity/wolf/wolf_spotted_angry", "#minecraft:is_savanna");
-            wolfVariantRegistry.wolfVariants.Add(wolfVariant);
-            
-            registries.Add(wolfVariantRegistry);
+            registryManager.AddDimensionType(new DimensionType(new Identifier("snow", "world"), 0x01, 0x00, 0x00, 0x01, 1.0, 0x01, 0x00, 0, GetWorldManager().GetDefaultWorld().GetWorldHeight(), 10, "#", "minecraft:overworld", 0.0f, 0x00, 0x01, 1, 0));
+            string[] biomes = new string[] { "plains" };
+            foreach(string biome in biomes)
+            {
+                registryManager.AddBiome(new Biome(new Identifier("minecraft", biome), 0x01, 1, 1, new BiomeEffects(16711680, 0, 0, 65280, 0, 0)));
+            }
 
 
-            PaintingVariantRegistry paintingVariantRegistry = new PaintingVariantRegistry();
-            PaintingVariant paintingVariant = new PaintingVariant(new Identifier("minecraft", "featherfall"), "minecraft:featherfall", 1, 1);
-            paintingVariantRegistry.paintingVariants.Add(paintingVariant);
+            registryManager.AddWolfVariant(new WolfVariant(new Identifier("minecraft", "ashen"), "minecraft:entity/wolf/wolf_spotted", "minecraft:entity/wolf/wolf_spotted_tame", "minecraft:entity/wolf/wolf_spotted_angry", "#minecraft:is_savanna"));
 
-            registries.Add(paintingVariantRegistry);
+            registryManager.AddPaintingVariant(new PaintingVariant(new Identifier("minecraft", "featherfall"), "minecraft:featherfall", 1, 1));
         }
 
     }

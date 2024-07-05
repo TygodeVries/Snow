@@ -15,11 +15,12 @@ namespace Snow.Network.Packets.Play.Serverbound
         public override void Decode(PacketReader packetReader)
         {
             command = packetReader.ReadString();
-            timestamp = packetReader.ReadLong();
         }
 
         public override void Use(Connection connection)
         {
+            Log.Send($"{connection.GetPlayer().GetName()} send command " + command);
+
             string cmd = command.Split(' ')[0];
             string args = "";
             if (command.Length > cmd.Length + 1)

@@ -5,16 +5,17 @@ $ Login
 0x00 LoginStartPacket
 
 $ Play
-0x2C SetHeldItemPacket
-0x17 SetPlayerPositionPacket
+0x2F SetHeldItemPacket
+0x1A SetPlayerPositionPacket
 0x04 ChatCommandPacket
-0x18 SetPlayerPositionandRotationPacket
-0x0A CommandSuggestionsRequestPacket
-0x35 UseItemOnPacket
-0x19 SetPlayerRotationPacket
-0x05 ChatMessagePacket
-0x21 PlayerActionPacket
-0x0D ClickContainerPacket
-0x36 UseItemPacket
+0x1B SetPlayerPositionandRotationPacket
+0x10 CommandSuggestionsRequestPacket
+0x38 UseItemOnPacket
+0x1C SetPlayerRotationPacket
+0x06 ChatMessagePacket
+0x24 PlayerActionPacket
+0x0E ClickContainerPacket
+0x39 UseItemPacket
+
 $ Status
 0x01 PingRequestPacket

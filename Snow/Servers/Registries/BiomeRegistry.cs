@@ -22,9 +22,10 @@ namespace Snow.Servers.Registries
             foreach (Biome entry in biomes)
             {
                 NbtCompoundTag tag = new NbtCompoundTag();
-                tag.AddField("asset_id", new NbtByteTag(entry.hasRain));
+    
                 tag.AddField("temperature", new NbtFloatTag(entry.temperature));
                 tag.AddField("downfall", new NbtFloatTag(entry.downfall));
+                tag.AddField("has_precipitation", new NbtByteTag(entry.hasRain));
 
                 BiomeEffects biomeEffects = entry.biomeEffects;
                 NbtCompoundTag effects = new NbtCompoundTag();
@@ -74,6 +75,19 @@ namespace Snow.Servers.Registries
         public int grassColor;
         // Add particle
         public string grassColorModifier = "none";
+
+        public BiomeEffects(int fogColor, int waterColor, int waterFogColor, int skyColor, int foliageColor, int grassColor)
+        {
+            this.fogColor = fogColor;
+            this.waterColor = waterColor;
+            this.waterFogColor = waterFogColor;
+            this.skyColor = skyColor;
+            this.foliageColor = foliageColor;
+            this.grassColor = grassColor;
+        }
+
+
         // Add sounds
+
     }
 }

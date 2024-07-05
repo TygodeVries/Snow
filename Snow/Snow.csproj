@@ -64,6 +64,7 @@
     <Compile Include="Servers\Registries\DimensionTypeRegistry.cs" />
     <Compile Include="Servers\Registries\PaintingVariantRegistry.cs" />
     <Compile Include="Servers\Registries\Registry.cs" />
+    <Compile Include="Servers\Registries\RegistryManager.cs" />
     <Compile Include="Servers\Registries\WolfVariantRegistry.cs" />
     <Compile Include="Worlds\Entities\AI\Goal.cs" />
     <Compile Include="Worlds\Entities\AI\Goals\WanderGoal.cs" />
